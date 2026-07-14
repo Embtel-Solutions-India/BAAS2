@@ -72,21 +72,15 @@ export default function Register() {
   };
 
   return (
-    <div style={{ background: '#f5f5f7', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-      <div className="auth-wrap" style={{ width: '100%', maxWidth: '460px' }}>
-        <div className="auth-brand" style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div className="auth-brand-icon" style={{
-            width: '52px', height: '52px', borderRadius: '14px',
-            background: 'linear-gradient(135deg, var(--accent), var(--accent2))',
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            fontFamily: "'DM Serif Display', serif", fontSize: '26px', fontWeight: '700', color: '#fff',
-            marginBottom: '14px'
-          }}>B</div>
-          <h1 style={{ fontSize: '22px', marginBottom: '6px' }}>Create your account</h1>
-          <p style={{ fontSize: '14px', color: 'var(--td)' }}>Get started with BAAS Client Portal</p>
+    <div className="auth-shell">
+      <div className="auth-wrap" style={{ maxWidth: '460px' }}>
+        <div className="auth-brand">
+          <div className="auth-brand-icon">B</div>
+          <h1>Create your account</h1>
+          <p>Get started with BAAS Client Portal</p>
         </div>
 
-        <div className="auth-card" style={{ background: '#fff', borderRadius: 'var(--radius-xl)', border: '1px solid var(--cb)', padding: '32px', boxShadow: 'var(--shadow-md)' }}>
+        <div className="auth-card">
           {alertMsg && (
             <div className="alert alert-danger" style={{ marginBottom: '16px' }}>
               {alertMsg}
@@ -211,6 +205,10 @@ export default function Register() {
               Sign in
             </Link>
           </div>
+        </div>
+
+        <div className="auth-footer">
+          <Link to="/" style={{ color: 'var(--accent)', fontWeight: '600' }}>← Back to main website</Link>
         </div>
       </div>
     </div>

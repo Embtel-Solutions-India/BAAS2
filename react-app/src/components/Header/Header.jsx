@@ -41,7 +41,9 @@ export default function Header() {
 
   const isActive = (path) => location.pathname === path ? 'active' : '';
 
-  const navClass = `nav ${scrolled ? 'scrolled' : ''} nav-hero`;
+  // All page heroes now use a light background, so the nav always renders dark
+  // text (the white-on-dark `nav-hero` treatment is no longer needed).
+  const navClass = `nav ${scrolled ? 'scrolled' : ''}`;
 
   return (
     <nav className={navClass} id="mainNav" role="navigation" aria-label="Main navigation">
@@ -92,7 +94,7 @@ export default function Header() {
         </div>
 
         <div className="nav-cta">
-          <button className={`${!scrolled ? 'nav-ghost' : 'btn-g'}`} onClick={open} aria-label="Open client portal login">
+          <button className="btn-g" onClick={open} aria-label="Open client portal login">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
             </svg>

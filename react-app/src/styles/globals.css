@@ -178,6 +178,25 @@ body .container{max-width:var(--mw);margin:0 auto;padding:0 var(--gut);width:100
 .hero-card-row span:first-child{font-size:15px;color:var(--tm)}
 .hero-card-row span:last-child{font-size:17px;color:var(--accent);font-weight:700}
 
+/* LIGHT HERO (homepage) */
+.hero-light{position:relative;min-height:100vh;overflow:hidden;display:flex;align-items:center;padding:clamp(130px,10vw,180px) 0 clamp(60px,6vw,90px);background:var(--bg)}
+.hero-light-glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 50% at 88% 12%,rgba(212,0,31,.06),transparent 60%),radial-gradient(ellipse 50% 45% at 6% 92%,rgba(212,0,31,.045),transparent 62%)}
+.hero-title-light{font-family:'DM Serif Display',serif;font-size:clamp(40px,5.5vw,64px);letter-spacing:-.03em;line-height:1.08;margin-bottom:24px;color:#111}
+.hero-title-light .accent{color:var(--accent)}
+.hero-desc-light{font-size:clamp(17px,1.6vw,20px);color:var(--tm);line-height:1.7;margin-bottom:20px;max-width:560px}
+.hero-desc-light .accent{color:var(--accent);font-weight:600}
+.pill-light{display:inline-flex;align-items:center;gap:9px;padding:7px 16px;border-radius:100px;border:1px solid rgba(212,0,31,.16);background:rgba(212,0,31,.06);font-size:14px;font-weight:600;color:var(--accent);margin-bottom:26px}
+.hero-card-label{font-size:13px;color:var(--td);text-transform:uppercase;letter-spacing:.18em;font-weight:600;margin-bottom:6px}
+
+/* LIGHT PAGE HERO (inner pages) */
+.page-hero-light{position:relative;background:var(--bg);color:var(--text);min-height:clamp(520px,70vh,720px);overflow:hidden;display:flex;align-items:center;padding:clamp(130px,10vw,180px) 0 clamp(60px,6vw,90px)}
+.page-hero-light .page-hero-title{color:#111}
+.page-hero-light .page-hero-desc{color:var(--tm)}
+.page-hero-light .breadcrumb a{color:var(--accent)}
+
+/* LIGHT CTA SECTION (shared glow background) */
+.cta-light{position:relative;overflow:hidden;background:var(--bg)}
+
 /* COMPARE */
 .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:60px}
 .compare-card{padding:32px;border-radius:20px}

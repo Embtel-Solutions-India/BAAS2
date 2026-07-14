@@ -60,21 +60,15 @@ export default function Login() {
   };
 
   return (
-    <div style={{ background: '#f5f5f7', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-      <div className="auth-wrap" style={{ width: '100%', maxWidth: '420px' }}>
-        <div className="auth-brand" style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div className="auth-brand-icon" style={{
-            width: '52px', height: '52px', borderRadius: '14px',
-            background: 'linear-gradient(135deg, var(--accent), var(--accent2))',
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            fontFamily: "'DM Serif Display', serif", fontSize: '26px', fontWeight: '700', color: '#fff',
-            marginBottom: '14px'
-          }}>B</div>
-          <h1 style={{ fontSize: '22px', marginBottom: '6px' }}>Welcome back</h1>
-          <p style={{ fontSize: '14px', color: 'var(--td)' }}>Sign in to your BAAS Client Portal</p>
+    <div className="auth-shell">
+      <div className="auth-wrap">
+        <div className="auth-brand">
+          <div className="auth-brand-icon">B</div>
+          <h1>Welcome back</h1>
+          <p>Sign in to your BAAS Client Portal</p>
         </div>
 
-        <div className="auth-card" style={{ background: '#fff', borderRadius: 'var(--radius-xl)', border: '1px solid var(--cb)', padding: '32px', boxShadow: 'var(--shadow-md)' }}>
+        <div className="auth-card">
           {alertMsg && <div className="alert alert-danger" style={{ marginBottom: '16px' }}>{alertMsg}</div>}
 
           <form onSubmit={handleSubmit} noValidate>
@@ -116,7 +110,7 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="divider" style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '20px 0', color: 'var(--td)', fontSize: '13px' }}>or</div>
+          <div className="divider">or</div>
 
           <div style={{ textAlign: 'center', fontSize: '14px', color: 'var(--td)' }}>
             Don't have an account?{' '}
@@ -126,7 +120,7 @@ export default function Login() {
           </div>
         </div>
 
-        <div className="auth-footer" style={{ textAlign: 'center', marginTop: '24px', fontSize: '14px', color: 'var(--td)' }}>
+        <div className="auth-footer">
           <Link to="/" style={{ color: 'var(--accent)', fontWeight: '600' }}>← Back to main website</Link>
         </div>
       </div>

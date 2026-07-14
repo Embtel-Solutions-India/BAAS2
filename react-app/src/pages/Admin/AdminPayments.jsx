@@ -194,7 +194,7 @@ export default function AdminPayments() {
               <div className="text-sm font-bold text-gray-900">QuickBooks Payments</div>
               <div className="text-xs text-gray-500 mt-0.5">
                 {qbStatus?.connected
-                  ? <>Connected &mdbl; Realm: <span className="font-mono">{qbStatus.realm_id}</span> &mdbl; {qbStatus.environment}</>
+                  ? <>Connected &mdash; Realm: <span className="font-mono">{qbStatus.realm_id}</span> &mdash; {qbStatus.environment}</>
                   : qbStatus?.configured
                     ? 'Not connected — click "Connect QuickBooks" to start accepting payments'
                     : 'Not configured — add QUICKBOOKS_* vars to server .env'}

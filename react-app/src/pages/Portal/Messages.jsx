@@ -115,7 +115,7 @@ export default function Messages() {
         {/* Chat Area */}
         <div className="chat-area" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           {!activeThread ? (
-            <div className="no-thread" style={{ flex: 1, display: 'flex', alignItems: 'center', justifycontent: 'center', justifyContent: 'center', color: 'var(--td)', height: '100%' }}>
+            <div className="no-thread" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--td)', height: '100%' }}>
               <div style={{ textAlign: 'center' }}>
                 <svg width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" style={{ opacity: .3, marginBottom: '12px', margin: '0 auto' }}>
                   <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>

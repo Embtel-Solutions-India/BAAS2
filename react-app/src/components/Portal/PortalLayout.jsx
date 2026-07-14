@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { api } from '../../utils/api';
 import '../../styles/portal.css';
-import '../../../../client-portal/public/css/portal-layout.css';
 
 export default function PortalLayout({ children, title = '', subtitle = '' }) {
   const [user, setUser] = useState(null);

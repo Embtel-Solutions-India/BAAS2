@@ -29,9 +29,9 @@ export default function VerifyEmail() {
   }, [token]);
 
   return (
-    <div style={{ background: '#f5f5f7', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-      <div className="wrap" style={{ width: '100%', maxWidth: '400px', textAlign: 'center' }}>
-        <div className="auth-card" id="card" style={{ background: '#fff', borderRadius: 'var(--radius-xl)', border: '1px solid var(--cb)', padding: '40px 32px', boxShadow: 'var(--shadow-md)' }}>
+    <div className="auth-shell">
+      <div className="auth-wrap" style={{ maxWidth: '400px', textAlign: 'center' }}>
+        <div className="auth-card" id="card" style={{ padding: '40px 32px' }}>
           {status === 'loading' && (
             <div className="empty-state">
               <div className="spinner"></div>

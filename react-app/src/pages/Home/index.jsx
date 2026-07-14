@@ -32,80 +32,92 @@ export default function Home() {
 
   return (
     <>
-      {/* ═══ DARK HERO ═══════════════════════════════════════════════ */}
-      <section className="hero-dark">
-        <div className="radial-glow" aria-hidden="true"/>
-        <div className="mesh-bg" aria-hidden="true"/>
+      {/* ═══ LIGHT HERO ══════════════════════════════════════════════ */}
+      <section className="hero-light">
+        <div className="hero-light-glow" aria-hidden="true"/>
 
         <div className="container" style={{position:'relative',zIndex:2,width:'100%'}}>
           <div className="hero-grid" style={{display:'flex',alignItems:'center',gap:'clamp(40px,5vw,64px)',flexWrap:'wrap'}}>
 
             {/* left copy */}
-            <div style={{flex:'1 1 420px',maxWidth:'640px'}}>
+            <div style={{flex:'1 1 460px',maxWidth:'640px'}}>
+              <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:.6,delay:.05,ease:[.16,1,.3,1]}}>
+                <span className="pill-light">
+                  <span className="pill-dot" aria-hidden="true"/>
+                  Serving 500+ businesses across all 50 states
+                </span>
+              </motion.div>
+
               <motion.h1 initial={{opacity:0,y:28}} animate={{opacity:1,y:0}} transition={{duration:.75,delay:.1,ease:[.16,1,.3,1]}}
-                className="hero-title">
+                className="hero-title-light">
                 You built the business.<br/>
-                Let us protect it.
+                <span className="accent">Let us protect it.</span>
               </motion.h1>
 
               <motion.p initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:.7,delay:.2}}
-                className="hero-desc">
+                className="hero-desc-light">
                 You didn&apos;t start a business to wrestle with spreadsheets, chase receipts, or decode tax law. But financial chaos left unchecked becomes the silent threat to everything you&apos;ve built — your growth, your time, your peace of mind.
               </motion.p>
               <motion.p initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:.7,delay:.25}}
-                className="hero-desc" style={{marginTop:'-8px'}}>
-                We give Bay Area business owners one thing their competitors lack: total financial clarity.
+                className="hero-desc-light">
+                We give Bay Area business owners one thing their competitors lack:{' '}
+                <span className="accent">total financial clarity.</span>
               </motion.p>
 
               <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{duration:.6,delay:.3}}
-                style={{display:'flex',gap:'14px',flexWrap:'wrap',marginBottom:'40px'}}>
+                style={{display:'flex',gap:'14px',flexWrap:'wrap',marginTop:'32px'}}>
                 <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-pl">
                   Get Your Free Clarity Session
                   <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 9h10M10 5l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </a>
-                <a href="tel:+15109627300" className="btn-ghost">
+                <a href="tel:+15109627300" className="btn-ol">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
                   (510) 962-7300
                 </a>
               </motion.div>
             </div>
 
-            {/* floating dashboard card */}
+            {/* stat highlight card */}
             <motion.div style={{flex:'1 1 300px',display:'flex',justifyContent:'center'}}
-              initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} transition={{duration:.8,delay:.25,ease:[.16,1,.3,1]}}>
-              <motion.div animate={{y:[0,-14,0]}} transition={{duration:3.8,repeat:Infinity,ease:'easeInOut'}}
-                className="floating-card" style={{animation:'none'}}>
-                {/* top bar */}
-                <div style={{display:'flex',alignItems:'center',gap:'8px',padding:'14px 20px',borderBottom:'1px solid rgba(255,255,255,.08)'}}>
-                  <div style={{display:'flex',gap:'6px'}}>
-                    <span style={{width:'10px',height:'10px',borderRadius:'50%',background:'#ff5f57',opacity:.7}}/>
-                    <span style={{width:'10px',height:'10px',borderRadius:'50%',background:'#ffbd2e',opacity:.7}}/>
-                    <span style={{width:'10px',height:'10px',borderRadius:'50%',background:'#28c840',opacity:.7}}/>
-                  </div>
-                  <span style={{fontSize:'12px',color:'rgba(255,255,255,.35)',marginLeft:'auto'}}>Financial Overview · BAAS</span>
-                </div>
-                {/* title */}
-                <div style={{padding:'16px 20px 8px'}}>
-                  <div style={{fontSize:'11px',fontWeight:700,color:'var(--accent)',textTransform:'uppercase',letterSpacing:'.18em'}}>Q4 Status</div>
-                </div>
-                {/* rows */}
-                {[['Monthly Bookkeeping','Up to date ✓'],['Tax Return Status','Filed on time ✓'],['Payroll Runs','Zero errors ✓'],['Compliance Score','100% ✓']].map(([k,v],i,arr) => (
-                  <div key={k} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'12px 20px',borderBottom:i<arr.length-1?'1px solid rgba(255,255,255,.06)':'none'}}>
-                    <span style={{fontSize:'14px',color:'rgba(255,255,255,.5)'}}>{k}</span>
-                    <span style={{fontSize:'14px',fontWeight:600,color:'#4ade80'}}>{v}</span>
+              initial={{opacity:0,x:30}} animate={{opacity:1,x:0}} transition={{duration:.8,delay:.25,ease:[.16,1,.3,1]}} >
+              <div className="hero-card">
+                <div className="hero-card-line" aria-hidden="true"/>
+                <div className="hero-card-label">The BAAS Difference</div>
+                {[
+                  ['Average tax savings per client','$23,400/yr'],
+                  ['Hours saved on bookkeeping monthly','40+ hrs'],
+                  ['Client financial clarity score','94/100'],
+                  ['IRS issue resolution rate','100%'],
+                ].map(([k,v]) => (
+                  <div className="hero-card-row" key={k}>
+                    <span>{k}</span>
+                    <span>{v}</span>
                   </div>
                 ))}
-                {/* bottom progress */}
-                <div style={{padding:'16px 20px'}}>
-                  <div style={{display:'flex',justifyContent:'space-between',fontSize:'12px',color:'rgba(255,255,255,.35)',marginBottom:'8px'}}><span>Year-end progress</span><span>87%</span></div>
-                  <div style={{height:'6px',background:'rgba(255,255,255,.08)',borderRadius:'100px',overflow:'hidden'}}>
-                    <motion.div style={{height:'100%',background:'var(--accent)',borderRadius:'100px'}} initial={{width:0}} animate={{width:'87%'}} transition={{duration:1.4,delay:.9,ease:[.16,1,.3,1]}}/>
-                  </div>
-                </div>
-              </motion.div>
+              </div>
             </motion.div>
           </div>
 
+        </div>
+      </section>
+
+      {/* ═══ STATS ROW ════════════════════════════════════════════════ */}
+      <section className="bg-surface mt-10" style={{padding:'0 0 clamp(48px,7vw,88px)'}}>
+        <div className="container">
+          <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{once:true,margin:'-60px'}}
+            className="stats-row" style={{marginTop:0}}>
+            {[
+              ['500+','Businesses Served'],
+              ['$12M','In Tax Savings'],
+              ['98%','Client Retention'],
+              ['All 50','States Served'],
+            ].map(([n,l]) => (
+              <motion.div variants={fadeUp} key={l} className="stat-card">
+                <div className="stat-num">{n}</div>
+                <div className="stat-label">{l}</div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
@@ -215,26 +227,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ PORTAL PROMO (dark) ══════════════════════════════════════ */}
-      <section className="section-dark">
-        <div style={{position:'absolute',inset:0,pointerEvents:'none',background:'radial-gradient(ellipse 60% 50% at 100% 50%,rgba(212,0,31,.2),transparent)'}} aria-hidden="true"/>
+      {/* ═══ PORTAL PROMO (light) ═════════════════════════════════════ */}
+      <section className="section cta-light">
+        <div className="hero-light-glow" aria-hidden="true"/>
         <div className="container" style={{position:'relative',zIndex:2}}>
-          <div className="portal-promo" style={{background:'transparent',border:'1px solid rgba(255,255,255,.08)',borderRadius:'24px',padding:'clamp(32px,5vw,56px)'}}>
+          <div className="portal-promo" style={{borderRadius:'24px',padding:'clamp(32px,5vw,56px)'}}>
             <div style={{flex:'1 1 400px'}}>
               <Reveal>
                 <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'20px'}}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4001f" strokeWidth="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                   <span style={{fontSize:'12px',fontWeight:700,textTransform:'uppercase',letterSpacing:'.18em',color:'var(--accent)'}}>Secure Client Portal</span>
                 </div>
-                <h2 className="serif" style={{fontSize:'clamp(28px,3.5vw,44px)',color:'#fff',lineHeight:1.15,letterSpacing:'-.02em',marginBottom:'16px'}}>
+                <h2 className="serif" style={{fontSize:'clamp(28px,3.5vw,44px)',color:'#111',lineHeight:1.15,letterSpacing:'-.02em',marginBottom:'16px'}}>
                   Your financial documents.<br/>One secure place.
                 </h2>
-                <p style={{color:'rgba(255,255,255,.55)',fontSize:'17px',lineHeight:1.7,marginBottom:'28px',maxWidth:'460px'}}>
+                <p style={{color:'var(--tm)',fontSize:'17px',lineHeight:1.7,marginBottom:'28px',maxWidth:'460px'}}>
                   Upload bank statements, receipts, tax forms — securely. Our team downloads and processes everything. No more email attachments.
                 </p>
                 <div style={{display:'flex',flexWrap:'wrap',gap:'10px',marginBottom:'32px'}}>
                   {['Drag & drop upload','256-bit encryption','Document tracking','Team messaging'].map(f => (
-                    <div key={f} className="pill" style={{padding:'6px 14px'}}>
+                    <div key={f} className="portal-feat">
                       <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10l4 4 8-8" stroke="#d4001f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                       {f}
                     </div>
@@ -248,22 +260,22 @@ export default function Home() {
             </div>
             <motion.div animate={{y:[0,-10,0]}} transition={{duration:4,repeat:Infinity,ease:'easeInOut'}}
               style={{flex:'1 1 280px',display:'flex',justifyContent:'center'}}>
-              <div className="mockup-dark">
-                <div style={{display:'flex',alignItems:'center',gap:'6px',padding:'12px 16px',borderBottom:'1px solid rgba(255,255,255,.08)'}}>
+              <div className="mockup">
+                <div className="mockup-bar">
                   <span style={{width:'8px',height:'8px',borderRadius:'50%',background:'#ff5f57',opacity:.7}}/>
                   <span style={{width:'8px',height:'8px',borderRadius:'50%',background:'#ffbd2e',opacity:.7}}/>
                   <span style={{width:'8px',height:'8px',borderRadius:'50%',background:'#28c840',opacity:.7}}/>
-                  <span style={{fontSize:'11px',color:'rgba(255,255,255,.3)',marginLeft:'auto'}}>portal.baas.com</span>
+                  <span style={{fontSize:'11px',color:'var(--td)',marginLeft:'auto'}}>portal.baas.com</span>
                 </div>
                 <div style={{padding:'16px'}}>
                   {['W-2_Forms_2025.pdf','Bank_Statement_Q4.pdf','Receipts_Dec.zip'].map((f,i) => (
                     <motion.div key={f} initial={{opacity:0,x:-10}} animate={{opacity:1,x:0}} transition={{delay:.6+i*.15}}
-                      className="mockup-file-dark">
+                      className="mockup-file">
                       <span style={{overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{f}</span>
-                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10l4 4 8-8" stroke="#4ade80" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10l4 4 8-8" stroke="#0a7c42" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                     </motion.div>
                   ))}
-                  <div style={{marginTop:'12px',padding:'8px 12px',borderRadius:'8px',border:'1px dashed rgba(212,0,31,.3)',textAlign:'center',fontSize:'12px',color:'rgba(212,0,31,.6)'}}>+ Drop files here</div>
+                  <div style={{marginTop:'12px',padding:'8px 12px',borderRadius:'8px',border:'1px dashed rgba(212,0,31,.3)',textAlign:'center',fontSize:'12px',color:'rgba(212,0,31,.7)'}}>+ Drop files here</div>
                 </div>
               </div>
             </motion.div>
@@ -311,13 +323,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ CTA BAR (dark) ═══════════════════════════════════════════ */}
-      <section className="cta-dark">
-        <div style={{position:'absolute',inset:0,pointerEvents:'none',background:'radial-gradient(ellipse 70% 60% at 50% 50%,rgba(212,0,31,.22),transparent)'}} aria-hidden="true"/>
-        <div className="mesh-bg" aria-hidden="true"/>
+      {/* ═══ CTA BAR (light) ══════════════════════════════════════════ */}
+      <section className="cta-bar cta-light">
+        <div className="hero-light-glow" aria-hidden="true"/>
         <div className="container" style={{position:'relative',zIndex:2}}>
           <Reveal>
-            <div className="slabel" style={{color:'rgba(255,120,120,.8)'}}>Take the next step</div>
+            <div className="pill-light" style={{textTransform:'uppercase',letterSpacing:'.16em',fontSize:'12px',marginBottom:'24px'}}>
+              <span className="pill-dot" aria-hidden="true"/>
+              Take the next step
+            </div>
             <h2 style={{maxWidth:'680px',margin:'0 auto 20px'}}>
               Stop surviving your finances.<br/>
               <span className="accent">Start thriving because of them.</span>
@@ -331,7 +345,7 @@ export default function Home() {
                 Book Free Clarity Session →
               </motion.a>
               <motion.a href="tel:+15109627300"
-                whileHover={{scale:1.03}} whileTap={{scale:.97}} className="btn-ghost">
+                whileHover={{scale:1.03}} whileTap={{scale:.97}} className="btn-ol">
                 (510) 962-7300
               </motion.a>
             </div>
