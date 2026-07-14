@@ -18,6 +18,8 @@ const EmailVerification  = require('./EmailVerification');
 const PasswordReset     = require('./PasswordReset');
 const Blog              = require('./Blog');
 const QuickBooksToken   = require('./QuickBooksToken');
+const Conversation      = require('./Conversation');
+const ChatMessage       = require('./ChatMessage');
 
 function toRow(doc) {
   if (!doc) return doc;
@@ -56,6 +58,8 @@ module.exports = {
   PasswordReset,
   Blog,
   QuickBooksToken,
+  Conversation,
+  ChatMessage,
   toRow,
   toRows
 };

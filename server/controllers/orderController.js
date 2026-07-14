@@ -1,4 +1,15 @@
-const { Order, Service, OrderStatusHistory, toRow, toRows } = require('../models');
+const { Order, Service, OrderStatusHistory, Notification, ActivityLog, toRow, toRows } = require('../models');
+
+// Fire-and-forget audit + client notification. Never allowed to break the
+// core order flow, so failures are swallowed with a log.
+async function notifyOrderEvent({ clientId, title, body, action, orderId, meta }) {
+  try {
+    await new Notification({ client_id: clientId, type: 'order_update', title, body }).save();
+    await new ActivityLog({ admin_id: null, action, entity_type: 'order', entity_id: orderId, meta: meta || {} }).save();
+  } catch (err) {
+    console.error(`notifyOrderEvent(${action}) failed:`, err.message);
+  }
+}
 
 exports.listOrders = async (req, res) => {
   try {
@@ -71,6 +82,15 @@ exports.createOrder = async (req, res) => {
     });
     await osh.save();
 
+    await notifyOrderEvent({
+      clientId: req.user.id,
+      title: 'Order placed',
+      body: `Your order ${order_number} has been placed successfully. Complete payment to get started.`,
+      action: 'order_created',
+      orderId: order.id,
+      meta: { order_number, service_id, total: order.total_amount }
+    });
+
     res.status(201).json({
       message:      'Order created successfully',
       order_id:     order.id,
@@ -100,6 +120,15 @@ exports.cancelOrder = async (req, res) => {
       note: 'Cancelled by client'
     });
     await osh.save();
+
+    await notifyOrderEvent({
+      clientId: req.user.id,
+      title: 'Order cancelled',
+      body: `Your order ${order.order_number} has been cancelled.`,
+      action: 'order_cancelled',
+      orderId: order.id,
+      meta: { order_number: order.order_number }
+    });
 
     res.json({ message: 'Order cancelled' });
   } catch (err) {

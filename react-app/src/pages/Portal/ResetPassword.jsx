@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { api } from '../../utils/api';
+import PasswordInput from '../../components/UI/PasswordInput';
 import '../../styles/portal.css';
 
 export default function ResetPassword() {
@@ -81,8 +82,7 @@ export default function ResetPassword() {
             <form onSubmit={handleSubmit} noValidate>
               <div className="form-group">
                 <label htmlFor="password">New Password</label>
-                <input
-                  type="password"
+                <PasswordInput
                   id="password"
                   className={`form-control ${passwordErr ? 'error' : ''}`}
                   placeholder="Min. 8 characters"
@@ -95,8 +95,7 @@ export default function ResetPassword() {
 
               <div className="form-group">
                 <label htmlFor="confirm_password">Confirm Password</label>
-                <input
-                  type="password"
+                <PasswordInput
                   id="confirm_password"
                   className={`form-control ${confirmPasswordErr ? 'error' : ''}`}
                   placeholder="Re-enter password"

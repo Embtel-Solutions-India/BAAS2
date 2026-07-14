@@ -35,8 +35,10 @@ const PortalDashboard      = lazy(() => import('./pages/Portal/Dashboard'));
 const PortalOrders         = lazy(() => import('./pages/Portal/Orders'));
 const PortalOrderDetail    = lazy(() => import('./pages/Portal/OrderDetail'));
 const PortalNewOrder       = lazy(() => import('./pages/Portal/NewOrder'));
+const PortalCheckout       = lazy(() => import('./pages/Portal/Checkout'));
 const PortalDocuments      = lazy(() => import('./pages/Portal/Documents'));
 const PortalMessages       = lazy(() => import('./pages/Portal/Messages'));
+const PortalChat           = lazy(() => import('./pages/Portal/Chat'));
 const PortalInvoices       = lazy(() => import('./pages/Portal/Invoices'));
 const PortalProfile        = lazy(() => import('./pages/Portal/Profile'));
 const PortalNotifications  = lazy(() => import('./pages/Portal/Notifications'));
@@ -49,6 +51,7 @@ const AdminClientDetail    = lazy(() => import('./pages/Admin/AdminClientDetail'
 const AdminOrders          = lazy(() => import('./pages/Admin/AdminOrders'));
 const AdminOrderDetail     = lazy(() => import('./pages/Admin/AdminOrderDetail'));
 const AdminMessages        = lazy(() => import('./pages/Admin/AdminMessages'));
+const AdminChat            = lazy(() => import('./pages/Admin/AdminChat'));
 const AdminNotifications   = lazy(() => import('./pages/Admin/AdminNotifications'));
 const AdminActivity        = lazy(() => import('./pages/Admin/AdminActivity'));
 const AdminBlogs           = lazy(() => import('./pages/Admin/AdminBlogs'));
@@ -107,8 +110,10 @@ function AnimatedRoutes() {
             <Route path="/client-portal/orders"          element={<PortalOrders />} />
             <Route path="/client-portal/orders/:id"      element={<PortalOrderDetail />} />
             <Route path="/client-portal/new-order"       element={<PortalNewOrder />} />
+            <Route path="/client-portal/checkout/:orderId" element={<PortalCheckout />} />
             <Route path="/client-portal/documents"       element={<PortalDocuments />} />
             <Route path="/client-portal/messages"        element={<PortalMessages />} />
+            <Route path="/client-portal/chat"            element={<PortalChat />} />
             <Route path="/client-portal/invoices"        element={<PortalInvoices />} />
             <Route path="/client-portal/profile"         element={<PortalProfile />} />
             <Route path="/client-portal/notifications"   element={<PortalNotifications />} />
@@ -121,6 +126,7 @@ function AnimatedRoutes() {
             <Route path="/admin/orders"                  element={<AdminOrders />} />
             <Route path="/admin/orders/:id"              element={<AdminOrderDetail />} />
             <Route path="/admin/messages"                element={<AdminMessages />} />
+            <Route path="/admin/chat"                    element={<AdminChat />} />
             <Route path="/admin/notifications"           element={<AdminNotifications />} />
             <Route path="/admin/activity"                element={<AdminActivity />} />
             <Route path="/admin/blogs"                   element={<AdminBlogs />} />

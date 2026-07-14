@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import PortalLayout from '../../components/Portal/PortalLayout';
-import { api, formatDate, formatCurrency, statusBadge } from '../../utils/api';
+import { api, apiUrl, formatDate, formatCurrency, statusBadge } from '../../utils/api';
 
 export default function OrderDetail() {
   const { id } = useParams();
@@ -94,6 +94,8 @@ export default function OrderDetail() {
   );
 
   const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+  const payable = order && !['paid', 'processing', 'refunded'].includes(order.payment_status) && order.status !== 'cancelled';
 
   if (loading) {
     return (
@@ -192,7 +194,7 @@ export default function OrderDetail() {
                       <div style={{ fontSize: '14px', fontWeight: 500 }}>{d.name}</div>
                       <div style={{ fontSize: '12px', color: 'var(--td)' }}>{d.type} · {formatDate(d.created_at)}</div>
                     </div>
-                    <a href={`http://localhost:4000/api/documents/${d.id}/download`} className="btn-g" style={{ fontSize: '13px', display: 'inline-flex', padding: '6px 12px' }} download>Download</a>
+                    <a href={apiUrl(`/documents/${d.id}/download`)} className="btn-g" style={{ fontSize: '13px', display: 'inline-flex', padding: '6px 12px' }} download>Download</a>
                   </div>
                 ))
               )}
@@ -247,13 +249,28 @@ export default function OrderDetail() {
 
         {/* Right Column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {payable && (
+            <div className="card" style={{ borderColor: 'rgba(212,0,31,.2)', background: 'rgba(212,0,31,.03)' }}>
+              <h4 style={{ marginBottom: '6px', fontSize: '15px', fontWeight: 700 }}>Payment due</h4>
+              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: '30px', lineHeight: 1.1, marginBottom: '12px' }}>
+                {formatCurrency(order?.total_amount)}
+              </div>
+              <button className="btn-pl" onClick={() => navigate(`/client-portal/checkout/${id}`)} style={{ width: '100%', justifyContent: 'center' }}>
+                Pay Now
+              </button>
+              <p className="form-hint" style={{ marginTop: '10px', textAlign: 'center' }}>Secure payment via QuickBooks</p>
+            </div>
+          )}
+
           <div className="card">
             <h4 style={{ marginBottom: '14px', fontSize: '15px', fontWeight: 700 }}>Order Info</h4>
             {infoRow('Order #', order?.order_number)}
             {infoRow('Service', order?.service_name || '—')}
             {infoRow('State', order?.state)}
             {infoRow('Status', <span className={`badge badge-${order?.status}`}>{statusBadge(order?.status)}</span>)}
+            {infoRow('Payment', <span className={`badge badge-${order?.payment_status}`}>{statusBadge(order?.payment_status)}</span>)}
             {infoRow('Amount', formatCurrency(order?.total_amount))}
+            {order?.transaction_id && infoRow('Transaction', <span style={{ fontSize: '12px', wordBreak: 'break-all' }}>{order.transaction_id}</span>)}
             {infoRow('Placed', formatDate(order?.created_at))}
             {infoRow('Updated', formatDate(order?.updated_at))}
             {order?.notes && infoRow('Notes', <span style={{ color: 'var(--tm)' }}>{order?.notes}</span>)}

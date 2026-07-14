@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../utils/api';
+import PasswordInput from '../../components/UI/PasswordInput';
 import '../../styles/portal.css';
 
 export default function AdminLogin() {
@@ -109,8 +110,7 @@ export default function AdminLogin() {
               <label htmlFor="password" className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
                 Password
               </label>
-              <input
-                type="password"
+              <PasswordInput
                 id="password"
                 className={`w-full px-3.5 py-2.5 rounded-lg border focus:ring-3 outline-none text-xs transition-all bg-slate-950 text-white placeholder-slate-700 ${passwordErr ? 'border-rose-900 focus:border-rose-500 focus:ring-rose-500/10' : 'border-slate-800 focus:border-[#d4001f] focus:ring-[#d4001f]/10'}`}
                 placeholder="••••••••"

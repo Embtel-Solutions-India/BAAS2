@@ -49,6 +49,7 @@ app.use('/api/admin/payments', require('./routes/adminPayments'));
 app.use('/api/admin/blogs',   require('./routes/adminBlogs'));
 app.use('/api/blogs',         require('./routes/blogs'));
 app.use('/api/quickbooks',    require('./routes/quickbooks'));
+app.use('/api/chat',          require('./routes/chat'));
 
 app.get('/api/health', (req, res) =>
   res.json({ status: 'ok', ts: new Date().toISOString() })
@@ -61,6 +62,20 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
 });
 
-app.listen(PORT, () => {
+// ── HTTP server + Socket.IO (real-time chat) ──────────────────────
+const http = require('http');
+const { Server } = require('socket.io');
+const { initSocket } = require('./socket');
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: { origin: ALLOWED_ORIGINS, credentials: true },
+  connectionStateRecovery: {}   // auto connection-recovery on brief drops
+});
+app.set('io', io);              // let REST controllers emit real-time events
+initSocket(io);
+
+server.listen(PORT, () => {
   console.log(`🚀 BAAS Portal API running on http://localhost:${PORT}`);
+  console.log(`⚡ Socket.IO real-time chat ready`);
 });

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePortal } from '../../hooks/usePortal';
 import { api } from '../../utils/api';
+import PasswordInput from '../UI/PasswordInput';
 
 export default function PortalModal() {
   const { isOpen, close, activeTab, setActiveTab } = usePortal();
@@ -109,7 +110,7 @@ export default function PortalModal() {
               <div>
                 {loginError && <div style={{background:'rgba(212,0,31,.08)',color:'var(--accent)',padding:'10px 14px',borderRadius:'8px',fontSize:'14px',marginBottom:'16px'}}>{loginError}</div>}
                 <div className="form-group"><label>Email Address</label><input type="email" className="form-input" placeholder="you@company.com" value={loginEmail} onChange={e => setLoginEmail(e.target.value)}/></div>
-                <div className="form-group" style={{marginBottom:'8px'}}><label>Password</label><input type="password" className="form-input" placeholder="••••••••" value={loginPassword} onChange={e => setLoginPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleLogin()}/></div>
+                <div className="form-group" style={{marginBottom:'8px'}}><label>Password</label><PasswordInput className="form-input" placeholder="••••••••" value={loginPassword} onChange={e => setLoginPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleLogin()}/></div>
                 <div style={{textAlign:'right',marginBottom:'24px'}}><a href="/client-portal/forgot-password" style={{fontSize:'14px',color:'var(--accent)'}}>Forgot password?</a></div>
                 <button className="form-submit" onClick={handleLogin} disabled={loginLoading}>{loginLoading ? 'Signing in…' : 'Sign In to Portal'}</button>
               </div>
@@ -125,7 +126,7 @@ export default function PortalModal() {
                 <div className="form-group"><label>Company Name</label><input type="text" name="company_name" className="form-input" placeholder="Your Company LLC" value={regData.company_name} onChange={handleRegChange}/></div>
                 <div className="form-group"><label>Email Address</label><input type="email" name="email" className="form-input" placeholder="you@company.com" value={regData.email} onChange={handleRegChange}/></div>
                 <div className="form-group"><label>Phone Number</label><input type="tel" name="phone" className="form-input" placeholder="(555) 000-0000" value={regData.phone} onChange={handleRegChange}/></div>
-                <div className="form-group" style={{marginBottom:'24px'}}><label>Create Password</label><input type="password" name="password" className="form-input" placeholder="Min. 8 characters" value={regData.password} onChange={handleRegChange} onKeyDown={e => e.key === 'Enter' && handleRegister()}/></div>
+                <div className="form-group" style={{marginBottom:'24px'}}><label>Create Password</label><PasswordInput name="password" className="form-input" placeholder="Min. 8 characters" value={regData.password} onChange={handleRegChange} onKeyDown={e => e.key === 'Enter' && handleRegister()}/></div>
                 <button className="form-submit" onClick={handleRegister} disabled={regLoading}>{regLoading ? 'Creating account…' : 'Create Account'}</button>
               </div>
             )}

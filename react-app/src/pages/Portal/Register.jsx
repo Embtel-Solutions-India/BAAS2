@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../utils/api';
+import PasswordInput from '../../components/UI/PasswordInput';
 import '../../styles/portal.css';
 
 export default function Register() {
@@ -166,8 +167,7 @@ export default function Register() {
 
             <div className="form-group">
               <label htmlFor="password">Password</label>
-              <input
-                type="password"
+              <PasswordInput
                 id="password"
                 name="password"
                 className={`form-control ${errors.password ? 'error' : ''}`}
@@ -181,8 +181,7 @@ export default function Register() {
 
             <div className="form-group">
               <label htmlFor="confirm_password">Confirm Password</label>
-              <input
-                type="password"
+              <PasswordInput
                 id="confirm_password"
                 name="confirm_password"
                 className={`form-control ${errors.confirm_password ? 'error' : ''}`}

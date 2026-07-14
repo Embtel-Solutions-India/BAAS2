@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PortalLayout from '../../components/Portal/PortalLayout';
-import { api, formatDate } from '../../utils/api';
+import { api, apiUrl, formatDate } from '../../utils/api';
 
 export default function Documents() {
   const [documents, setDocuments] = useState([]);
@@ -126,7 +126,7 @@ export default function Documents() {
                 </div>
                 <div className="doc-actions" style={{ marginLeft: 'auto', display: 'flex', gap: '8px' }}>
                   <a
-                    href={`http://localhost:4000/api/documents/${d.id}/download`}
+                    href={apiUrl(`/documents/${d.id}/download`)}
                     className="btn-g"
                     style={{ fontSize: '13px', display: 'inline-flex', padding: '6px 12px' }}
                     download

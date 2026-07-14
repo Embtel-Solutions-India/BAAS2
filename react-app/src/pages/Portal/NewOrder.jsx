@@ -67,10 +67,10 @@ export default function NewOrder() {
         notes: notes.trim() || undefined
       });
       setAlertType('success');
-      setAlertMsg(`Order ${data.order_number} placed successfully!`);
+      setAlertMsg(`Order ${data.order_number} placed! Redirecting to checkout…`);
       setTimeout(() => {
-        navigate(`/client-portal/orders/${data.order_id}`);
-      }, 1200);
+        navigate(`/client-portal/checkout/${data.order_id}`);
+      }, 1000);
     } catch (err) {
       setAlertType('danger');
       setAlertMsg(err.message);

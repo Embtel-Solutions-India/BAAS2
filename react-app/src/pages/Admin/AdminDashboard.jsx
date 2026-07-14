@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/Portal/AdminLayout';
-import { api, formatDate } from '../../utils/api';
+import { api, formatDate, formatCurrency, statusBadge } from '../../utils/api';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -17,7 +17,8 @@ export default function AdminDashboard() {
     recent_blogs: [],
     blog_stats: [],
     user_growth: [],
-    monthly_activity: []
+    monthly_activity: [],
+    payment_analytics: {}
   });
   const [loading, setLoading] = useState(true);
 
@@ -50,8 +51,73 @@ export default function AdminDashboard() {
   const maxGrowthCount = Math.max(...(stats.user_growth || []).map(u => u.count), 1);
   const maxActivityCount = Math.max(...(stats.monthly_activity || []).map(a => a.count), 1);
 
+  const pa = stats.payment_analytics || {};
+
   return (
     <AdminLayout title="Dashboard">
+      {/* Orders & Revenue KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-5">
+        {/* Total Orders */}
+        <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-xs hover:shadow-md hover:border-rose-100 transition-all duration-300 flex flex-col gap-1 group relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-rose-500/[0.015] rounded-bl-full translate-x-3 -translate-y-3 pointer-events-none" />
+          <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center mb-2 group-hover:scale-105 transition-all text-gray-500">
+            <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/>
+            </svg>
+          </div>
+          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Orders</span>
+          <span className="text-2xl font-bold text-gray-900 tracking-tight font-serif mt-1">{stats.total_orders}</span>
+        </div>
+
+        {/* Pending Orders */}
+        <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-xs hover:shadow-md hover:border-rose-100 transition-all duration-300 flex flex-col gap-1 group relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-rose-500/[0.015] rounded-bl-full translate-x-3 -translate-y-3 pointer-events-none" />
+          <div className="w-9 h-9 rounded-lg bg-amber-50/50 border border-amber-100/50 flex items-center justify-center mb-2 group-hover:scale-105 transition-all text-amber-600">
+            <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Pending Orders</span>
+          <span className="text-2xl font-bold text-gray-900 tracking-tight font-serif mt-1">{stats.pending_orders}</span>
+        </div>
+
+        {/* Total Revenue */}
+        <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-xs hover:shadow-md hover:border-rose-100 transition-all duration-300 flex flex-col gap-1 group relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-rose-500/[0.015] rounded-bl-full translate-x-3 -translate-y-3 pointer-events-none" />
+          <div className="w-9 h-9 rounded-lg bg-emerald-50/50 border border-emerald-100/50 flex items-center justify-center mb-2 group-hover:scale-105 transition-all text-emerald-600">
+            <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+            </svg>
+          </div>
+          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Revenue</span>
+          <span className="text-2xl font-bold text-gray-900 tracking-tight font-serif mt-1">{formatCurrency(stats.revenue)}</span>
+        </div>
+
+        {/* Today's Revenue */}
+        <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-xs hover:shadow-md hover:border-rose-100 transition-all duration-300 flex flex-col gap-1 group relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-rose-500/[0.015] rounded-bl-full translate-x-3 -translate-y-3 pointer-events-none" />
+          <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center mb-2 group-hover:scale-105 transition-all text-gray-500">
+            <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Today's Sales</span>
+          <span className="text-2xl font-bold text-gray-900 tracking-tight font-serif mt-1">{formatCurrency(pa.today_revenue)}</span>
+        </div>
+
+        {/* Month Revenue */}
+        <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-xs hover:shadow-md hover:border-rose-100 transition-all duration-300 flex flex-col gap-1 group relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-16 h-16 bg-rose-500/[0.015] rounded-bl-full translate-x-3 -translate-y-3 pointer-events-none" />
+          <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center mb-2 group-hover:scale-105 transition-all text-gray-500">
+            <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+            </svg>
+          </div>
+          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Monthly Sales</span>
+          <span className="text-2xl font-bold text-gray-900 tracking-tight font-serif mt-1">{formatCurrency(pa.month_revenue)}</span>
+        </div>
+      </div>
+
       {/* Overview KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
         {/* Total Clients */}
@@ -260,6 +326,34 @@ export default function AdminDashboard() {
               </div>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Recent Payments */}
+      <div className="bg-white rounded-xl border border-gray-100 shadow-xs overflow-hidden flex flex-col mb-8">
+        <div className="px-6 py-5 border-b border-gray-50 flex items-center justify-between">
+          <h3 className="text-sm font-bold text-gray-900">Recent Payments</h3>
+          <Link to="/admin/payments" className="text-xs font-semibold text-[#d4001f] hover:text-[#a4001a] hover:underline transition-colors">View all</Link>
+        </div>
+        <div className="p-6">
+          {!(stats.recent_payments || []).length ? (
+            <div className="flex items-center justify-center text-xs text-gray-400 py-12">No payments recorded yet.</div>
+          ) : (
+            <div className="space-y-3">
+              {stats.recent_payments.map(p => (
+                <div key={p.id} className="flex items-center justify-between gap-4 pb-3 last:pb-0 border-b border-gray-50 last:border-b-0">
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-gray-900 truncate">{p.client_name || 'Client'}</div>
+                    <div className="text-[11px] text-gray-400 mt-0.5">{formatDate(p.created_at)}{p.card_last4 ? ` · ${p.card_type || 'Card'} ••••${p.card_last4}` : ''}</div>
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="text-sm font-bold text-gray-900">{formatCurrency(p.amount)}</span>
+                    <span className={`badge badge-${p.status}`}>{statusBadge(p.status)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

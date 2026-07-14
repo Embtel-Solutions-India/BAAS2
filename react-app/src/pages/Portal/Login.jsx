@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../utils/api';
+import PasswordInput from '../../components/UI/PasswordInput';
 import '../../styles/portal.css';
 
 export default function Login() {
@@ -93,8 +94,7 @@ export default function Login() {
                   Forgot password?
                 </Link>
               </label>
-              <input
-                type="password"
+              <PasswordInput
                 id="password"
                 className={`form-control ${passwordErr ? 'error' : ''}`}
                 placeholder="••••••••"

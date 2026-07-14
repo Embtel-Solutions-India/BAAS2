@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PortalLayout from '../../components/Portal/PortalLayout';
 import { api, formatDate, formatCurrency, statusBadge } from '../../utils/api';
 
@@ -8,6 +9,7 @@ export default function Invoices() {
   const [errorMsg, setErrorMsg] = useState('');
   const [alertType, setAlertType] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
+  const navigate = useNavigate();
 
   const loadInvoices = async () => {
     try {
@@ -24,9 +26,13 @@ export default function Invoices() {
     loadInvoices();
   }, []);
 
-  const handlePay = (id) => {
+  const handlePay = (invoice) => {
+    if (invoice?.order_id) {
+      navigate(`/client-portal/checkout/${invoice.order_id}`);
+      return;
+    }
     setAlertType('info');
-    setAlertMsg('Online payment is coming soon. Please contact us at (510) 962-7300 or accounting@bayareaaccountingsolutions.com to arrange payment.');
+    setAlertMsg('This invoice is not linked to an order. Please contact us at (510) 962-7300 or accounting@bayareaaccountingsolutions.com to arrange payment.');
   };
 
   const unpaidCount = invoices.filter(i => ['sent', 'overdue'].includes(i.status)).length;
@@ -96,7 +102,7 @@ export default function Invoices() {
                       {['sent', 'overdue'].includes(inv.status) ? (
                         <button
                           className="btn-p"
-                          onClick={() => handlePay(inv.id)}
+                          onClick={() => handlePay(inv)}
                           style={{ fontSize: '13px', padding: '7px 14px', cursor: 'pointer' }}
                         >
                           Pay Now

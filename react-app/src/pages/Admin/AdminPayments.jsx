@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import AdminLayout from '../../components/Portal/AdminLayout';
-import { api, formatDate, formatCurrency, statusBadge, statusBadgeClass } from '../../utils/api';
+import { api, apiUrl, formatDate, formatCurrency, statusBadge, statusBadgeClass } from '../../utils/api';
 
 export default function AdminPayments() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -139,7 +139,7 @@ export default function AdminPayments() {
     if (statusFilter !== 'all') params.set('status', statusFilter);
     if (searchQuery) params.set('search', searchQuery);
     const url = `/admin/payments/export/${type}?${params.toString()}`;
-    window.open(`http://localhost:4000/api${url}`, '_blank');
+    window.open(apiUrl(url), '_blank');
   };
 
   const openRefund = (payment) => {

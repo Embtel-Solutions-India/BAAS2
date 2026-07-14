@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import AdminLayout from '../../components/Portal/AdminLayout';
-import { api, formatDate, formatCurrency, statusBadge } from '../../utils/api';
+import { api, apiUrl, formatDate, formatCurrency, statusBadge } from '../../utils/api';
 
 export default function AdminOrderDetail() {
   const { id } = useParams();
@@ -233,7 +233,7 @@ export default function AdminOrderDetail() {
                         <div className="text-[10px] text-gray-400 font-semibold tracking-wide mt-0.5">{d.type} &bull; {formatDate(d.created_at)}</div>
                       </div>
                       <a 
-                        href={`http://localhost:4000/api/documents/${d.id}/download`} 
+                        href={apiUrl(`/documents/${d.id}/download`)}
                         className="inline-flex items-center px-2.5 py-1.5 rounded-lg border border-gray-200 hover:border-rose-200 text-[10px] font-bold text-gray-600 hover:text-[#d4001f] hover:bg-rose-500/[0.015] transition-all"
                         download
                       >
@@ -267,6 +267,24 @@ export default function AdminOrderDetail() {
                   {order.notes}
                 </div>
               )}
+            </div>
+
+            {/* Payment panel */}
+            <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider">Payment</h4>
+                <Link to={`/admin/payments?search=${encodeURIComponent(order.order_number)}`} className="text-xs font-semibold text-[#d4001f] hover:text-[#a4001a] hover:underline">Transactions →</Link>
+              </div>
+              {infoRow('Payment status', (
+                <span className={`badge badge-${order.payment_status} border border-current/10 font-semibold px-2.5 py-0.5 text-xs rounded-full`}>
+                  {statusBadge(order.payment_status)}
+                </span>
+              ))}
+              {infoRow('Amount', formatCurrency(order.total_amount))}
+              {order.transaction_id
+                ? infoRow('Transaction ID', <span className="font-mono text-[11px] break-all">{order.transaction_id}</span>)
+                : infoRow('Transaction ID', <span className="text-gray-400">—</span>)}
+              {order.qb_payment_id && infoRow('QuickBooks ID', <span className="font-mono text-[11px] break-all">{order.qb_payment_id}</span>)}
             </div>
           </div>
         </div>
