@@ -124,17 +124,6 @@ export default function AdminLayout({ children, title = '' }) {
               Payments
             </Link>
 
-            <Link 
-              to="/admin/messages"
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all group relative ${isTabActive('/admin/messages') ? 'text-white bg-[#d4001f]/25 font-bold shadow-xs border border-white/5' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
-              onClick={() => setMenuOpen(false)}
-            >
-              <svg className="w-4 h-4 text-current opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-              </svg>
-              Messages
-            </Link>
-
             <Link
               to="/admin/chat"
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all group relative ${isTabActive('/admin/chat') ? 'text-white bg-[#d4001f]/25 font-bold shadow-xs border border-white/5' : 'text-white/60 hover:text-white hover:bg-white/5'}`}

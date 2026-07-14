@@ -71,6 +71,33 @@ export default function Footer() {
             Designed by <a href="https://embtelsolutions.com/" target="_blank" rel="noopener noreferrer">Embtel Solutions</a>
           </span>
         </div>
+
+        <div
+          className="footer-disclaimer"
+          style={{
+            borderTop: '1px solid var(--cb)',
+            marginTop: '24px',
+            paddingTop: '20px',
+            fontSize: '12.5px',
+            lineHeight: 1.7,
+            color: 'var(--tf)',
+          }}
+        >
+          <strong style={{ color: 'var(--td)', fontWeight: 600 }}>Disclaimer:</strong>{' '}
+          Bay Area Accounting Solutions provides bookkeeping, accounting, tax, payroll,
+          business formation, registered agent, and related advisory services. The information on
+          this website is provided for general informational purposes only and does not constitute
+          tax, legal, accounting, or financial advice. Bay Area Accounting Solutions is not a law
+          firm, and no attorney–client relationship is created. Use of this website, or submission
+          of any form, does not create a client, advisory, or fiduciary relationship. You should
+          consult a qualified professional regarding your specific circumstances before making any
+          financial, tax, or business decision. While we strive to keep information accurate and
+          current, we make no warranties as to its completeness or accuracy, and content is subject
+          to change without notice. Any figures, savings, ratings, reviews, testimonials, or
+          results referenced (including Google reviews) reflect individual experiences and are not a
+          guarantee of future outcomes. Third-party links are provided for convenience only and do
+          not imply endorsement.
+        </div>
       </div>
     </footer>
   );

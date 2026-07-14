@@ -5,6 +5,7 @@ import StaggerGrid from '../../components/UI/StaggerGrid';
 import StaggerItem from '../../components/UI/StaggerItem';
 import PageHero from '../../components/Sections/PageHero';
 import CtaBar from '../../components/Sections/CtaBar';
+import GoogleReviewsBar from '../../components/Sections/GoogleReviewsBar';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^\+?[0-9\s().-]{7,20}$/;
@@ -71,6 +72,8 @@ export default function Contact() {
         description="Give us a call or drop by anytime. We answer all enquiries within 24 hours on business days."
       />
 
+      <GoogleReviewsBar />
+
       <div className="content">
         <div className="container">
           <div className="contact-grid">
@@ -107,6 +110,18 @@ export default function Contact() {
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3163.1234!2d-121.9289!3d37.5585!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fc1234567890%3A0x1234567890!2s39159+Paseo+Padre+Pkwy+%23115%2C+Fremont%2C+CA+94538!5e0!3m2!1sen!2sus"
                     width="100%" height="240" style={{border:0}} allowFullScreen loading="lazy" title="Office location map"
                   />
+                </div>
+
+                <div style={{marginTop:'24px',display:'flex',alignItems:'center',gap:'14px',flexWrap:'wrap'}}>
+                  <span style={{fontSize:'15px',fontWeight:600}}>Follow Us</span>
+                  <div className="footer-social">
+                    <a href="https://www.facebook.com/BAAccountingsolutions/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+                    </a>
+                    <a href="https://www.linkedin.com/company/bay-area-accounting-solutions/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-4 0v7h-4v-7a6 6 0 016-6zM2 9h4v12H2zM4 6a2 2 0 100-4 2 2 0 000 4z"/></svg>
+                    </a>
+                  </div>
                 </div>
               </RevealWrapper>
             </div>

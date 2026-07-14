@@ -6,7 +6,6 @@ import '../../styles/portal.css';
 export default function PortalLayout({ children, title = '', subtitle = '' }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [unreadMsg, setUnreadMsg] = useState(0);
   const [unreadNotif, setUnreadNotif] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -37,7 +36,6 @@ export default function PortalLayout({ children, title = '', subtitle = '' }) {
         const unreadN = notifications.filter(n => !n.is_read).length;
         setUnreadNotif(unreadN);
 
-        setUnreadMsg(0);
         setLoading(false);
       } catch (err) {
         navigate('/client-portal/login');
@@ -130,22 +128,6 @@ export default function PortalLayout({ children, title = '', subtitle = '' }) {
             </Link>
 
             <div className="px-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest pt-4 mb-2">Communication</div>
-
-            <Link 
-              to="/client-portal/messages" 
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group relative ${isTabActive('/client-portal/messages') ? 'text-[#d4001f] bg-rose-500/[0.04] font-semibold' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'}`}
-              onClick={() => setMenuOpen(false)}
-            >
-              <svg className="w-4 h-4 text-current opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
-                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
-              </svg>
-              Messages
-              {unreadMsg > 0 && (
-                <span className="ml-auto inline-flex items-center justify-center w-5 h-5 rounded-full text-[10px] font-bold bg-[#d4001f] text-white">
-                  {unreadMsg}
-                </span>
-              )}
-            </Link>
 
             <Link
               to="/client-portal/chat"
