@@ -1,6 +1,6 @@
 // Configurable via Vite env (VITE_API_URL); defaults to the local dev server
 // so existing behaviour is unchanged when the var is not set.
-export const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+export const API_BASE = import.meta.env.VITE_API_URL || 'https://bayareaaccountingsolutions.com/api';
 
 // Build an absolute URL to a backend endpoint for direct browser navigation
 // (file downloads, CSV exports) that can't go through fetch/credentials JSON.
