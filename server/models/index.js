@@ -20,6 +20,7 @@ const Blog              = require('./Blog');
 const QuickBooksToken   = require('./QuickBooksToken');
 const Conversation      = require('./Conversation');
 const ChatMessage       = require('./ChatMessage');
+const Otp               = require('./Otp');
 
 function toRow(doc) {
   if (!doc) return doc;
@@ -60,6 +61,7 @@ module.exports = {
   QuickBooksToken,
   Conversation,
   ChatMessage,
+  Otp,
   toRow,
   toRows
 };

@@ -19,6 +19,9 @@ function issueToken(res, payload) {
   return token;
 }
 
+// Exposed so the additive OTP / OAuth flows mint the identical session cookie.
+exports.issueToken = issueToken;
+
 exports.register = async (req, res) => {
   const { first_name, last_name, email, password, phone, company_name } = req.body;
   if (!first_name || !last_name || !email || !password)

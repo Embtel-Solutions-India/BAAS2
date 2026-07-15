@@ -14,7 +14,7 @@ app.use(helmet());
 const ALLOWED_ORIGINS = (process.env.CLIENT_URL || 'http://localhost:3000')
   .split(',')
   .map(o => o.trim())
-  .concat(['http://localhost:8000', 'http://127.0.0.1:8000', 'http://localhost:5173', 'http://127.0.0.1:5173']);
+  .concat(['http://localhost:4000', 'http://127.0.0.1:4000', 'http://localhost:5173', 'http://127.0.0.1:5173']);
 
 app.use(cors({
   origin(origin, cb) {

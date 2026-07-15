@@ -16,4 +16,13 @@ const apiLimiter = rateLimit({
   legacyHeaders:  false
 });
 
-module.exports = { authLimiter, apiLimiter };
+// Tighter limiter for OTP send/verify (brute-force + abuse protection).
+const otpLimiter = rateLimit({
+  windowMs:       15 * 60 * 1000,
+  max:            15,
+  message:        { error: 'Too many OTP requests. Please try again in 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders:  false
+});
+
+module.exports = { authLimiter, apiLimiter, otpLimiter };
