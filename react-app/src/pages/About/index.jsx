@@ -92,7 +92,8 @@ export default function About() {
             <div className="slabel">Reviewed by Clients</div>
             <h2 className="stitle">What our clients say on Google</h2>
           </RevealWrapper>
-          <div className="elfsight-app-a13c0b30-2d99-4de3-8204-0b55392cb077" data-elfsight-app-lazy/>
+          <script src="https://elfsightcdn.com/platform.js" async></script>
+<div class="elfsight-app-8c3a1505-8573-49f8-a9ca-e0959d3c787a" data-elfsight-app-lazy></div>
         </div>
       </section>
 

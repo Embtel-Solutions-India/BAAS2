@@ -1,4 +1,5 @@
 const { Conversation, ChatMessage, Client, Notification, toRow, toRows } = require('../models');
+const chatNotifyService = require('./chatNotifyService');
 
 const isStaff = (role) => role === 'admin' || role === 'staff';
 
@@ -142,6 +143,10 @@ async function createMessage({ conversation, senderId, senderRole, body = '', at
       });
     } catch (err) { console.error('chat notify failed:', err.message); }
   }
+
+  // Email notification (fire-and-forget; offline-only + cooldown enforced inside).
+  chatNotifyService.notifyByEmail({ conversation, senderRole })
+    .catch(err => console.error('chat email notify failed:', err.message));
 
   return toRow(msg);
 }

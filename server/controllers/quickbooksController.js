@@ -18,6 +18,20 @@ function frontendBase() {
 
 // GET /api/quickbooks/connect  (admin) → returns the Intuit authorize URL
 exports.connect = async (req, res) => {
+  // Demo mode: establish a simulated connection instead of the Intuit OAuth flow.
+  if (qb.isDemoMode()) {
+    try {
+      await qb.connectDemo();
+      await new ActivityLog({
+        admin_id: req.user.id, action: 'quickbooks_connected', entity_type: 'quickbooks',
+        meta: { demo: true, environment: qb.ENV() }
+      }).save();
+      return res.json({ url: `${frontendBase()}/admin/payments?qb=connected` });
+    } catch (err) {
+      console.error('QuickBooks demo connect error:', err);
+      return res.status(500).json({ error: 'Failed to enable demo payments' });
+    }
+  }
   if (!qb.isConfigured()) {
     return res.status(503).json({ error: 'QuickBooks credentials are not configured on the server (.env).' });
   }
@@ -63,8 +77,9 @@ exports.status = async (req, res) => {
   try {
     const conn = await qb.getConnection();
     res.json({
-      configured: qb.isConfigured(),
+      configured: qb.isConfigured() || qb.isDemoMode(),
       connected: Boolean(conn),
+      demo: qb.isDemoMode(),
       environment: qb.ENV(),
       realm_id: conn ? conn.realm_id : null,
       connected_at: conn ? conn.created_at : null,

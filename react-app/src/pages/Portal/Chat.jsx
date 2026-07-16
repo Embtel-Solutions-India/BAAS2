@@ -187,7 +187,7 @@ export default function Chat() {
     <PortalLayout title="Live Support" subtitle="Chat with the BAAS team in real time">
       {errorMsg && <div className="alert alert-danger" style={{ marginBottom: 16 }}>{errorMsg}</div>}
 
-      <div className="card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 200px)', minHeight: 420 }}>
+      <div className="card chat-card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', height: 'calc(100vh - 200px)', minHeight: 420 }}>
         {/* header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px', borderBottom: '1px solid var(--border)' }}>
           <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--accent-grad)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontFamily: "'DM Serif Display',serif" }}>B</div>

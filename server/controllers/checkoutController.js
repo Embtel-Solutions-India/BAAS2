@@ -5,11 +5,19 @@ const {
   Invoice,
   Notification,
   ActivityLog,
+  OrderStatusHistory,
   Client,
   toRow
 } = require('../models');
 
 const LARGE_PAYMENT_THRESHOLD = () => Number(process.env.QUICKBOOKS_LARGE_PAYMENT_THRESHOLD || 1000);
+
+// Demo payment simulation — lets the full checkout flow be exercised without
+// real QuickBooks credentials. Active ONLY when PAYMENTS_DEMO_MODE=true and the
+// environment is not production, so it can never fake a real (production) charge.
+const DEMO_MODE = () =>
+  process.env.PAYMENTS_DEMO_MODE === 'true' &&
+  (process.env.QUICKBOOKS_ENVIRONMENT || 'sandbox').toLowerCase() !== 'production';
 
 function validCardInput(card) {
   if (!card || typeof card !== 'object') return 'Card details are required';
@@ -77,21 +85,33 @@ exports.chargeOrder = async (req, res) => {
     let charge;
     try {
       const cardNumber = String(card.number).replace(/[\s-]/g, '');
-      const token = await qb.tokenizeCard({
-        number: cardNumber,
-        expMonth: String(card.expMonth).padStart(2, '0'),
-        expYear: String(card.expYear),
-        cvc: String(card.cvc),
-        name: String(card.name).trim(),
-        address: card.address || undefined
-      });
+      if (DEMO_MODE()) {
+        // Simulated success — no external gateway call, no card number stored.
+        charge = {
+          id: `DEMO-${Date.now()}`,
+          status: 'CAPTURED',
+          card: {
+            number: cardNumber.slice(-4),
+            cardType: cardNumber[0] === '4' ? 'Visa' : cardNumber[0] === '5' ? 'Mastercard' : 'Card',
+          },
+        };
+      } else {
+        const token = await qb.tokenizeCard({
+          number: cardNumber,
+          expMonth: String(card.expMonth).padStart(2, '0'),
+          expYear: String(card.expYear),
+          cvc: String(card.cvc),
+          name: String(card.name).trim(),
+          address: card.address || undefined
+        });
 
-      charge = await qb.createCharge({
-        amountStr,
-        currency: order.currency || 'USD',
-        token,
-        description: `Order ${order.order_number}${order.service_id ? ` — ${order.service_id.name}` : ''}`
-      });
+        charge = await qb.createCharge({
+          amountStr,
+          currency: order.currency || 'USD',
+          token,
+          description: `Order ${order.order_number}${order.service_id ? ` — ${order.service_id.name}` : ''}`
+        });
+      }
     } catch (gatewayErr) {
       payment.status = 'failed';
       payment.failure_reason = gatewayErr.message;
@@ -154,8 +174,21 @@ exports.chargeOrder = async (req, res) => {
     order.payment_status = paid ? 'paid' : 'failed';
     order.transaction_id = payment.transaction_id;
     order.qb_payment_id = payment.qb_payment_id;
+    // Once paid, move a still-pending order into fulfillment so it no longer
+    // reads as "Pending" in the orders lists.
+    const advancedToProcessing = paid && order.status === 'pending';
+    if (advancedToProcessing) order.status = 'processing';
     order.updated_at = new Date();
     await order.save();
+
+    if (advancedToProcessing) {
+      OrderStatusHistory.create({
+        order_id: order.id,
+        status: 'processing',
+        changed_by: 'system:payment',
+        note: 'Payment received — order moved to processing',
+      }).catch(err => console.error('order status history failed:', err.message));
+    }
 
     const notif = new Notification({
       client_id: req.user.id,

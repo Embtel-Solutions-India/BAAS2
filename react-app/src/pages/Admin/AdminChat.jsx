@@ -220,9 +220,9 @@ export default function AdminChat() {
   return (
     <AdminLayout title="Live Chat">
       {errorMsg && <div className="alert alert-danger" style={{ marginBottom: 12 }}>{errorMsg}</div>}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden" style={{ display: 'grid', gridTemplateColumns: '320px 1fr', height: 'calc(100vh - 170px)', minHeight: 460 }}>
+      <div className={`admin-chat-grid bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden${active ? ' has-active' : ''}`} style={{ display: 'grid', gridTemplateColumns: '320px 1fr', height: 'calc(100vh - 170px)', minHeight: 460 }}>
         {/* Conversation list */}
-        <div style={{ borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        <div className="chat-list-pane" style={{ borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
           <div style={{ padding: 12, borderBottom: '1px solid var(--border)' }}>
             <input className="form-control" placeholder="Search name, email, message…" value={search} onChange={e => setSearch(e.target.value)} style={{ fontSize: 13 }} />
             <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
@@ -261,7 +261,7 @@ export default function AdminChat() {
         </div>
 
         {/* Thread */}
-        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        <div className="chat-thread-pane" style={{ display: 'flex', flexDirection: 'column', minHeight: 0 }}>
           {!active ? (
             <div className="empty-state" style={{ flex: 1, justifyContent: 'center' }}>
               <h4>Select a conversation</h4>
@@ -270,21 +270,24 @@ export default function AdminChat() {
           ) : (
             <>
               {/* header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
+              <div className="chat-thread-header" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
+                <button type="button" className="btn-g chat-back-btn" title="Back to conversations" onClick={() => { setActiveId(null); activeRef.current = null; }} style={{ padding: '5px 10px', fontSize: 14, lineHeight: 1 }}>←</button>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 700, fontSize: 14 }}>{active.client_name}</div>
                   <div style={{ fontSize: 12, color: 'var(--td)' }}>
                     {active.client_email}{active.company_name ? ` · ${active.company_name}` : ''}
                   </div>
                 </div>
-                <div style={{ fontSize: 12, color: online ? 'var(--success)' : 'var(--td)', display: 'flex', alignItems: 'center', gap: 5 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: '50%', background: online ? 'var(--success)' : 'var(--tf)' }} />{presenceLabel}
+                <div className="chat-thread-actions" style={{ display: 'contents' }}>
+                  <div style={{ fontSize: 12, color: online ? 'var(--success)' : 'var(--td)', display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: online ? 'var(--success)' : 'var(--tf)' }} />{presenceLabel}
+                  </div>
+                  <span className={`badge badge-${active.status === 'open' ? 'in_review' : active.status === 'resolved' ? 'completed' : 'draft'}`}>{active.status}</span>
+                  <button className="btn-g" style={{ padding: '5px 10px', fontSize: 12 }} onClick={() => setStatus(active.status === 'resolved' ? 'open' : 'resolved')}>
+                    {active.status === 'resolved' ? 'Reopen' : 'Resolve'}
+                  </button>
+                  <button className="btn-g" style={{ padding: '5px 10px', fontSize: 12 }} onClick={() => setStatus('archived')}>Archive</button>
                 </div>
-                <span className={`badge badge-${active.status === 'open' ? 'in_review' : active.status === 'resolved' ? 'completed' : 'draft'}`}>{active.status}</span>
-                <button className="btn-g" style={{ padding: '5px 10px', fontSize: 12 }} onClick={() => setStatus(active.status === 'resolved' ? 'open' : 'resolved')}>
-                  {active.status === 'resolved' ? 'Reopen' : 'Resolve'}
-                </button>
-                <button className="btn-g" style={{ padding: '5px 10px', fontSize: 12 }} onClick={() => setStatus('archived')}>Archive</button>
               </div>
 
               {/* messages */}

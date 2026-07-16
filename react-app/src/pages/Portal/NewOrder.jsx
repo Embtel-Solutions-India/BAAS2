@@ -85,7 +85,7 @@ export default function NewOrder() {
         <Link to="/client-portal/orders" className="btn-g">← Back to Orders</Link>
       </div>
 
-      <div className="form-wrap" style={{ maxWidth: '680px' }}>
+      <div className="form-wrap" style={{ maxWidth: '100%' }}>
         {alertMsg && (
           <div className={`alert alert-${alertType}`} style={{ marginBottom: '20px' }}>
             {alertMsg}

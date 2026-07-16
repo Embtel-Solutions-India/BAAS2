@@ -44,6 +44,15 @@ export default function PortalLayout({ children, title = '', subtitle = '' }) {
     loadPortal();
   }, [navigate]);
 
+  // Reflect profile edits (name/avatar) in the sidebar/header without a reload.
+  useEffect(() => {
+    const refresh = () => {
+      api.get('/auth/me').then(d => { if (d?.user) setUser(d.user); }).catch(() => {});
+    };
+    window.addEventListener('profile-updated', refresh);
+    return () => window.removeEventListener('profile-updated', refresh);
+  }, []);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">

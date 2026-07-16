@@ -6,6 +6,7 @@ const ctrl        = require('../controllers/adminController');
 router.use(requireAuth, requireRole('admin', 'staff'));
 
 router.get ('/stats',                        ctrl.getDashboardStats);
+router.get ('/analytics',                    ctrl.getAnalytics);
 
 router.get ('/clients',                      ctrl.listClients);
 router.get ('/clients/:id',                  ctrl.getClient);

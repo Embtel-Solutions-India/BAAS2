@@ -41,4 +41,12 @@ function onlineUserIds() {
   return [...online.keys()];
 }
 
-module.exports = { markOnline, markOffline, isOnline, getLastSeen, onlineUserIds };
+/** True if any admin/staff user currently has a live connection. */
+function anyStaffOnline() {
+  for (const entry of online.values()) {
+    if (entry.role === 'admin' || entry.role === 'staff') return true;
+  }
+  return false;
+}
+
+module.exports = { markOnline, markOffline, isOnline, getLastSeen, onlineUserIds, anyStaffOnline };

@@ -1,7 +1,45 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/Portal/AdminLayout';
+import MiniBarChart from '../../components/Admin/MiniBarChart';
+import MiniLineChart from '../../components/Admin/MiniLineChart';
+import DonutChart from '../../components/Admin/DonutChart';
 import { api, formatDate, formatCurrency, statusBadge } from '../../utils/api';
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const GRANS = [
+  { key: 'day', label: 'Day' },
+  { key: 'month', label: 'Month' },
+  { key: 'year', label: 'Year' },
+];
+
+// Format an aggregation period ("2026-07-15" | "2026-07" | "2026") into a short axis label.
+function fmtPeriod(period, gran) {
+  if (gran === 'day') return period.slice(8);            // DD
+  if (gran === 'year') return period;                    // YYYY
+  const [, m] = period.split('-');                       // month → short name
+  return MONTHS[Number(m) - 1] || period;
+}
+
+// Small Day/Month/Year selector used by the time-series charts.
+function GranToggle({ value, onChange }) {
+  return (
+    <div className="flex gap-1">
+      {GRANS.map(g => (
+        <button
+          key={g.key}
+          type="button"
+          onClick={() => onChange(g.key)}
+          className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide transition-colors ${
+            value === g.key ? 'bg-[#d4001f] text-white' : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+          }`}
+        >
+          {g.label}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -22,6 +60,12 @@ export default function AdminDashboard() {
   });
   const [loading, setLoading] = useState(true);
 
+  // Time-series charts (independent Day/Month/Year selectors)
+  const [growthGran, setGrowthGran] = useState('month');
+  const [activityGran, setActivityGran] = useState('month');
+  const [growthSeries, setGrowthSeries] = useState(null);     // [{period,count}] | null
+  const [activitySeries, setActivitySeries] = useState(null);
+
   useEffect(() => {
     async function loadStats() {
       try {
@@ -36,6 +80,22 @@ export default function AdminDashboard() {
     loadStats();
   }, []);
 
+  useEffect(() => {
+    let live = true;
+    api.get(`/admin/analytics?granularity=${growthGran}`)
+      .then(d => { if (live) setGrowthSeries(d.user_growth || []); })
+      .catch(() => { if (live) setGrowthSeries([]); });
+    return () => { live = false; };
+  }, [growthGran]);
+
+  useEffect(() => {
+    let live = true;
+    api.get(`/admin/analytics?granularity=${activityGran}`)
+      .then(d => { if (live) setActivitySeries(d.activity || []); })
+      .catch(() => { if (live) setActivitySeries([]); });
+    return () => { live = false; };
+  }, [activityGran]);
+
   if (loading) {
     return (
       <AdminLayout title="Dashboard">
@@ -46,10 +106,10 @@ export default function AdminDashboard() {
     );
   }
 
-  // Calculate highest value for chart scaling
-  const maxCategoryCount = Math.max(...(stats.blog_stats || []).map(b => b.count), 1);
-  const maxGrowthCount = Math.max(...(stats.user_growth || []).map(u => u.count), 1);
-  const maxActivityCount = Math.max(...(stats.monthly_activity || []).map(a => a.count), 1);
+  // Chart datasets
+  const growthChart = (growthSeries || []).map(r => ({ label: fmtPeriod(r.period, growthGran), fullLabel: r.period, value: r.count }));
+  const activityChart = (activitySeries || []).map(r => ({ label: fmtPeriod(r.period, activityGran), fullLabel: r.period, value: r.count }));
+  const categoryChart = (stats.blog_stats || []).map(b => ({ label: b.category, fullLabel: b.category, value: b.count }));
 
   const pa = stats.payment_analytics || {};
 
@@ -186,69 +246,49 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* User Growth */}
         <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-xs flex flex-col">
-          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-5 pb-3 border-b border-gray-50">User Growth</h3>
-          {!stats.user_growth.length ? (
+          <div className="flex items-center justify-between mb-5 pb-3 border-b border-gray-50">
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">User Growth</h3>
+            <GranToggle value={growthGran} onChange={setGrowthGran} />
+          </div>
+          {growthSeries === null ? (
+            <div className="flex-1 flex items-center justify-center text-xs text-gray-400 py-12">Loading…</div>
+          ) : !growthChart.length ? (
             <div className="flex-1 flex items-center justify-center text-xs text-gray-400 py-12">No growth data available.</div>
           ) : (
-            <div className="space-y-4 flex-1 flex flex-col justify-center">
-              {stats.user_growth.map(ug => (
-                <div key={ug.month} className="flex items-center gap-3">
-                  <div className="w-14 shrink-0 text-xs font-semibold text-gray-500">{ug.month}</div>
-                  <div className="flex-1 h-3 bg-gray-50 rounded-full overflow-hidden">
-                    <div 
-                      className="bg-[#d4001f] h-full rounded-full transition-all duration-500" 
-                      style={{ width: `${(ug.count / maxGrowthCount) * 100}%` }}
-                    />
-                  </div>
-                  <div className="w-8 shrink-0 text-right text-xs font-bold text-gray-800">{ug.count}</div>
-                </div>
-              ))}
+            <div className="flex-1 flex items-center">
+              <MiniLineChart data={growthChart} color="#d4001f" />
             </div>
           )}
         </div>
 
         {/* Monthly Activity */}
         <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-xs flex flex-col">
-          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-5 pb-3 border-b border-gray-50">Monthly Activity</h3>
-          {!stats.monthly_activity.length ? (
+          <div className="flex items-center justify-between mb-5 pb-3 border-b border-gray-50">
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Activity</h3>
+            <GranToggle value={activityGran} onChange={setActivityGran} />
+          </div>
+          {activitySeries === null ? (
+            <div className="flex-1 flex items-center justify-center text-xs text-gray-400 py-12">Loading…</div>
+          ) : !activityChart.length ? (
             <div className="flex-1 flex items-center justify-center text-xs text-gray-400 py-12">No activity data available.</div>
           ) : (
-            <div className="space-y-4 flex-1 flex flex-col justify-center">
-              {stats.monthly_activity.map(ma => (
-                <div key={ma.month} className="flex items-center gap-3">
-                  <div className="w-14 shrink-0 text-xs font-semibold text-gray-500">{ma.month}</div>
-                  <div className="flex-1 h-3 bg-gray-50 rounded-full overflow-hidden">
-                    <div 
-                      className="bg-gradient-to-r from-[#d4001f] to-[#a4001a] h-full rounded-full transition-all duration-500" 
-                      style={{ width: `${(ma.count / maxActivityCount) * 100}%` }}
-                    />
-                  </div>
-                  <div className="w-8 shrink-0 text-right text-xs font-bold text-gray-800">{ma.count}</div>
-                </div>
-              ))}
+            <div className="flex-1 flex items-end">
+              <MiniBarChart data={activityChart} gradient="linear-gradient(to top, #a4001a, #d4001f)" />
             </div>
           )}
         </div>
 
         {/* Blogs by Category */}
         <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-xs flex flex-col">
-          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-5 pb-3 border-b border-gray-50">Blogs by Category</h3>
-          {!stats.blog_stats.length ? (
+          <div className="mb-5 pb-3 border-b border-gray-50">
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Blogs by Category</h3>
+            <p className="text-[13px] text-gray-400 mt-1">Distribution of published content</p>
+          </div>
+          {!categoryChart.length ? (
             <div className="flex-1 flex items-center justify-center text-xs text-gray-400 py-12">No category data available.</div>
           ) : (
-            <div className="space-y-4 flex-1 flex flex-col justify-center">
-              {stats.blog_stats.map(bs => (
-                <div key={bs.category} className="flex items-center gap-3">
-                  <div className="w-24 shrink-0 text-xs font-semibold text-gray-500 truncate" title={bs.category}>{bs.category}</div>
-                  <div className="flex-1 h-3 bg-gray-50 rounded-full overflow-hidden">
-                    <div 
-                      className="bg-blue-600 h-full rounded-full transition-all duration-500" 
-                      style={{ width: `${(bs.count / maxCategoryCount) * 100}%` }}
-                    />
-                  </div>
-                  <div className="w-8 shrink-0 text-right text-xs font-bold text-gray-800">{bs.count}</div>
-                </div>
-              ))}
+            <div className="flex-1 flex items-center justify-center">
+              <DonutChart data={categoryChart} />
             </div>
           )}
         </div>

@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const path         = require('path');
 require('./config/db');
 require('./scripts/seedAdmin');
+require('./scripts/seedServices');
 
 const app  = express();
 const PORT = process.env.PORT || 4000;

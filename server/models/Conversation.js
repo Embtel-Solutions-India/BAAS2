@@ -16,6 +16,9 @@ const conversationSchema = new mongoose.Schema({
   client_unread:    { type: Number, default: 0 },
   admin_unread:     { type: Number, default: 0 },
   status:           { type: String, enum: ['open', 'resolved', 'archived'], default: 'open' },
+  // Email-notification cooldown tracking (additive)
+  last_notified_client_at: { type: Date, default: null },
+  last_notified_admin_at:  { type: Date, default: null },
   created_at:       { type: Date, default: Date.now },
   updated_at:       { type: Date, default: Date.now }
 }, schemaOptions);

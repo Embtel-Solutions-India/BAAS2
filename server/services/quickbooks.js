@@ -29,6 +29,12 @@ function isConfigured() {
   return Boolean(process.env.QUICKBOOKS_CLIENT_ID && process.env.QUICKBOOKS_CLIENT_SECRET);
 }
 
+// Demo mode: simulate connect/charge without real Intuit credentials.
+// Active only when PAYMENTS_DEMO_MODE=true and not in production.
+function isDemoMode() {
+  return process.env.PAYMENTS_DEMO_MODE === 'true' && ENV() !== 'production';
+}
+
 /* ─────────────────────────── Token encryption ─────────────────────────── */
 
 function encKey() {
@@ -166,6 +172,16 @@ async function getAccessToken() {
   });
   const saved = await saveTokens(conn.realm_id, data);
   return { accessToken: decrypt(saved.access_token_enc), realmId: saved.realm_id };
+}
+
+// Establish a simulated connection for demo mode (no Intuit round-trip).
+async function connectDemo() {
+  return saveTokens('DEMO-SANDBOX', {
+    access_token: 'demo-access',
+    refresh_token: 'demo-refresh',
+    expires_in: 3600,
+    x_refresh_token_expires_in: 8726400,
+  });
 }
 
 async function revokeConnection() {
@@ -308,6 +324,8 @@ function verifyWebhookSignature(rawBody, signatureHeader) {
 
 module.exports = {
   isConfigured,
+  isDemoMode,
+  connectDemo,
   buildAuthorizeUrl,
   exchangeCodeForTokens,
   getConnection,

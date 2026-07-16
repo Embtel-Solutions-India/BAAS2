@@ -1,7 +1,35 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import AdminLayout from '../../components/Portal/AdminLayout';
+import MiniLineChart from '../../components/Admin/MiniLineChart';
 import { api, apiUrl, formatDate, formatCurrency, statusBadge, statusBadgeClass } from '../../utils/api';
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const GRANS = [{ key: 'day', label: 'Day' }, { key: 'month', label: 'Month' }, { key: 'year', label: 'Year' }];
+
+function fmtPeriod(period, gran) {
+  if (gran === 'day') return period.slice(8);
+  if (gran === 'year') return period;
+  const [, m] = period.split('-');
+  return MONTHS[Number(m) - 1] || period;
+}
+
+function GranToggle({ value, onChange }) {
+  return (
+    <div className="flex gap-1">
+      {GRANS.map(g => (
+        <button
+          key={g.key}
+          type="button"
+          onClick={() => onChange(g.key)}
+          className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wide transition-colors ${value === g.key ? 'bg-[#d4001f] text-white' : 'bg-gray-50 text-gray-500 hover:bg-gray-100'}`}
+        >
+          {g.label}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 export default function AdminPayments() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,6 +45,10 @@ export default function AdminPayments() {
   const [refundAmount, setRefundAmount] = useState('');
   const [refundReason, setRefundReason] = useState('');
   const [refundError, setRefundError] = useState(null);
+
+  // Revenue trend granularity (Day / Month / Year)
+  const [trendGran, setTrendGran] = useState('month');
+  const [trendSeries, setTrendSeries] = useState(null);
 
   const page = Number(searchParams.get('page') || 1);
   const statusFilter = searchParams.get('status') || 'all';
@@ -70,6 +102,14 @@ export default function AdminPayments() {
   useEffect(() => {
     loadPayments();
   }, [loadPayments]);
+
+  useEffect(() => {
+    let live = true;
+    api.get(`/admin/payments/revenue-trend?granularity=${trendGran}`)
+      .then(d => { if (live) setTrendSeries(d.trend || []); })
+      .catch(() => { if (live) setTrendSeries([]); });
+    return () => { live = false; };
+  }, [trendGran]);
 
   // Handle QB OAuth redirect result
   useEffect(() => {
@@ -168,9 +208,7 @@ export default function AdminPayments() {
     }
   };
 
-  const maxRevenue = analytics?.monthly_trend?.length
-    ? Math.max(...analytics.monthly_trend.map(m => m.revenue), 1)
-    : 1;
+  const revenueChart = (trendSeries || []).map(m => ({ label: fmtPeriod(m.period, trendGran), fullLabel: m.period, value: m.revenue }));
 
   return (
     <AdminLayout title="Payment Management">
@@ -191,12 +229,17 @@ export default function AdminPayments() {
               </svg>
             </div>
             <div>
-              <div className="text-sm font-bold text-gray-900">QuickBooks Payments</div>
+              <div className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                QuickBooks Payments
+                {qbStatus?.demo && (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide bg-amber-50 text-amber-700 border border-amber-200/60">Demo</span>
+                )}
+              </div>
               <div className="text-xs text-gray-500 mt-0.5">
                 {qbStatus?.connected
-                  ? <>Connected &mdash; Realm: <span className="font-mono">{qbStatus.realm_id}</span> &mdash; {qbStatus.environment}</>
+                  ? <>Connected &mdash; Realm: <span className="font-mono">{qbStatus.realm_id}</span> &mdash; {qbStatus.environment}{qbStatus?.demo ? ' (simulated)' : ''}</>
                   : qbStatus?.configured
-                    ? 'Not connected — click "Connect QuickBooks" to start accepting payments'
+                    ? (qbStatus?.demo ? 'Not connected — click "Connect QuickBooks" to enable demo payments' : 'Not connected — click "Connect QuickBooks" to start accepting payments')
                     : 'Not configured — add QUICKBOOKS_* vars to server .env'}
               </div>
             </div>
@@ -238,26 +281,16 @@ export default function AdminPayments() {
 
       {/* Revenue Trend Chart */}
       <div className="bg-white rounded-xl border border-gray-100 p-6 mb-6 shadow-xs">
-        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-5 pb-3 border-b border-gray-50">Monthly Revenue Trend</h3>
-        {analyticsLoading ? (
+        <div className="flex items-center justify-between mb-5 pb-3 border-b border-gray-50">
+          <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Revenue Trend</h3>
+          <GranToggle value={trendGran} onChange={setTrendGran} />
+        </div>
+        {trendSeries === null ? (
           <div className="h-48 flex items-center justify-center text-xs text-gray-400">Loading…</div>
-        ) : !analytics?.monthly_trend?.length ? (
+        ) : !revenueChart.length ? (
           <div className="h-48 flex items-center justify-center text-xs text-gray-400">No revenue data yet.</div>
         ) : (
-          <div className="space-y-3">
-            {analytics.monthly_trend.map(m => (
-              <div key={m.month} className="flex items-center gap-3">
-                <div className="w-16 shrink-0 text-xs font-semibold text-gray-500">{m.month}</div>
-                <div className="flex-1 h-4 bg-gray-50 rounded-full overflow-hidden">
-                  <div
-                    className="bg-gradient-to-r from-[#d4001f] to-[#a4001a] h-full rounded-full transition-all duration-500"
-                    style={{ width: `${(m.revenue / maxRevenue) * 100}%` }}
-                  />
-                </div>
-                <div className="w-24 shrink-0 text-right text-xs font-bold text-gray-800">{formatCurrency(m.revenue)}</div>
-              </div>
-            ))}
-          </div>
+          <MiniLineChart data={revenueChart} color="#d4001f" formatValue={formatCurrency} />
         )}
       </div>
 

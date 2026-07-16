@@ -56,8 +56,19 @@ exports.callback = async (req, res) => {
     if (!code || !state) return fail('error');
 
     let decoded;
-    try { decoded = jwt.verify(state, JWT_SECRET); } catch { return fail('invalid_state'); }
-    if (decoded.purpose !== 'oauth' || decoded.provider !== provider) return fail('invalid_state');
+    try {
+      decoded = jwt.verify(state, JWT_SECRET);
+    } catch (e) {
+      // Usually means `start` and this `callback` ran against different servers
+      // /JWT secrets (e.g. a prod build's API started the flow but Google's
+      // redirect URI points here), or the 10-min state window elapsed.
+      console.error(`OAuth ${provider} state verify failed: ${e.name} ${e.message}`);
+      return fail('invalid_state');
+    }
+    if (decoded.purpose !== 'oauth' || decoded.provider !== provider) {
+      console.error(`OAuth ${provider} state mismatch (purpose=${decoded.purpose}, provider=${decoded.provider})`);
+      return fail('invalid_state');
+    }
 
     const cfg = PROVIDERS[provider];
     const body = new URLSearchParams({

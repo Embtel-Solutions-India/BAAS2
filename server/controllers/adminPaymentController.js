@@ -33,13 +33,15 @@ async function decoratePayments(payments) {
     Order.find({ _id: { $in: orderIds } }).select('order_number'),
     Client.find({ _id: { $in: clientIds } }).select('first_name last_name email')
   ]);
-  const orderMap = new Map(orders.map(o => [o.id, o]));
-  const clientMap = new Map(clients.map(c => [c.id, c]));
+  // Key by numeric _id — payment.order_id/client_id are Numbers, while the
+  // Mongoose `.id` virtual is a String (mismatched Map keys → missing joins).
+  const orderMap = new Map(orders.map(o => [Number(o._id), o]));
+  const clientMap = new Map(clients.map(c => [Number(c._id), c]));
 
   return payments.map(p => {
     const row = toRow(p);
-    const order = orderMap.get(p.order_id);
-    const client = clientMap.get(p.client_id);
+    const order = orderMap.get(Number(p.order_id));
+    const client = clientMap.get(Number(p.client_id));
     row.order_number = order ? order.order_number : null;
     row.client_name = client ? `${client.first_name} ${client.last_name}` : null;
     row.client_email = client ? client.email : null;
@@ -72,8 +74,8 @@ exports.listPayments = async (req, res) => {
       query.$or = [
         { transaction_id: { $regex: search, $options: 'i' } },
         { qb_payment_id: { $regex: search, $options: 'i' } },
-        { client_id: { $in: matchingClients.map(c => c.id) } },
-        { order_id: { $in: matchingOrders.map(o => o.id) } }
+        { client_id: { $in: matchingClients.map(c => Number(c._id)) } },
+        { order_id: { $in: matchingOrders.map(o => Number(o._id)) } }
       ];
     }
 
@@ -160,6 +162,34 @@ exports.getAnalytics = async (req, res) => {
   } catch (err) {
     console.error('payment analytics error:', err);
     res.status(500).json({ error: 'Failed to fetch payment analytics' });
+  }
+};
+
+/**
+ * GET /api/admin/payments/revenue-trend?granularity=day|month|year
+ * Completed-payment revenue grouped by the chosen granularity over a recent window.
+ */
+exports.getRevenueTrend = async (req, res) => {
+  try {
+    const gran = ['day', 'month', 'year'].includes(req.query.granularity) ? req.query.granularity : 'month';
+    const fmt  = gran === 'day' ? '%Y-%m-%d' : gran === 'year' ? '%Y' : '%Y-%m';
+
+    const now = new Date();
+    let since;
+    if (gran === 'day')       { since = new Date(now); since.setDate(now.getDate() - 29); since.setHours(0, 0, 0, 0); }
+    else if (gran === 'year') { since = new Date(now.getFullYear() - 5, 0, 1); }
+    else                      { since = new Date(now.getFullYear(), now.getMonth() - 11, 1); }
+
+    const rows = await Payment.aggregate([
+      { $match: { status: 'completed', created_at: { $gte: since } } },
+      { $group: { _id: { $dateToString: { format: fmt, date: '$created_at' } }, revenue: { $sum: '$amount' }, count: { $sum: 1 } } },
+      { $sort: { _id: 1 } }
+    ]);
+
+    res.json({ granularity: gran, trend: rows.map(r => ({ period: r._id, revenue: r.revenue, count: r.count })) });
+  } catch (err) {
+    console.error('revenue trend error:', err);
+    res.status(500).json({ error: 'Failed to fetch revenue trend' });
   }
 };
 

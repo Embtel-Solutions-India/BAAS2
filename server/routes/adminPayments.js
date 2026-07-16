@@ -7,6 +7,7 @@ router.use(requireAuth, requireRole('admin', 'staff'));
 
 router.get   ('/',                 ctrl.listPayments);
 router.get   ('/analytics',        ctrl.getAnalytics);
+router.get   ('/revenue-trend',    ctrl.getRevenueTrend);
 router.post  ('/:id/refund',       ctrl.refundPayment);
 router.get   ('/export/payments',  ctrl.exportPayments);
 router.get   ('/export/orders',    ctrl.exportOrders);

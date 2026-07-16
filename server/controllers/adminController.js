@@ -167,6 +167,40 @@ exports.getDashboardStats = async (req, res) => {
   }
 };
 
+/**
+ * Additive: time-series analytics for the dashboard charts.
+ * GET /api/admin/analytics?granularity=day|month|year
+ * Returns user growth (new clients) and activity counts grouped by the chosen
+ * granularity over a sensible recent window. Does not touch /stats.
+ */
+exports.getAnalytics = async (req, res) => {
+  try {
+    const gran = ['day', 'month', 'year'].includes(req.query.granularity) ? req.query.granularity : 'month';
+    const fmt  = gran === 'day' ? '%Y-%m-%d' : gran === 'year' ? '%Y' : '%Y-%m';
+
+    const now = new Date();
+    let since;
+    if (gran === 'day')       { since = new Date(now); since.setDate(now.getDate() - 29); since.setHours(0, 0, 0, 0); }
+    else if (gran === 'year') { since = new Date(now.getFullYear() - 5, 0, 1); }
+    else                      { since = new Date(now.getFullYear(), now.getMonth() - 11, 1); }
+
+    const series = async (Model) => {
+      const rows = await Model.aggregate([
+        { $match: { created_at: { $gte: since } } },
+        { $group: { _id: { $dateToString: { format: fmt, date: '$created_at' } }, count: { $sum: 1 } } },
+        { $sort: { _id: 1 } }
+      ]);
+      return rows.map(r => ({ period: r._id, count: r.count }));
+    };
+
+    const [user_growth, activity] = await Promise.all([ series(Client), series(ActivityLog) ]);
+    res.json({ granularity: gran, user_growth, activity });
+  } catch (err) {
+    console.error('getAnalytics error:', err);
+    res.status(500).json({ error: 'Failed to fetch analytics' });
+  }
+};
+
 exports.listClients = async (req, res) => {
   try {
     const clients = await Client.find().sort({ created_at: -1 });
