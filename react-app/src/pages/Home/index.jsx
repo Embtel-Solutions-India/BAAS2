@@ -15,6 +15,7 @@ import {
   Globe,
 } from "lucide-react";
 import FaqItem from "../../components/UI/FaqItem";
+import WhatsAppButton from "../../components/UI/WhatsAppButton";
 import GoogleReviewsBar from "../../components/Sections/GoogleReviewsBar";
 import { usePortal } from "../../hooks/usePortal";
 
@@ -1022,6 +1023,8 @@ export default function Home() {
           </Reveal>
         </div>
       </section>
+
+      <WhatsAppButton />
     </>
   );
 }
