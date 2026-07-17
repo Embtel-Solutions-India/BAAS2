@@ -5,7 +5,6 @@ import StaggerGrid from '../../components/UI/StaggerGrid';
 import StaggerItem from '../../components/UI/StaggerItem';
 import PageHero from '../../components/Sections/PageHero';
 import CtaBar from '../../components/Sections/CtaBar';
-import GoogleReviewsBar from '../../components/Sections/GoogleReviewsBar';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^\+?[0-9\s().-]{7,20}$/;
@@ -71,8 +70,6 @@ export default function Contact() {
         title={<>{"Let's Talk About"}<br/>{"Your Finances"}</>}
         description="Give us a call or drop by anytime. We answer all enquiries within 24 hours on business days."
       />
-
-      <GoogleReviewsBar />
 
       <div className="content">
         <div className="container">

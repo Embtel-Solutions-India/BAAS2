@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import FaqItem from "../../components/UI/FaqItem";
 import WhatsAppButton from "../../components/UI/WhatsAppButton";
-import GoogleReviewsBar from "../../components/Sections/GoogleReviewsBar";
 import { usePortal } from "../../hooks/usePortal";
 
 const BOOK =
@@ -285,8 +284,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <GoogleReviewsBar />
 
       {/* ═══ STATS ROW ════════════════════════════════════════════════ */}
       <section

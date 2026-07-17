@@ -11,6 +11,7 @@ const services = [
   ['Accounting Cleanup',            '/services/accounting'],
   ['Business Formation & Consulting','/services/consulting'],
   ['Registered Agent',              '/services/registered-agent'],
+  ['Bookkeeping Cleanup & Catch-Up','/services/bookkeeping-cleanup'],
 ];
 
 const beforeServices = [

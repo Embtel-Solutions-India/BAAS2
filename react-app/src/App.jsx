@@ -21,6 +21,7 @@ const Payroll       = lazy(() => import('./pages/ServiceDetail/Payroll'));
 const Accounting    = lazy(() => import('./pages/ServiceDetail/Accounting'));
 const Consulting     = lazy(() => import('./pages/ServiceDetail/Consulting'));
 const RegisteredAgent = lazy(() => import('./pages/ServiceDetail/RegisteredAgent'));
+const BookkeepingCleanup = lazy(() => import('./pages/ServiceDetail/BookkeepingCleanup'));
 const NotFound      = lazy(() => import('./pages/NotFound'));
 
 // Client Portal Auth pages
@@ -97,6 +98,7 @@ function AnimatedRoutes() {
             <Route path="/services/accounting"   element={<Accounting />} />
             <Route path="/services/consulting"    element={<Consulting />} />
             <Route path="/services/registered-agent" element={<RegisteredAgent />} />
+            <Route path="/services/bookkeeping-cleanup" element={<BookkeepingCleanup />} />
 
             {/* Client Portal Auth Routes */}
             <Route path="/client-portal/login"           element={<PortalLogin />} />
