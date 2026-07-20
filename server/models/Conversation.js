@@ -12,7 +12,7 @@ const conversationSchema = new mongoose.Schema({
   admin_id:         { type: Number, ref: 'Admin', default: null },
   last_message:     { type: String, default: '' },
   last_message_at:  { type: Date, default: null },
-  last_sender_role: { type: String, enum: ['client', 'admin', 'staff', null], default: null },
+  last_sender_role: { type: String, enum: ['client', 'admin', 'staff', 'system', null], default: null },
   client_unread:    { type: Number, default: 0 },
   admin_unread:     { type: Number, default: 0 },
   status:           { type: String, enum: ['open', 'resolved', 'archived'], default: 'open' },

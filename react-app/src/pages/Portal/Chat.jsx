@@ -220,6 +220,16 @@ export default function Chat() {
             <>
               {loadingOlder && <div style={{ textAlign: 'center', padding: 8 }}><div className="spinner" style={{ width: 16, height: 16 }} /></div>}
               {messages.map(m => {
+                if (m.sender_role === 'system') {
+                  return (
+                    <div key={m.id} style={{ display: 'flex', justifyContent: 'center', margin: '14px 0' }}>
+                      <div style={{ maxWidth: '92%', background: '#fff7ed', border: '1px solid #fed7aa', color: '#7c2d12', borderRadius: 12, padding: '12px 16px', fontSize: 13, lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
+                        {m.body}
+                        <div style={{ fontSize: 10, color: '#b45309', marginTop: 6, textAlign: 'right' }}>{fmtTime(m.created_at)}</div>
+                      </div>
+                    </div>
+                  );
+                }
                 const mine = m.sender_role === 'client';
                 return (
                   <div key={m.id} style={{ display: 'flex', justifyContent: mine ? 'flex-end' : 'flex-start', marginBottom: 10 }}>

@@ -1,4 +1,6 @@
 const qb = require('../services/quickbooks');
+const chatService = require('../services/chatService');
+const invoiceService = require('../services/invoiceService');
 const {
   Order,
   Payment,
@@ -154,20 +156,27 @@ exports.chargeOrder = async (req, res) => {
     if (!paid) payment.failure_reason = `Gateway status: ${charge.status}`;
     payment.updated_at = new Date();
 
+    let paidInvoice = null;
     if (paid) {
-      // Issue a paid invoice for the order
+      // Issue a paid invoice for the order (snapshot payment details for the PDF)
       const invoice = new Invoice({
         client_id: req.user.id,
         order_id: order.id,
         invoice_number: `INV-${order.order_number}-${Date.now().toString().slice(-6)}`,
         subtotal: amount,
         tax: 0,
+        discount: 0,
         total: amount,
+        currency: order.currency || 'USD',
+        service_name: order.service_id ? order.service_id.name : null,
+        payment_method: payment.method || 'card',
+        transaction_id: payment.transaction_id || null,
         status: 'paid',
         paid_at: new Date()
       });
       await invoice.save();
       payment.invoice_id = invoice.id;
+      paidInvoice = invoice;
     }
     await payment.save();
 
@@ -188,6 +197,25 @@ exports.chargeOrder = async (req, res) => {
         changed_by: 'system:payment',
         note: 'Payment received — order moved to processing',
       }).catch(err => console.error('order status history failed:', err.message));
+    }
+
+    // Additive: generate & permanently store the invoice PDF once, right after
+    // payment. Fire-and-forget — if it fails, the download endpoint regenerates
+    // on demand, so the checkout response is never blocked or broken.
+    if (paid && paidInvoice) {
+      invoiceService.generateAndStore(paidInvoice)
+        .catch(err => console.error('invoice PDF generation failed:', err.message));
+    }
+
+    // Additive: drop a real-time system message into the client's support chat
+    // so the admin is notified of the new paid order (idempotent per order).
+    if (paid) {
+      chatService.postOrderCheckoutMessages({
+        io: req.app.get('io'),
+        order,
+        serviceName: order.service_id ? order.service_id.name : null,
+        paymentId: payment.id,
+      }).catch(err => console.error('order checkout chat message failed:', err.message));
     }
 
     const notif = new Notification({

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PortalLayout from '../../components/Portal/PortalLayout';
-import { api, formatDate, formatCurrency, statusBadge } from '../../utils/api';
+import { api, apiUrl, formatDate, formatCurrency, statusBadge } from '../../utils/api';
 
 export default function Invoices() {
   const [invoices, setInvoices] = useState([]);
@@ -36,6 +36,16 @@ export default function Invoices() {
   };
 
   const unpaidCount = invoices.filter(i => ['sent', 'overdue'].includes(i.status)).length;
+
+  // Invoice PDF actions. Downloads/views ride the httpOnly auth cookie on a
+  // top-level navigation, so ownership is verified server-side before serving.
+  const invoiceHref = (inv, inline) => apiUrl(`/invoices/${inv.id}/download${inline ? '?inline=1' : ''}`);
+  const viewInvoice = (inv) => window.open(invoiceHref(inv, true), '_blank', 'noopener');
+  const printInvoice = (inv) => {
+    const w = window.open(invoiceHref(inv, true), '_blank', 'noopener');
+    if (w) w.addEventListener('load', () => { try { w.focus(); w.print(); } catch { /* viewer handles print */ } });
+  };
+  const canPdf = (inv) => inv.status === 'paid';
 
   return (
     <PortalLayout title="Invoices" subtitle="Your billing history">
@@ -107,10 +117,17 @@ export default function Invoices() {
                         >
                           Pay Now
                         </button>
+                      ) : canPdf(inv) ? (
+                        <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                          <button className="btn-g" onClick={() => viewInvoice(inv)} title="View invoice"
+                            style={{ fontSize: '12px', padding: '6px 10px', cursor: 'pointer' }}>View</button>
+                          <a className="btn-g" href={invoiceHref(inv, false)} download title="Download PDF"
+                            style={{ fontSize: '12px', padding: '6px 10px', display: 'inline-flex' }}>Download</a>
+                          <button className="btn-g" onClick={() => printInvoice(inv)} title="Print invoice"
+                            style={{ fontSize: '12px', padding: '6px 10px', cursor: 'pointer' }}>Print</button>
+                        </div>
                       ) : (
-                        <span style={{ fontSize: '13px', color: 'var(--td)' }}>
-                          {inv.status === 'paid' ? 'Paid ✓' : '—'}
-                        </span>
+                        <span style={{ fontSize: '13px', color: 'var(--td)' }}>—</span>
                       )}
                     </td>
                   </tr>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/Portal/AdminLayout';
 import { api } from '../../utils/api';
 import { getSocket } from '../../utils/chatSocket';
@@ -302,6 +303,21 @@ export default function AdminChat() {
                   <>
                     {loadingOlder && <div style={{ textAlign: 'center', padding: 8 }}><div className="spinner" style={{ width: 16, height: 16 }} /></div>}
                     {messages.map(m => {
+                      if (m.sender_role === 'system') {
+                        return (
+                          <div key={m.id} style={{ display: 'flex', justifyContent: 'center', margin: '14px 0' }}>
+                            <div style={{ maxWidth: '90%', background: '#fff7ed', border: '1px solid #fed7aa', color: '#7c2d12', borderRadius: 12, padding: '12px 16px', fontSize: 13, lineHeight: 1.55, whiteSpace: 'pre-wrap' }}>
+                              {m.body}
+                              {m.meta?.order_id && (
+                                <div style={{ marginTop: 8 }}>
+                                  <Link to={`/admin/orders/${m.meta.order_id}`} style={{ fontSize: 12, fontWeight: 700, color: '#d4001f' }}>View order →</Link>
+                                </div>
+                              )}
+                              <div style={{ fontSize: 10, color: '#b45309', marginTop: 6, textAlign: 'right' }}>{fmtTime(m.created_at)}</div>
+                            </div>
+                          </div>
+                        );
+                      }
                       const mine = m.sender_role === 'admin' || m.sender_role === 'staff';
                       return (
                         <div key={m.id} style={{ display: 'flex', justifyContent: mine ? 'flex-end' : 'flex-start', marginBottom: 10 }}>

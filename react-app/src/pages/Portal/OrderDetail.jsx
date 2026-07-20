@@ -10,6 +10,7 @@ export default function OrderDetail() {
   const [history, setHistory] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [invoice, setInvoice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
   const [msgInput, setMsgInput] = useState('');
@@ -19,15 +20,17 @@ export default function OrderDetail() {
 
   const loadOrderDetails = async () => {
     try {
-      const [orderRes, docsRes, msgsRes] = await Promise.all([
+      const [orderRes, docsRes, msgsRes, invRes] = await Promise.all([
         api.get(`/orders/${id}`),
         api.get(`/documents/order/${id}`),
-        api.get(`/messages/order/${id}`)
+        api.get(`/messages/order/${id}`),
+        api.get(`/invoices/order/${id}`).catch(() => ({ invoice: null }))
       ]);
       setOrder(orderRes.order);
       setHistory(orderRes.history || []);
       setDocuments(docsRes.documents || []);
       setMessages(msgsRes.messages || []);
+      setInvoice(invRes.invoice || null);
     } catch (err) {
       setErrorMsg(err.message);
     } finally {
@@ -94,6 +97,13 @@ export default function OrderDetail() {
   );
 
   const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+  const invoiceHref = (inline) => invoice ? apiUrl(`/invoices/${invoice.id}/download${inline ? '?inline=1' : ''}`) : '#';
+  const viewInvoice = () => window.open(invoiceHref(true), '_blank', 'noopener');
+  const printInvoice = () => {
+    const w = window.open(invoiceHref(true), '_blank', 'noopener');
+    if (w) w.addEventListener('load', () => { try { w.focus(); w.print(); } catch { /* viewer handles print */ } });
+  };
 
   const payable = order && !['paid', 'processing', 'refunded'].includes(order.payment_status) && order.status !== 'cancelled';
 
@@ -259,6 +269,24 @@ export default function OrderDetail() {
                 Pay Now
               </button>
               <p className="form-hint" style={{ marginTop: '10px', textAlign: 'center' }}>Secure payment via QuickBooks</p>
+            </div>
+          )}
+
+          {invoice && (
+            <div className="card">
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                <h4 style={{ margin: 0, fontSize: '15px', fontWeight: 700 }}>Invoice</h4>
+                <span className={`badge badge-${invoice.status}`}>{statusBadge(invoice.status)}</span>
+              </div>
+              <div style={{ fontSize: '14px', fontWeight: 600 }}>{invoice.invoice_number}</div>
+              <div style={{ fontSize: '13px', color: 'var(--td)', marginTop: '2px' }}>
+                {formatCurrency(invoice.total)} · {formatDate(invoice.paid_at || invoice.created_at)}
+              </div>
+              <div style={{ display: 'flex', gap: '8px', marginTop: '14px', flexWrap: 'wrap' }}>
+                <button className="btn-g" onClick={viewInvoice} style={{ flex: '1 1 auto', justifyContent: 'center', fontSize: '13px', cursor: 'pointer' }}>View</button>
+                <a className="btn-pl" href={invoiceHref(false)} download style={{ flex: '1 1 auto', justifyContent: 'center', fontSize: '13px', display: 'inline-flex' }}>Download</a>
+                <button className="btn-g" onClick={printInvoice} style={{ flex: '1 1 auto', justifyContent: 'center', fontSize: '13px', cursor: 'pointer' }}>Print</button>
+              </div>
             </div>
           )}
 

@@ -8,10 +8,11 @@ const schemaOptions = require('./schemaOptions');
  */
 const chatMessageSchema = new mongoose.Schema({
   conversation_id: { type: Number, ref: 'Conversation', required: true, index: true },
-  sender_id:       { type: Number, required: true },
-  sender_role:     { type: String, enum: ['client', 'admin', 'staff'], required: true },
+  sender_id:       { type: Number, required: true },   // 0 for system-generated messages
+  sender_role:     { type: String, enum: ['client', 'admin', 'staff', 'system'], required: true },
   receiver_id:     { type: Number, default: null },
   body:            { type: String, default: '' },
+  meta:            { type: mongoose.Schema.Types.Mixed, default: null },   // e.g. linked order info for system messages
   attachment_url:  { type: String, default: null },
   attachment_type: { type: String, default: null },   // MIME type
   attachment_name: { type: String, default: null },

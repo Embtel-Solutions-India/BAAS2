@@ -1,5 +1,6 @@
 const { Conversation, ChatMessage, Client, Notification, toRow, toRows } = require('../models');
 const chatNotifyService = require('./chatNotifyService');
+const { broadcastMessage } = require('../socket/broadcast');
 
 const isStaff = (role) => role === 'admin' || role === 'staff';
 
@@ -151,6 +152,94 @@ async function createMessage({ conversation, senderId, senderRole, body = '', at
   return toRow(msg);
 }
 
+/**
+ * Post a system-generated message into a conversation and broadcast it live.
+ * `audience` decides whose unread count increments ('admin' | 'client').
+ * Reuses the existing broadcastMessage so the admin/client get instant updates.
+ */
+async function postSystemMessage({ io, conversation, body, meta = null, audience = 'admin' }) {
+  const msg = await ChatMessage.create({
+    conversation_id: conversation.id,
+    sender_id: 0,
+    sender_role: 'system',
+    receiver_id: null,
+    body: body || '',
+    meta: meta || null,
+    status: 'sent',
+  });
+
+  const preview = (body || '').trim().slice(0, 140) || 'System message';
+  conversation.last_message = preview;
+  conversation.last_message_at = new Date();
+  conversation.last_sender_role = 'system';
+  if (audience === 'client') conversation.client_unread += 1;
+  else conversation.admin_unread += 1;
+  if (conversation.status !== 'open') conversation.status = 'open';
+  conversation.updated_at = new Date();
+  await conversation.save();
+
+  const row = toRow(msg);
+  if (io) broadcastMessage(io, conversation, row);
+  return row;
+}
+
+/**
+ * After a successful checkout/payment, drop a system message into the client's
+ * conversation (creating it if needed): an order summary for the admin and a
+ * confirmation for the client. Idempotent per order to avoid duplicates on retry.
+ */
+async function postOrderCheckoutMessages({ io, order, serviceName = null, paymentId = null }) {
+  const orderId = Number(order.id);
+  const convo = await getOrCreateForClient(Number(order.client_id));
+
+  // Idempotency guard — never post twice for the same order.
+  const dupe = await ChatMessage.findOne({ conversation_id: convo.id, sender_role: 'system', 'meta.order_id': orderId });
+  if (dupe) return;
+
+  const client = await Client.findById(order.client_id).select('first_name last_name');
+  const clientName = client
+    ? (`${client.first_name || ''} ${client.last_name || ''}`.trim() || `Client #${order.client_id}`)
+    : `Client #${order.client_id}`;
+  const amount = Number(order.total_amount || 0).toFixed(2);
+  const when = new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+  const serviceId = order.service_id ? Number(order.service_id._id ?? order.service_id) : null;
+
+  const meta = {
+    order_id: orderId,
+    order_number: order.order_number,
+    client_id: Number(order.client_id),
+    service_id: serviceId,
+    payment_id: paymentId != null ? Number(paymentId) : null,
+    transaction_id: order.transaction_id || null,
+    amount: Number(order.total_amount || 0),
+    timestamp: new Date(),
+  };
+
+  const adminBody =
+    `🛒 New Order Received\n\n` +
+    `Client: ${clientName}\n` +
+    `Service: ${serviceName || '—'}\n` +
+    `Order Number: ${order.order_number}\n` +
+    `Amount: $${amount}\n` +
+    `Payment Status: Paid\n` +
+    `Payment Method: QuickBooks Payments\n` +
+    `Order Time: ${when}\n\n` +
+    `The client has successfully completed checkout. Please review the order and contact the client for the next steps.`;
+
+  await postSystemMessage({ io, conversation: convo, body: adminBody, meta, audience: 'admin' });
+
+  const clientBody =
+    `✅ Your payment has been received successfully.\n\n` +
+    `Your order ${order.order_number} has been submitted to our team. ` +
+    `An administrator will review it and contact you shortly through this chat.`;
+
+  await postSystemMessage({
+    io, conversation: convo, body: clientBody,
+    meta: { order_id: orderId, order_number: order.order_number },
+    audience: 'client',
+  });
+}
+
 /** Mark the other party's messages as seen and clear the reader's unread count. */
 async function markRead({ conversation, readerRole }) {
   const staff = isStaff(readerRole);
@@ -185,6 +274,8 @@ module.exports = {
   listConversations,
   getMessages,
   createMessage,
+  postSystemMessage,
+  postOrderCheckoutMessages,
   markRead,
   setStatus,
 };

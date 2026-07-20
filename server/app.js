@@ -47,6 +47,7 @@ app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/profile',       require('./routes/profile'));
 app.use('/api/admin',         require('./routes/admin'));
 app.use('/api/admin/payments', require('./routes/adminPayments'));
+app.use('/api/admin/invoices', require('./routes/adminInvoices'));
 app.use('/api/admin/blogs',   require('./routes/adminBlogs'));
 app.use('/api/blogs',         require('./routes/blogs'));
 app.use('/api/quickbooks',    require('./routes/quickbooks'));

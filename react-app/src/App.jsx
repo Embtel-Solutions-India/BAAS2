@@ -58,6 +58,7 @@ const AdminActivity        = lazy(() => import('./pages/Admin/AdminActivity'));
 const AdminBlogs           = lazy(() => import('./pages/Admin/AdminBlogs'));
 const AdminBlogEditor      = lazy(() => import('./pages/Admin/AdminBlogEditor'));
 const AdminPayments        = lazy(() => import('./pages/Admin/AdminPayments'));
+const AdminInvoices        = lazy(() => import('./pages/Admin/AdminInvoices'));
 
 function Spinner() {
   return (
@@ -134,6 +135,7 @@ function AnimatedRoutes() {
             <Route path="/admin/blogs"                   element={<AdminBlogs />} />
             <Route path="/admin/blogs/new"               element={<AdminBlogEditor />} />
             <Route path="/admin/payments"                 element={<AdminPayments />} />
+            <Route path="/admin/invoices"                 element={<AdminInvoices />} />
             <Route path="/admin/blogs/:id/edit"          element={<AdminBlogEditor />} />
 
             <Route path="*"                              element={<NotFound />} />

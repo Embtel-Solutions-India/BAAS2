@@ -116,6 +116,7 @@ export default function AdminOrders() {
                   <th className="text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider py-3.5 px-6">Service</th>
                   <th className="text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider py-3.5 px-6">State</th>
                   <th className="text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider py-3.5 px-6">Status</th>
+                  <th className="text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider py-3.5 px-6">Payment</th>
                   <th className="text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider py-3.5 px-6">Amount</th>
                   <th className="text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider py-3.5 px-6">Date</th>
                   <th className="py-3.5 px-6"></th>
@@ -138,6 +139,11 @@ export default function AdminOrders() {
                     <td className="py-4 px-6">
                       <span className={`badge badge-${o.status} border border-current/10 font-semibold px-2.5 py-0.5 text-xs rounded-full`}>
                         {statusBadge(o.status)}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className={`badge badge-${o.payment_status} border border-current/10 font-semibold px-2.5 py-0.5 text-xs rounded-full`}>
+                        {statusBadge(o.payment_status)}
                       </span>
                     </td>
                     <td className="py-4 px-6 font-bold text-gray-900 text-xs">{formatCurrency(o.total_amount)}</td>
