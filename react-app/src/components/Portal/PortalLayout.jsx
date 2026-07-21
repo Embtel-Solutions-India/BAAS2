@@ -53,6 +53,12 @@ export default function PortalLayout({ children, title = '', subtitle = '' }) {
     return () => window.removeEventListener('profile-updated', refresh);
   }, []);
 
+  // Lock background scroll while the mobile drawer is open.
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -73,7 +79,7 @@ export default function PortalLayout({ children, title = '', subtitle = '' }) {
       />
 
       {/* Sidebar */}
-      <aside className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-white border-r border-gray-100/80 shadow-[1px_0_20px_rgba(16,24,40,0.03)] flex flex-col justify-between py-6 transition-transform duration-300 md:translate-x-0 ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed top-0 bottom-0 left-0 z-50 w-64 max-w-[85vw] bg-white border-r border-gray-100/80 shadow-[1px_0_20px_rgba(16,24,40,0.03)] flex flex-col justify-between py-6 overflow-y-auto overscroll-contain transition-transform duration-300 md:translate-x-0 ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div>
           {/* Brand Logo */}
           <div className="px-6 pb-6 border-b border-gray-50 flex items-center gap-3">

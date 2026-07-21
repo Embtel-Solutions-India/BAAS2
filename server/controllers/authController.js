@@ -6,7 +6,9 @@ const { sendMail } = require('../config/email');
 
 const JWT_SECRET  = process.env.JWT_SECRET  || 'dev_secret';
 const JWT_EXPIRES = process.env.JWT_EXPIRES_IN || '7d';
-const CLIENT_URL  = process.env.CLIENT_URL  || 'http://localhost:3000';
+// CLIENT_URL may be a comma-separated list of allowed origins (used for CORS);
+// email links need a single valid base, so take the first origin.
+const CLIENT_URL  = (process.env.CLIENT_URL || 'http://localhost:3000').split(',')[0].trim();
 
 function issueToken(res, payload) {
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES });
@@ -52,7 +54,7 @@ exports.register = async (req, res) => {
     });
     await ev.save();
 
-    const verifyUrl = `${CLIENT_URL}/client-portal/views/verify-email.html?token=${verifyToken}`;
+    const verifyUrl = `${CLIENT_URL}/client-portal/verify-email?token=${verifyToken}`;
     await sendMail({
       to:      email,
       subject: 'Verify your BAAS Portal account',
@@ -152,7 +154,7 @@ exports.forgotPassword = async (req, res) => {
     });
     await pr.save();
 
-    const resetUrl = `${CLIENT_URL}/client-portal/views/reset-password.html?token=${token}`;
+    const resetUrl = `${CLIENT_URL}/client-portal/reset-password?token=${token}`;
     await sendMail({
       to:      email,
       subject: 'Reset your BAAS Portal password',

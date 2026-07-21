@@ -369,7 +369,7 @@ select.form-input{color:#1a1a1a;appearance:auto}
 .page-hero-grid{display:flex;align-items:center;gap:clamp(40px,5vw,64px);flex-wrap:wrap}
 .page-hero-copy{flex:1 1 420px;max-width:680px}
 .page-hero-copy .breadcrumb{font-size:15px;margin-bottom:18px}
-.page-hero-copy .breadcrumb a{color:rgba(255,255,255,.7);transition:opacity .2s}
+.page-hero-copy .breadcrumb a{color:var(--accent);transition:opacity .2s}
 .page-hero-copy .breadcrumb a:hover{opacity:.7}
 .page-hero-copy .slabel{margin-bottom:12px}
 .page-hero-title{font-family:'DM Serif Display',serif;font-size:clamp(36px,4.8vw,52px);letter-spacing:-.03em;line-height:1.1;margin-bottom:20px;color:#fff}

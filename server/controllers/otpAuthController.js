@@ -33,7 +33,7 @@ exports.verifyOtp = async (req, res) => {
   const code = String(req.body.code || '').trim();
   if (!email || !code) return res.status(400).json({ error: 'Email and code are required.' });
   try {
-    await otpService.verifyOtp(email, code);
+    await otpService.verifyOtp(email, code, 'login');
     const { client, isNew } = await clientAuthService.loginClientByIdentity(res, { email, method: 'otp' });
     res.json({
       message: 'Verified successfully.',

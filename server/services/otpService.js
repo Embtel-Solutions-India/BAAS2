@@ -6,14 +6,20 @@ const EXPIRY_MS   = 5 * 60 * 1000;   // OTP valid 5 minutes
 const COOLDOWN_MS = 60 * 1000;       // min gap between sends (resend timer)
 const MAX_RESEND  = 5;               // max sends per active window
 const MAX_ATTEMPTS = 5;              // max verify attempts per code
+const MAX_FAILED_TOTAL = 10;         // hard ceiling on wrong guesses across resends before lockout
+const LOCK_MS = 15 * 60 * 1000;      // per-email lockout duration once the ceiling is hit
 const PEPPER = process.env.JWT_SECRET || 'dev_secret';
+
+const normEmail = (email) => String(email || '').toLowerCase().trim();
 
 function generateCode() {
   return String(crypto.randomInt(0, 1_000_000)).padStart(6, '0');
 }
 
-function hashCode(code) {
-  return crypto.createHash('sha256').update(`${code}:${PEPPER}`).digest('hex');
+// Bind the hash to the email AND purpose so a code minted for one identity or
+// flow can never validate for another, even if a lookup is ever mis-scoped.
+function hashCode(code, email, purpose) {
+  return crypto.createHash('sha256').update(`${code}:${normEmail(email)}:${purpose}:${PEPPER}`).digest('hex');
 }
 
 function safeEqualHex(a, b) {
@@ -57,8 +63,15 @@ async function sendOtpEmail(email, code, purpose = 'login') {
  * populated outside production when email delivery is unavailable.
  */
 async function requestOtp(email, purpose = 'login') {
+  email = normEmail(email);
   const now = Date.now();
   let otp = await Otp.findOne({ email, consumed: false }).sort({ created_at: -1 });
+
+  // Per-email lockout (survives resends and is IP-independent) blocks new codes too.
+  if (otp && otp.lock_until && otp.lock_until.getTime() > now) {
+    const secs = Math.ceil((otp.lock_until.getTime() - now) / 1000);
+    throw httpError(429, `Too many attempts. Please try again in ${Math.ceil(secs / 60)} minute(s).`, { retryAfter: secs });
+  }
 
   if (otp && otp.expires_at.getTime() > now) {
     const since = now - otp.last_sent_at.getTime();
@@ -71,10 +84,12 @@ async function requestOtp(email, purpose = 'login') {
   }
 
   const code = generateCode();
-  const code_hash = hashCode(code);
+  const code_hash = hashCode(code, email, purpose);
   const expires_at = new Date(now + EXPIRY_MS);
 
   if (otp && otp.expires_at.getTime() > now) {
+    // Reset per-code attempts for legit UX, but PRESERVE failed_total so the
+    // hard ceiling can't be bypassed by simply requesting another code.
     otp.code_hash = code_hash; otp.expires_at = expires_at; otp.attempts = 0;
     otp.last_sent_at = new Date(); otp.resend_count += 1; otp.purpose = purpose;
     await otp.save();
@@ -105,14 +120,34 @@ async function requestOtp(email, purpose = 'login') {
  * different flow, so a login code can't create an account and vice-versa.
  */
 async function verifyOtp(email, code, expectedPurpose = null) {
+  email = normEmail(email);
+  const now = Date.now();
   const otp = await Otp.findOne({ email, consumed: false }).sort({ created_at: -1 });
   if (!otp) throw httpError(400, 'No active code. Please request a new one.');
+
+  // Lockout is checked first so it can't be side-stepped by any later branch.
+  if (otp.lock_until && otp.lock_until.getTime() > now) {
+    const secs = Math.ceil((otp.lock_until.getTime() - now) / 1000);
+    throw httpError(429, `Too many attempts. Please try again in ${Math.ceil(secs / 60)} minute(s).`, { retryAfter: secs });
+  }
   if (expectedPurpose && otp.purpose !== expectedPurpose) throw httpError(400, 'No active code for this action. Please request a new one.');
-  if (otp.expires_at.getTime() < Date.now()) throw httpError(400, 'Code expired. Please request a new one.');
+  if (otp.expires_at.getTime() < now) throw httpError(400, 'Code expired. Please request a new one.');
   if (otp.attempts >= MAX_ATTEMPTS) throw httpError(429, 'Too many incorrect attempts. Please request a new code.');
 
-  if (!safeEqualHex(hashCode(String(code)), otp.code_hash)) {
+  if (!safeEqualHex(hashCode(String(code), email, otp.purpose), otp.code_hash)) {
     otp.attempts += 1;
+    otp.failed_total += 1;
+
+    // Hard, cross-resend ceiling → lock this email out for a fixed window.
+    // Keep the row alive until the lock ends (TTL uses expires_at) so the
+    // lockout survives and can't be reset by requesting a fresh code.
+    if (otp.failed_total >= MAX_FAILED_TOTAL) {
+      otp.lock_until = new Date(now + LOCK_MS);
+      otp.expires_at = otp.lock_until;
+      await otp.save();
+      throw httpError(429, `Too many incorrect attempts. This email is locked for ${LOCK_MS / 60000} minutes.`, { retryAfter: LOCK_MS / 1000 });
+    }
+
     await otp.save();
     const remaining = Math.max(0, MAX_ATTEMPTS - otp.attempts);
     throw httpError(400, `Incorrect code. ${remaining} attempt${remaining === 1 ? '' : 's'} left.`);

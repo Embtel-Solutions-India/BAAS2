@@ -15,7 +15,6 @@ import {
   Globe,
 } from "lucide-react";
 import FaqItem from "../../components/UI/FaqItem";
-import WhatsAppButton from "../../components/UI/WhatsAppButton";
 import { usePortal } from "../../hooks/usePortal";
 
 const BOOK =
@@ -1020,8 +1019,6 @@ export default function Home() {
           </Reveal>
         </div>
       </section>
-
-      <WhatsAppButton />
     </>
   );
 }

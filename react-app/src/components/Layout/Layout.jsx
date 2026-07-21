@@ -4,6 +4,7 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import PortalModal from '../Portal/PortalModal';
 import BackToTop from '../UI/BackToTop';
+import WhatsAppButton from '../UI/WhatsAppButton';
 
 export default function Layout({ children }) {
   const { pathname } = useLocation();
@@ -23,6 +24,7 @@ export default function Layout({ children }) {
       <Footer />
       <PortalModal />
       <BackToTop />
+      <WhatsAppButton />
     </>
   );
 }

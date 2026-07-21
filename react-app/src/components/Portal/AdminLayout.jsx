@@ -37,6 +37,12 @@ export default function AdminLayout({ children, title = '' }) {
     loadAdmin();
   }, [navigate]);
 
+  // Lock background scroll while the mobile drawer is open.
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -58,7 +64,7 @@ export default function AdminLayout({ children, title = '' }) {
       />
 
       {/* Sidebar */}
-      <aside className={`fixed top-0 bottom-0 left-0 z-50 w-60 bg-[#0f0f11] border-r border-white/5 flex flex-col justify-between py-6 transition-transform duration-300 md:translate-x-0 ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed top-0 bottom-0 left-0 z-50 w-60 max-w-[85vw] bg-[#0f0f11] border-r border-white/5 flex flex-col justify-between py-6 overflow-y-auto overscroll-contain transition-transform duration-300 md:translate-x-0 ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div>
           {/* Brand */}
           <div className="px-6 pb-6 border-b border-white/5 flex items-center gap-3">
