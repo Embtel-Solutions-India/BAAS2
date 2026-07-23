@@ -6,10 +6,17 @@ const cookieParser = require('cookie-parser');
 const path         = require('path');
 require('./config/db');
 require('./scripts/seedAdmin');
-require('./scripts/seedServices');
+// Services are now fully admin-managed (no seeded catalog). This idempotently
+// retires any legacy seeded services so the catalog starts empty.
+require('./scripts/retireSeededServices');
 
 const app  = express();
 const PORT = process.env.PORT || 4000;
+
+// Behind the nginx TLS proxy on EC2: trust X-Forwarded-* so req.secure /
+// req.protocol / req.ip are correct (needed for Secure cookies over HTTPS and
+// accurate per-IP rate limiting).
+app.set('trust proxy', 1);
 
 app.use(helmet());
 const ALLOWED_ORIGINS = (process.env.CLIENT_URL || 'http://localhost:3000')
@@ -39,6 +46,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/auth',          require('./routes/auth'));
 app.use('/api/orders',        require('./routes/orders'));
+app.use('/api/services',      require('./routes/services'));
 app.use('/api/documents',     require('./routes/documents'));
 app.use('/api/messages',      require('./routes/messages'));
 app.use('/api/invoices',      require('./routes/invoices'));
@@ -48,6 +56,7 @@ app.use('/api/profile',       require('./routes/profile'));
 app.use('/api/admin',         require('./routes/admin'));
 app.use('/api/admin/payments', require('./routes/adminPayments'));
 app.use('/api/admin/invoices', require('./routes/adminInvoices'));
+app.use('/api/admin/services', require('./routes/adminServices'));
 app.use('/api/admin/blogs',   require('./routes/adminBlogs'));
 app.use('/api/blogs',         require('./routes/blogs'));
 app.use('/api/quickbooks',    require('./routes/quickbooks'));

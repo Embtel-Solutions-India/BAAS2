@@ -10,16 +10,26 @@ const JWT_EXPIRES = process.env.JWT_EXPIRES_IN || '7d';
 // email links need a single valid base, so take the first origin.
 const CLIENT_URL  = (process.env.CLIENT_URL || 'http://localhost:3000').split(',')[0].trim();
 
+// Session-cookie attributes. In production the SPA and API can be served from
+// different origins (e.g. www.* page → apex /api), so the cookie must be
+// SameSite=None + Secure or browsers won't send it on cross-origin requests.
+// SameSite=None REQUIRES Secure, so both are tied to production (HTTPS).
+const IS_PROD = process.env.NODE_ENV === 'production';
+const COOKIE_OPTS = {
+  httpOnly: true,
+  secure:   IS_PROD,
+  sameSite: IS_PROD ? 'none' : 'lax',
+};
+
 function issueToken(res, payload) {
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES });
-  res.cookie('token', token, {
-    httpOnly: true,
-    secure:   process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge:   7 * 24 * 60 * 60 * 1000
-  });
+  res.cookie('token', token, { ...COOKIE_OPTS, maxAge: 7 * 24 * 60 * 60 * 1000 });
   return token;
 }
+
+// Exposed so logout clears the cookie with the SAME attributes it was set with
+// (a mismatch would leave the cookie in place).
+exports.COOKIE_OPTS = COOKIE_OPTS;
 
 // Exposed so the additive OTP / OAuth flows mint the identical session cookie.
 exports.issueToken = issueToken;
@@ -193,7 +203,7 @@ exports.resetPassword = async (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  res.clearCookie('token');
+  res.clearCookie('token', COOKIE_OPTS);
   res.json({ message: 'Logged out successfully' });
 };
 

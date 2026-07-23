@@ -46,6 +46,9 @@ export default function AdminDashboard() {
     total_clients: 0,
     total_orders: 0,
     pending_orders: 0,
+    total_products: 0,
+    available_products: 0,
+    unavailable_products: 0,
     revenue: 0,
     total_blogs: 0,
     published_blogs: 0,
@@ -175,6 +178,25 @@ export default function AdminDashboard() {
           </div>
           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Monthly Sales</span>
           <span className="text-2xl font-bold text-gray-900 tracking-tight font-serif mt-1">{formatCurrency(pa.month_revenue)}</span>
+        </div>
+      </div>
+
+      {/* Product & Services summary */}
+      <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-xs mb-5 flex items-center justify-between flex-wrap gap-4">
+        <div className="flex items-center gap-8 flex-wrap">
+          <div>
+            <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Product &amp; Services</div>
+            <div className="text-sm font-semibold text-gray-700 mt-0.5">Manage your catalog</div>
+          </div>
+          <div className="flex items-center gap-6">
+            <div><div className="text-xl font-bold font-serif text-gray-900">{stats.total_products}</div><div className="text-[10px] text-gray-400 uppercase tracking-wide">Total</div></div>
+            <div><div className="text-xl font-bold font-serif text-emerald-600">{stats.available_products}</div><div className="text-[10px] text-gray-400 uppercase tracking-wide">Available</div></div>
+            <div><div className="text-xl font-bold font-serif text-amber-600">{stats.unavailable_products}</div><div className="text-[10px] text-gray-400 uppercase tracking-wide">Not Available</div></div>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link to="/admin/services" className="px-3 py-2 rounded-lg text-xs font-bold border border-gray-200 text-gray-700 hover:bg-gray-50 transition-all">Manage</Link>
+          <Link to="/admin/services" className="px-4 py-2 rounded-lg text-xs font-bold bg-[#d4001f] hover:bg-[#a4001a] text-white shadow-xs transition-all">+ Add Product</Link>
         </div>
       </div>
 

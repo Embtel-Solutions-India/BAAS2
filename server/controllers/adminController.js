@@ -20,6 +20,11 @@ exports.getDashboardStats = async (req, res) => {
     const total_orders  = await Order.countDocuments();
     const pending_orders = await Order.countDocuments({ status: 'pending' });
 
+    // Product/Service catalog counts (admin-managed; excludes soft-deleted).
+    const total_products = await Service.countDocuments({ deleted_at: null });
+    const available_products = await Service.countDocuments({ deleted_at: null, is_active: true });
+    const unavailable_products = await Service.countDocuments({ deleted_at: null, is_active: false });
+
     const paymentAgg = await Payment.aggregate([
       { $match: { status: 'completed' } },
       { $group: { _id: null, total: { $sum: '$amount' } } }
@@ -148,6 +153,9 @@ exports.getDashboardStats = async (req, res) => {
       total_clients,
       total_orders,
       pending_orders,
+      total_products,
+      available_products,
+      unavailable_products,
       revenue,
       total_blogs,
       published_blogs,

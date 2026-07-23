@@ -58,8 +58,8 @@ exports.createOrder = async (req, res) => {
   if (!service_id || !state)
     return res.status(400).json({ error: 'service_id and state are required' });
   try {
-    const svc = await Service.findOne({ _id: service_id, is_active: true });
-    if (!svc) return res.status(404).json({ error: 'Service not found' });
+    const svc = await Service.findOne({ _id: service_id, is_active: true, deleted_at: null });
+    if (!svc) return res.status(404).json({ error: 'This service is no longer available. Please choose another.' });
 
     const order_number = `BAAS-${Date.now()}`;
     const order = new Order({
@@ -70,7 +70,7 @@ exports.createOrder = async (req, res) => {
       status: 'pending',
       state: state.toUpperCase(),
       notes: notes || null,
-      total_amount: svc.price
+      total_amount: (svc.discount_price != null ? svc.discount_price : svc.price)
     });
     await order.save();
 

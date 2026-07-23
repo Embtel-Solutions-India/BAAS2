@@ -119,8 +119,19 @@ export default function AdminLayout({ children, title = '' }) {
               Orders
             </Link>
 
-            <Link 
-              to="/admin/payments" 
+            <Link
+              to="/admin/services"
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all group relative ${isTabActive('/admin/services') ? 'text-white bg-[#d4001f]/25 font-bold shadow-xs border border-white/5' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              onClick={() => setMenuOpen(false)}
+            >
+              <svg className="w-4 h-4 text-current opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-14L4 7m8 4v10M4 7v10l8 4"/>
+              </svg>
+              Product &amp; Services
+            </Link>
+
+            <Link
+              to="/admin/payments"
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all group relative ${isTabActive('/admin/payments') ? 'text-white bg-[#d4001f]/25 font-bold shadow-xs border border-white/5' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
               onClick={() => setMenuOpen(false)}
             >
