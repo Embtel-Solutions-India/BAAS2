@@ -9,7 +9,9 @@ export default function Footer() {
         <div className="footer-grid">
           <div>
             <div style={{display:'flex',alignItems:'center',gap:'10px',marginBottom:'16px'}}>
-              <div className="nav-logo-icon" style={{width:'36px',height:'36px',borderRadius:'9px',fontSize:'20px'}}>B</div>
+              <div className="nav-logo-icon" style={{width:'48px',height:'48px'}}>
+                <img src="/logo.webp" alt="Bay Area Accounting Solutions logo" width="48" height="48" />
+              </div>
               <span className="serif" style={{fontSize:'17px'}}>Bay Area Accounting Solutions</span>
             </div>
             <p style={{fontSize:'15px',color:'var(--td)',lineHeight:'1.7',marginBottom:'20px',maxWidth:'300px'}}>
