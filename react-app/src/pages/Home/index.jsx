@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -16,6 +15,8 @@ import {
 } from "lucide-react";
 import FaqItem from "../../components/UI/FaqItem";
 import { usePortal } from "../../hooks/usePortal";
+import SEOHead from "../../components/SEO/SEOHead";
+import { SITE_URL } from "../../components/SEO/seoConfig";
 
 const BOOK =
   "https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt";
@@ -89,14 +90,28 @@ const Reveal = ({ children, delay = 0, className = "", style }) => (
   </motion.div>
 );
 
+const FAQ_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQS.map(({ q, a }) => ({
+    "@type": "Question",
+    name: q,
+    acceptedAnswer: { "@type": "Answer", text: a },
+  })),
+};
+
 export default function Home() {
   const { open } = usePortal();
-  useEffect(() => {
-    document.title = "Bay Area Accounting Solutions | Bookkeeping & Tax";
-  }, []);
 
   return (
     <>
+      <SEOHead
+        title="Bay Area Bookkeeping & Accounting Services | BAAS"
+        description="Full-range bookkeeping, tax, payroll, and business formation for Bay Area businesses. 500+ clients served across all 50 states. Free clarity session available."
+        url={`${SITE_URL}/`}
+        type="website"
+        structuredData={FAQ_SCHEMA}
+      />
       {/* ═══ LIGHT HERO ══════════════════════════════════════════════ */}
       <section className="hero-light">
         <div className="hero-light-glow" aria-hidden="true" />

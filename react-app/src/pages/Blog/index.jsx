@@ -7,6 +7,10 @@ import StaggerItem from '../../components/UI/StaggerItem';
 import PageHero from '../../components/Sections/PageHero';
 import CtaBar from '../../components/Sections/CtaBar';
 import { api, formatDate } from '../../utils/api';
+import SEOHead from '../../components/SEO/SEOHead';
+import { SITE_URL, breadcrumbSchema } from '../../components/SEO/seoConfig';
+
+const BLOG_BREADCRUMB = breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }]);
 
 export default function Blog() {
   const [blogs, setBlogs] = useState([]);
@@ -39,7 +43,6 @@ export default function Blog() {
   }
 
   useEffect(() => {
-    document.title = 'Blog | Bay Area Accounting Solutions';
     loadPublishedBlogs(1, activeCategory);
   }, [activeCategory, search]);
 
@@ -55,6 +58,13 @@ export default function Blog() {
 
   return (
     <>
+      <SEOHead
+        title="Blog | Bay Area Accounting Solutions"
+        description="Practical bookkeeping, tax, and business finance advice for Bay Area entrepreneurs — written in plain English, not accountant-speak."
+        url={`${SITE_URL}/blog`}
+        type="website"
+        structuredData={BLOG_BREADCRUMB}
+      />
       <PageHero
         breadcrumb={[{ label: 'Home', to: '/' }, { label: 'Blog' }]}
         label="Insights & News"

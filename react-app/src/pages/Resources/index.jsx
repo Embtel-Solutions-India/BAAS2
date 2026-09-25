@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import RevealWrapper from '../../components/UI/RevealWrapper';
 import StaggerGrid from '../../components/UI/StaggerGrid';
@@ -6,6 +5,8 @@ import StaggerItem from '../../components/UI/StaggerItem';
 import FaqItem from '../../components/UI/FaqItem';
 import PageHero from '../../components/Sections/PageHero';
 import CtaBar from '../../components/Sections/CtaBar';
+import SEOHead from '../../components/SEO/SEOHead';
+import { SITE_URL, breadcrumbSchema } from '../../components/SEO/seoConfig';
 
 const FAQS = [
   { q: 'What records should I keep for my small business?', a: 'Keep all income and expense receipts, bank statements, payroll records, tax returns, and business contracts for at least 7 years. Digital backups are strongly recommended.' },
@@ -27,10 +28,29 @@ const GUIDES = [
   { cat: 'Tax Planning', title: 'Understanding Quarterly Estimated Tax Payments', desc: 'Who owes them, how to calculate them, and how to avoid underpayment penalties — explained in plain English.', date: 'June 2025' },
 ];
 
+const RESOURCES_SCHEMA = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQS.map(({ q, a }) => ({
+      '@type': 'Question',
+      name: q,
+      acceptedAnswer: { '@type': 'Answer', text: a },
+    })),
+  },
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Resources', path: '/resources' }]),
+];
+
 export default function Resources() {
-  useEffect(() => { document.title = 'Resources & Guides | Bay Area Accounting Solutions'; }, []);
   return (
     <>
+      <SEOHead
+        title="Resources & Guides | Bay Area Accounting Solutions"
+        description="Free bookkeeping, tax, and business finance guides for Bay Area business owners. FAQs on record-keeping, entity structure, quarterly taxes, and more."
+        url={`${SITE_URL}/resources`}
+        type="website"
+        structuredData={RESOURCES_SCHEMA}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Resources'}]}
         label="Knowledge Center"

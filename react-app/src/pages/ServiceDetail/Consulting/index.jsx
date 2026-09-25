@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Brain, Coins, ShieldOff, TrendingDown, User, Building2, Percent, Landmark, Users, Heart, Compass, FileText, Fingerprint, FileCheck, PercentCircle, Award, RefreshCw, CheckCircle, XCircle } from 'lucide-react';
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import SEOHead from '../../../components/SEO/SEOHead';
+import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
 const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
 
@@ -70,9 +72,20 @@ function ConsultForm() {
   );
 }
 
-export default function Consulting() {
-  useEffect(() => { document.title = 'Business Formation & Consulting | BAAS'; }, []);
+const CONSULTING_SCHEMA = [
+  serviceSchema({
+    name: 'Business Formation & Consulting',
+    description: 'LLC, S-Corp, and C-Corp formation with EIN registration, operating agreements, and ongoing compliance support.',
+    path: '/services/consulting',
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: 'Business Formation & Consulting', path: '/services/consulting' },
+  ]),
+];
 
+export default function Consulting() {
   const pain = [
     [Brain,'Analysis paralysis','Six structures, each with different tax, liability, and compliance rules. Most founders freeze — or worse, default to whatever a friend chose, which may be completely wrong for them.'],
     [Coins,'Costly tax mistakes','Pick the wrong structure and you could overpay self-employment tax by thousands every year — or miss out on deductions and credits only available to certain entities.'],
@@ -128,6 +141,13 @@ export default function Consulting() {
 
   return (
     <>
+      <SEOHead
+        title="Business Formation & Consulting | BAAS"
+        description="LLC, S-Corp, and C-Corp formation for Bay Area businesses — EIN registration, operating agreements, tax election, and ongoing compliance support."
+        url={`${SITE_URL}/services/consulting`}
+        type="website"
+        structuredData={CONSULTING_SCHEMA}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Services',to:'/services'},{label:'Business Formation & Consulting'}]}
         label="Our Services"

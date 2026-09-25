@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Home, ShieldAlert, CalendarClock, MapPin, ScanLine, Eye, Globe, Clock, CheckCircle, Phone, ChevronDown } from 'lucide-react';
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import SEOHead from '../../../components/SEO/SEOHead';
+import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
 const fadeUp = { hidden:{opacity:0,y:36}, visible:{opacity:1,y:0,transition:{duration:.7,ease:[.16,1,.3,1]}} };
 const stagger = { hidden:{}, visible:{transition:{staggerChildren:.08}} };
@@ -32,9 +34,20 @@ function FaqItem({ question, answer }) {
   );
 }
 
-export default function RegisteredAgent() {
-  useEffect(() => { document.title = 'Registered Agent Services | BAAS'; }, []);
+const REGISTERED_AGENT_SCHEMA = [
+  serviceSchema({
+    name: 'Registered Agent Services',
+    description: 'Registered agent services keeping Bay Area businesses compliant in California and every state they operate in.',
+    path: '/services/registered-agent',
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: 'Registered Agent Services', path: '/services/registered-agent' },
+  ]),
+];
 
+export default function RegisteredAgent() {
   const pain = [
     [Mail,'Worried About Missing Mail?','Worried about missing state or IRS correspondence that requires urgent action?'],
     [Home,'Working from Home?','Need a California address for legal notices but don\'t want to expose your home address publicly?'],
@@ -74,6 +87,13 @@ export default function RegisteredAgent() {
 
   return (
     <>
+      <SEOHead
+        title="Registered Agent Services | Bay Area Accounting Solutions"
+        description="Professional registered agent services for Bay Area businesses — stay compliant in California and every state you operate in, with instant notice of legal mail."
+        url={`${SITE_URL}/services/registered-agent`}
+        type="website"
+        structuredData={REGISTERED_AGENT_SCHEMA}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Services',to:'/services'},{label:'Registered Agent'}]}
         label="Our Services"

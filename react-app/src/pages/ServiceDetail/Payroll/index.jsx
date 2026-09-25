@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AlertTriangle, Percent, Scale, CalendarX, Building2, Search, Files, EyeOff, Map, Clock, Users, HelpCircle, Wallet, FileText, CalendarDays, Handshake, Calculator, CreditCard, FileCheck, ShieldCheck, BarChart3, BookOpen, SlidersHorizontal, Phone, MapPin } from 'lucide-react';
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import SEOHead from '../../../components/SEO/SEOHead';
+import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
 const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
 
@@ -105,9 +107,20 @@ function PayrollQuoteForm() {
   );
 }
 
-export default function Payroll() {
-  useEffect(() => { document.title = 'Payroll Management Services | BAAS'; }, []);
+const PAYROLL_SCHEMA = [
+  serviceSchema({
+    name: 'Payroll Management',
+    description: 'Payroll processing, tax filings, and compliance management for Bay Area businesses.',
+    path: '/services/payroll',
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: 'Payroll Management', path: '/services/payroll' },
+  ]),
+];
 
+export default function Payroll() {
   const penalties = [
     [Percent,'Failure-to-deposit penalties','The IRS penalizes late payroll tax deposits on a sliding scale — 2% if 1–5 days late, 5% if 6–15 days, 10% beyond that, and 15% once a notice is issued. These add up shockingly fast because payroll taxes are due frequently, sometimes within days of each pay run.'],
     [Scale,'Trust Fund Recovery Penalty','Withheld employee taxes are considered "trust funds" held for the government. Fail to remit them and the IRS can pursue you personally — piercing the corporate veil. Owners and even bookkeepers can be held individually liable for 100% of the unpaid amount.'],
@@ -150,6 +163,13 @@ export default function Payroll() {
 
   return (
     <>
+      <SEOHead
+        title="Payroll Management Services | Bay Area Accounting Solutions"
+        description="Payroll management for Bay Area businesses — accurate, on-time pay, tax filings, W-2 & 1099 prep, and full compliance. Local and California-compliant."
+        url={`${SITE_URL}/services/payroll`}
+        type="website"
+        structuredData={PAYROLL_SCHEMA}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Services',to:'/services'},{label:'Payroll Management'}]}
         label="Our Services"

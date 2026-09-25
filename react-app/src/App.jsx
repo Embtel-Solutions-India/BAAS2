@@ -140,6 +140,7 @@ function AnimatedRoutes() {
             <Route path="/admin/services"                 element={<AdminServices />} />
             <Route path="/admin/blogs/:id/edit"          element={<AdminBlogEditor />} />
 
+            <Route path="/404"                           element={<NotFound />} />
             <Route path="*"                              element={<NotFound />} />
           </Routes>
         </Suspense>

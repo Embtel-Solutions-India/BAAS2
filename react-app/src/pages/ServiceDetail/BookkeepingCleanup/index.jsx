@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -10,6 +10,8 @@ import {
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import SEOHead from '../../../components/SEO/SEOHead';
+import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
 const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
 
@@ -163,11 +165,20 @@ function FaqAccordion({ items }) {
 /* ═══════════════════════════════════════
    MAIN PAGE
 ═══════════════════════════════════════ */
-export default function BookkeepingCleanup() {
-  useEffect(() => {
-    document.title = 'Bookkeeping Cleanup & Catch-Up Services | Bay Area Accounting Solutions';
-  }, []);
+const BOOKKEEPING_CLEANUP_SCHEMA = [
+  serviceSchema({
+    name: 'Bookkeeping Cleanup & Catch-Up',
+    description: 'AI-assisted, human-verified bookkeeping cleanup and catch-up for Bay Area businesses with messy or backlogged QuickBooks.',
+    path: '/services/bookkeeping-cleanup',
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: 'Bookkeeping Cleanup & Catch-Up', path: '/services/bookkeeping-cleanup' },
+  ]),
+];
 
+export default function BookkeepingCleanup() {
   const costCards = [
     [AlertTriangle, 'Audit bait', 'IRS red flags multiply', 'Mismatched 1099s, unreported income, and inconsistent filings are exactly what IRS computers screen for. And if you\'re audited with incomplete records, legitimate deductions get disallowed — you pay tax on money you already spent.'],
     [TrendingDown, '25%+', 'Penalties compound', 'Failure-to-file penalties run 5% of unpaid tax per month, up to 25% — before interest. Add a 20% accuracy-related penalty if messy records lead to understated income. Waiting is the most expensive option.'],
@@ -218,6 +229,13 @@ export default function BookkeepingCleanup() {
 
   return (
     <>
+      <SEOHead
+        title="Bookkeeping Cleanup & Catch-Up Services | BAAS"
+        description="Months or years behind on your books? We fix messy QuickBooks, reconcile every account, and get you audit-ready — fast. AI-assisted, human-verified."
+        url={`${SITE_URL}/services/bookkeeping-cleanup`}
+        type="website"
+        structuredData={BOOKKEEPING_CLEANUP_SCHEMA}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Services',to:'/services'},{label:'Bookkeeping Cleanup & Catch-Up'}]}
         label="Bookkeeping Cleanup & Catch-Up"

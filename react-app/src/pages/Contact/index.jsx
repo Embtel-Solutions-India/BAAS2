@@ -1,17 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import RevealWrapper from '../../components/UI/RevealWrapper';
 import StaggerGrid from '../../components/UI/StaggerGrid';
 import StaggerItem from '../../components/UI/StaggerItem';
 import PageHero from '../../components/Sections/PageHero';
 import CtaBar from '../../components/Sections/CtaBar';
+import SEOHead from '../../components/SEO/SEOHead';
+import { SITE_URL, breadcrumbSchema } from '../../components/SEO/seoConfig';
+
+const CONTACT_BREADCRUMB = breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }]);
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^\+?[0-9\s().-]{7,20}$/;
 
 export default function Contact() {
-  useEffect(() => { document.title = 'Contact Us | Bay Area Accounting Solutions'; }, []);
-
   const [form, setForm] = useState({ first_name:'', last_name:'', email:'', phone:'', service:'', message:'' });
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState({});
@@ -64,6 +66,13 @@ export default function Contact() {
 
   return (
     <>
+      <SEOHead
+        title="Contact Us | Bay Area Accounting Solutions"
+        description="Get in touch with Bay Area Accounting Solutions. Call (510) 962-7300, email us, or visit our Fremont, CA office. We respond to all enquiries within 24 hours."
+        url={`${SITE_URL}/contact`}
+        type="website"
+        structuredData={CONTACT_BREADCRUMB}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Contact'}]}
         label="Get In Touch"

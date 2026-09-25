@@ -1,11 +1,20 @@
-import { useEffect } from 'react';
 import RevealWrapper from '../../components/UI/RevealWrapper';
 import PageHero from '../../components/Sections/PageHero';
+import SEOHead from '../../components/SEO/SEOHead';
+import { SITE_URL, breadcrumbSchema } from '../../components/SEO/seoConfig';
+
+const PRIVACY_BREADCRUMB = breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Privacy Policy', path: '/privacy-policy' }]);
 
 export default function PrivacyPolicy() {
-  useEffect(() => { document.title = 'Privacy Policy | Bay Area Accounting Solutions'; }, []);
   return (
     <>
+      <SEOHead
+        title="Privacy Policy | Bay Area Accounting Solutions"
+        description="How Bay Area Accounting Solutions collects, uses, and protects the personal and financial information you share with us through our website and services."
+        url={`${SITE_URL}/privacy-policy`}
+        type="website"
+        structuredData={PRIVACY_BREADCRUMB}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Privacy Policy'}]}
         label="Legal"

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import RevealWrapper from '../../components/UI/RevealWrapper';
@@ -6,6 +5,10 @@ import StaggerGrid from '../../components/UI/StaggerGrid';
 import StaggerItem from '../../components/UI/StaggerItem';
 import PageHero from '../../components/Sections/PageHero';
 import CtaBar from '../../components/Sections/CtaBar';
+import SEOHead from '../../components/SEO/SEOHead';
+import { SITE_URL, breadcrumbSchema } from '../../components/SEO/seoConfig';
+
+const INDUSTRIES_BREADCRUMB = breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Industries', path: '/industries' }]);
 
 const INDUSTRIES = [
   { name: 'Technology & SaaS', icon: '💻', desc: 'From pre-revenue startups to scaling SaaS companies — R&D credits, stock options, and investor-ready financials.' },
@@ -23,9 +26,15 @@ const INDUSTRIES = [
 ];
 
 export default function Industries() {
-  useEffect(() => { document.title = 'Industries We Serve | Bay Area Accounting Solutions'; }, []);
   return (
     <>
+      <SEOHead
+        title="Industries We Serve | Bay Area Accounting Solutions"
+        description="Specialized bookkeeping and accounting for tech, e-commerce, real estate, restaurants, healthcare, construction, and 12+ other Bay Area industries."
+        url={`${SITE_URL}/industries`}
+        type="website"
+        structuredData={INDUSTRIES_BREADCRUMB}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Industries'}]}
         label="Who We Serve"

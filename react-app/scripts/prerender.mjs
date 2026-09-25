@@ -42,6 +42,7 @@ const ROUTES = [
   '/services/consulting',
   '/services/registered-agent',
   '/services/bookkeeping-cleanup',
+  '/404',
 ];
 
 const MIME = {

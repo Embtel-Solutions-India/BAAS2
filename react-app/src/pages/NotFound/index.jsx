@@ -1,11 +1,16 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import RevealWrapper from '../../components/UI/RevealWrapper';
+import SEOHead from '../../components/SEO/SEOHead';
 
 export default function NotFound() {
-  useEffect(() => { document.title = '404 – Page Not Found | Bay Area Accounting Solutions'; }, []);
   return (
+    <>
+    <SEOHead
+      title="404 – Page Not Found | Bay Area Accounting Solutions"
+      description="The page you're looking for doesn't exist or has been moved."
+      noindex
+    />
     <section className="page-hero-light" style={{minHeight:'100vh',paddingTop:'160px'}}>
       <div className="hero-light-glow" aria-hidden="true"/>
       <div className="container" style={{position:'relative',zIndex:2,textAlign:'center'}}>
@@ -25,5 +30,6 @@ export default function NotFound() {
         </RevealWrapper>
       </div>
     </section>
+    </>
   );
 }

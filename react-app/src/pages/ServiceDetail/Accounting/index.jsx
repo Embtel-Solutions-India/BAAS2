@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Scale, FolderOpen, Copy, FileX, Search, RefreshCw, ListChecks, FileText, Settings, TrendingUp, CheckCircle, Phone, Mail } from 'lucide-react';
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import SEOHead from '../../../components/SEO/SEOHead';
+import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
 const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
 
@@ -62,9 +64,20 @@ function CleanupQuoteForm() {
   );
 }
 
-export default function Accounting() {
-  useEffect(() => { document.title = 'Accounting & Bookkeeping Cleanup | BAAS'; }, []);
+const ACCOUNTING_SCHEMA = [
+  serviceSchema({
+    name: 'Accounting & Bookkeeping Cleanup',
+    description: 'Rescue bookkeeping and accounting cleanup for Bay Area businesses with disorganized or backlogged books.',
+    path: '/services/accounting',
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: 'Accounting Cleanup', path: '/services/accounting' },
+  ]),
+];
 
+export default function Accounting() {
   const problems = [
     [Scale,'Balances don\'t match','Your QuickBooks balance and real bank balance are completely different numbers.'],
     [FolderOpen,'Uncategorized expenses','Months of transactions sitting in "Uncategorized" or assigned to the wrong accounts.'],
@@ -92,6 +105,13 @@ export default function Accounting() {
 
   return (
     <>
+      <SEOHead
+        title="Accounting & Bookkeeping Cleanup | BAAS"
+        description="Rescue bookkeeping for Bay Area businesses — we fix messy QuickBooks, reconcile every account, and get your books audit-ready with flat-fee cleanup pricing."
+        url={`${SITE_URL}/services/accounting`}
+        type="website"
+        structuredData={ACCOUNTING_SCHEMA}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Services',to:'/services'},{label:'Accounting Cleanup'}]}
         label="Our Services"

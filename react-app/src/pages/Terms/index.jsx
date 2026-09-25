@@ -1,11 +1,20 @@
-import { useEffect } from 'react';
 import RevealWrapper from '../../components/UI/RevealWrapper';
 import PageHero from '../../components/Sections/PageHero';
+import SEOHead from '../../components/SEO/SEOHead';
+import { SITE_URL, breadcrumbSchema } from '../../components/SEO/seoConfig';
+
+const TERMS_BREADCRUMB = breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Terms & Conditions', path: '/terms-and-conditions' }]);
 
 export default function Terms() {
-  useEffect(() => { document.title = 'Terms & Conditions | Bay Area Accounting Solutions'; }, []);
   return (
     <>
+      <SEOHead
+        title="Terms & Conditions | Bay Area Accounting Solutions"
+        description="The terms and conditions governing your use of the Bay Area Accounting Solutions website, client portal, and professional accounting services."
+        url={`${SITE_URL}/terms-and-conditions`}
+        type="website"
+        structuredData={TERMS_BREADCRUMB}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Terms & Conditions'}]}
         label="Legal"

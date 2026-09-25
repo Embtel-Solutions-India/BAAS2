@@ -1,9 +1,11 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, CloudFog, Receipt, FileWarning, Percent, CalendarClock, Building2, Users, Clock, PiggyBank, Dices, TrendingDown, Shuffle, Coins, Flag, FileX, UserCheck, BookOpen, CalendarDays, FileText, User, Calculator, ShieldCheck, RefreshCw, Inbox, Search, Send } from 'lucide-react';
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import SEOHead from '../../../components/SEO/SEOHead';
+import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
 const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
 
@@ -114,9 +116,20 @@ function TaxUploadForm() {
   );
 }
 
-export default function TaxServices() {
-  useEffect(() => { document.title = 'Business & Individual Tax Services | BAAS'; }, []);
+const TAX_SERVICES_SCHEMA = [
+  serviceSchema({
+    name: 'Business & Individual Tax Services',
+    description: 'Proactive tax planning, business and individual tax return preparation, and IRS representation for Bay Area business owners.',
+    path: '/services/tax-services',
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: 'Tax Services', path: '/services/tax-services' },
+  ]),
+];
 
+export default function TaxServices() {
   const deadlines = [
     [FileWarning,'Failure-to-file penalties stack up fast','The IRS charges 5% of unpaid taxes per month for filing late — up to 25% of what you owe. On a $20,000 tax bill, that\'s $5,000 in penalties alone, before interest. Miss one deadline and you\'ve handed the government thousands for nothing.'],
     [Percent,'Interest compounds daily','On top of penalties, the IRS charges interest that compounds daily on unpaid balances. What started as a manageable bill quietly grows every single day until it\'s paid. The longer you wait, the deeper the hole.'],
@@ -160,6 +173,13 @@ export default function TaxServices() {
 
   return (
     <>
+      <SEOHead
+        title="Business & Individual Tax Services | BAAS"
+        description="Business and individual tax preparation, proactive tax planning, and IRS representation for Bay Area business owners. Never miss a deadline again."
+        url={`${SITE_URL}/services/tax-services`}
+        type="website"
+        structuredData={TAX_SERVICES_SCHEMA}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Services',to:'/services'},{label:'Tax Services'}]}
         label="Our Services"

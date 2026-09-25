@@ -1,17 +1,25 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import RevealWrapper from '../../components/UI/RevealWrapper';
 import StaggerGrid from '../../components/UI/StaggerGrid';
 import StaggerItem from '../../components/UI/StaggerItem';
 import PageHero from '../../components/Sections/PageHero';
 import CtaBar from '../../components/Sections/CtaBar';
+import SEOHead from '../../components/SEO/SEOHead';
+import { SITE_URL, breadcrumbSchema } from '../../components/SEO/seoConfig';
 
 const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
+const ABOUT_BREADCRUMB = breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }]);
 
 export default function About() {
-  useEffect(() => { document.title = 'About Us | Bay Area Accounting Solutions'; }, []);
   return (
     <>
+      <SEOHead
+        title="About Us | Bay Area Accounting Solutions"
+        description="Meet the team behind Bay Area Accounting Solutions — Bay Area business owners and accountants who've helped 500+ companies find financial clarity."
+        url={`${SITE_URL}/about`}
+        type="website"
+        structuredData={ABOUT_BREADCRUMB}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'About'}]}
         label="About Us"

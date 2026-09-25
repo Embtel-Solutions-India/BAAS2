@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, Brain, HeartPulse, Clock, GitBranch, Users, TrendingUp, EyeOff, BrainCircuit, Frown, Flame, CalendarClock, HeartCrack, Moon, Activity, UserX, BarChart3, Target, FileText, RefreshCw, CheckCircle, PieChart, ClipboardList, Calendar, User } from 'lucide-react';
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import SEOHead from '../../../components/SEO/SEOHead';
+import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
 const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
 
@@ -130,9 +132,20 @@ function QuoteForm() {
   );
 }
 
-export default function Bookkeeping() {
-  useEffect(() => { document.title = 'Bookkeeping & Accounting Services | BAAS'; }, []);
+const BOOKKEEPING_SCHEMA = [
+  serviceSchema({
+    name: 'Bookkeeping & Accounting',
+    description: "Monthly bookkeeping, account reconciliation, and financial reporting for Bay Area businesses.",
+    path: '/services/bookkeeping',
+  }),
+  breadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: 'Bookkeeping & Accounting', path: '/services/bookkeeping' },
+  ]),
+];
 
+export default function Bookkeeping() {
   const productivity = [
     [Clock,'10–15 hours per week lost','Small business owners spend an average of 10–15 hours per week on bookkeeping tasks they\'re not trained to do — reconciling bank statements, categorizing expenses, chasing receipts, fixing QuickBooks errors. That\'s nearly two full work days, every single week, spent on tasks that produce zero revenue.'],
     [GitBranch,'Decision paralysis from bad data','When your books are wrong, every decision becomes a gamble. Should you hire that new employee? Can you afford that equipment? Is this client profitable? Without accurate numbers, you either freeze or guess — and both cost you money.'],
@@ -176,6 +189,13 @@ export default function Bookkeeping() {
 
   return (
     <>
+      <SEOHead
+        title="Bookkeeping & Accounting Services | BAAS"
+        description="Monthly bookkeeping and accounting for Bay Area businesses: bank reconciliation, financial statements, custom dashboards, and a dedicated bookkeeper."
+        url={`${SITE_URL}/services/bookkeeping`}
+        type="website"
+        structuredData={BOOKKEEPING_SCHEMA}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Services',to:'/services'},{label:'Bookkeeping & Accounting'}]}
         label="Our Services"

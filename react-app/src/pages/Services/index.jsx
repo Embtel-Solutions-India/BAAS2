@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import RevealWrapper from '../../components/UI/RevealWrapper';
@@ -6,6 +5,8 @@ import StaggerGrid from '../../components/UI/StaggerGrid';
 import StaggerItem from '../../components/UI/StaggerItem';
 import PageHero from '../../components/Sections/PageHero';
 import CtaBar from '../../components/Sections/CtaBar';
+import SEOHead from '../../components/SEO/SEOHead';
+import { SITE_URL, breadcrumbSchema } from '../../components/SEO/seoConfig';
 
 const SERVICES = [
   { icon: <><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></>, title: 'Bookkeeping & Accounting', desc: 'Crystal-clear books, monthly reports that actually make sense, and year-end confidence. We reconcile accounts, categorize transactions, and deliver clean financial statements every month.', href: '/services/bookkeeping', features: ['Monthly reconciliation','P&L statements','Balance sheet','Year-end prep'] },
@@ -17,10 +18,30 @@ const SERVICES = [
   { icon: <><path d="M3 3h18v4H3z"/><path d="M3 9h18v4H3z"/><path d="M3 15h12v4H3z"/><path d="M17 17l2 2 4-4"/></>, title: 'Bookkeeping Cleanup & Catch-Up', desc: 'Months or years behind on your books? We fix messy QuickBooks, reconcile every account, clear uncategorized transactions, and get you audit-ready — fast. AI-assisted, human-verified.', href: '/services/bookkeeping-cleanup', features: ['QuickBooks cleanup','Catch-up bookkeeping','Bank reconciliation','Audit-ready financials'] },
 ];
 
+const SERVICES_SCHEMA = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: SERVICES.map(({ title, href }, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: title,
+      url: `${SITE_URL}${href}`,
+    })),
+  },
+  breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Services', path: '/services' }]),
+];
+
 export default function Services() {
-  useEffect(() => { document.title = 'Services | Bay Area Accounting Solutions'; }, []);
   return (
     <>
+      <SEOHead
+        title="Accounting & Bookkeeping Services | BAAS"
+        description="Full-range accounting services for Bay Area businesses: bookkeeping, taxes, payroll, business formation, registered agent, and bookkeeping cleanup."
+        url={`${SITE_URL}/services`}
+        type="website"
+        structuredData={SERVICES_SCHEMA}
+      />
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Services'}]}
         label="What We Do"
