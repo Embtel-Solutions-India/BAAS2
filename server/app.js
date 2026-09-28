@@ -4,6 +4,7 @@ const helmet       = require('helmet');
 const cors         = require('cors');
 const cookieParser = require('cookie-parser');
 const path         = require('path');
+const fs           = require('fs');
 require('./config/db');
 require('./scripts/seedAdmin');
 // Services are now fully admin-managed (no seeded catalog). This idempotently
@@ -70,6 +71,31 @@ app.use('/api/chat',          require('./routes/chat'));
 app.get('/api/health', (req, res) =>
   res.json({ status: 'ok', ts: new Date().toISOString() })
 );
+
+// Blog articles are CSR-only (never prerendered — see react-app/scripts/
+// prerender.mjs), so nginx can't tell a real slug from an invented one by
+// looking at the filesystem alone. It falls back to proxying unmatched
+// /blog/<slug> requests here so we can check the database directly and
+// return a real 404 for bad slugs, exactly like /api/blogs/:slug already
+// does — without requiring every article to be prerendered (which would
+// make a newly published post 404 until the next deploy).
+const FRONTEND_INDEX = process.env.FRONTEND_INDEX_PATH
+  || path.join(__dirname, '..', 'react-app', 'dist', 'index.html');
+
+app.get('/blog/:slug', async (req, res, next) => {
+  try {
+    if (!fs.existsSync(FRONTEND_INDEX)) return next();
+    const Blog = require('./models/Blog');
+    const exists = await Blog.exists({ slug: req.params.slug, status: 'published' });
+    // Served by nginx everywhere else with no CSP header; match that here
+    // so this passthrough doesn't behave differently (e.g. block the
+    // Elfsight widget's inline bootstrap script) from every other page.
+    res.removeHeader('Content-Security-Policy');
+    res.status(exists ? 200 : 404).sendFile(FRONTEND_INDEX);
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.use((req, res) => res.status(404).json({ error: 'Route not found' }));
 
