@@ -96,6 +96,14 @@ async function main() {
     process.exit(1);
   }
 
+  // Save a pristine copy of the bare (pre-prerender) SPA shell BEFORE the loop
+  // below overwrites dist/index.html with the home page's own rendered
+  // content. server/app.js's CSR passthrough for /blog/:slug (unprerendered
+  // article routes) needs this neutral shell — serving the prerendered
+  // dist/index.html there would ship the *home page's* title/canonical/JSON-LD
+  // under a completely different URL.
+  fs.copyFileSync(path.join(DIST, 'index.html'), path.join(DIST, 'shell.html'));
+
   let puppeteer;
   try {
     puppeteer = (await import('puppeteer')).default;

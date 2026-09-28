@@ -79,19 +79,51 @@ app.get('/api/health', (req, res) =>
 // return a real 404 for bad slugs, exactly like /api/blogs/:slug already
 // does — without requiring every article to be prerendered (which would
 // make a newly published post 404 until the next deploy).
-const FRONTEND_INDEX = process.env.FRONTEND_INDEX_PATH
-  || path.join(__dirname, '..', 'react-app', 'dist', 'index.html');
+//
+// IMPORTANT: this must be the neutral pre-prerender shell (shell.html), not
+// dist/index.html — the prerender script overwrites index.html with the
+// *home page's* own rendered content (title/canonical/JSON-LD), which would
+// otherwise ship under every blog article's URL too.
+const FRONTEND_SHELL = process.env.FRONTEND_SHELL_PATH
+  || path.join(__dirname, '..', 'react-app', 'dist', 'shell.html');
+
+let shellHtmlCache;
+function readShellHtml() {
+  if (shellHtmlCache === undefined) {
+    shellHtmlCache = fs.existsSync(FRONTEND_SHELL) ? fs.readFileSync(FRONTEND_SHELL, 'utf8') : null;
+  }
+  return shellHtmlCache;
+}
 
 app.get('/blog/:slug', async (req, res, next) => {
   try {
-    if (!fs.existsSync(FRONTEND_INDEX)) return next();
+    const shell = readShellHtml();
+    if (!shell) return next();
     const Blog = require('./models/Blog');
     const exists = await Blog.exists({ slug: req.params.slug, status: 'published' });
+
+    // The shell's baked-in canonical/robots point at "/" — fine for every
+    // other CSR-only route (which all redirect to "/" anyway), wrong here
+    // since this one URL now serves real, distinct article slugs. Rewrite
+    // both to describe *this* URL instead; SEOHead corrects them again
+    // client-side once React mounts, this is only for non-JS fetches.
+    const selfUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+    let html = shell.replace(
+      /<link rel="canonical" href="[^"]*"\s*\/?>/,
+      `<link rel="canonical" href="${selfUrl}" />`
+    );
+    if (!exists) {
+      html = html.replace(
+        /<meta name="robots" content="[^"]*"\s*\/?>/,
+        '<meta name="robots" content="noindex, follow" />'
+      );
+    }
+
     // Served by nginx everywhere else with no CSP header; match that here
     // so this passthrough doesn't behave differently (e.g. block the
     // Elfsight widget's inline bootstrap script) from every other page.
     res.removeHeader('Content-Security-Policy');
-    res.status(exists ? 200 : 404).sendFile(FRONTEND_INDEX);
+    res.status(exists ? 200 : 404).type('html').send(html);
   } catch (err) {
     next(err);
   }
