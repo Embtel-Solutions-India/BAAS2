@@ -22,7 +22,12 @@ app.use(helmet());
 const ALLOWED_ORIGINS = (process.env.CLIENT_URL || 'http://localhost:3000')
   .split(',')
   .map(o => o.trim())
-  .concat(['http://localhost:4000', 'http://127.0.0.1:4000', 'http://localhost:5173', 'http://127.0.0.1:5173']);
+  // 5173/4000 are the Vite dev server and this API; 5178 is the local static
+  // server the build-time prerender script (react-app/scripts/prerender.mjs)
+  // uses to headlessly render each route — without it, any page that fetches
+  // data (e.g. /blog) gets its API calls CORS-rejected during prerendering
+  // and ships with no data baked into its static HTML.
+  .concat(['http://localhost:4000', 'http://127.0.0.1:4000', 'http://localhost:5173', 'http://127.0.0.1:5173', 'http://localhost:5178', 'http://127.0.0.1:5178']);
 
 app.use(cors({
   origin(origin, cb) {

@@ -136,6 +136,10 @@ async function main() {
       }
       // Wait for React to actually render into #root, then settle animations.
       await page.waitForFunction('document.querySelector("#root") && document.querySelector("#root").children.length > 0', { timeout: 20000 }).catch(() => {});
+      // Pages that fetch their content client-side (e.g. /blog) can still be
+      // mid-request at this point — wait for that to settle too, otherwise
+      // we capture a loading skeleton / empty state instead of real content.
+      await page.waitForNetworkIdle({ idleTime: 500, timeout: 8000 }).catch(() => {});
       await autoScroll(page);
       await new Promise((r) => setTimeout(r, 500));
 

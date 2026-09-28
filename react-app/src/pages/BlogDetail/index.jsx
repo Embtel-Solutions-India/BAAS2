@@ -46,11 +46,19 @@ export default function BlogDetail() {
 
   if (error || !blog) {
     return (
-      <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-        <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: '32px', marginBottom: '16px' }}>Article Not Found</h2>
-        <p style={{ color: 'var(--td)', marginBottom: '24px' }}>The article you are looking for does not exist or has been removed.</p>
-        <Link to="/blog" className="btn-pl" style={{ textDecoration: 'none' }}>Back to Blog</Link>
-      </div>
+      <>
+        <SEOHead
+          title="Article Not Found | Bay Area Accounting Solutions"
+          description="The article you are looking for does not exist or has been removed."
+          type="website"
+          noindex
+        />
+        <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+          <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: '32px', marginBottom: '16px' }}>Article Not Found</h2>
+          <p style={{ color: 'var(--td)', marginBottom: '24px' }}>The article you are looking for does not exist or has been removed.</p>
+          <Link to="/blog" className="btn-pl" style={{ textDecoration: 'none' }}>Back to Blog</Link>
+        </div>
+      </>
     );
   }
 
