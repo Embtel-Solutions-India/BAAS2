@@ -40,6 +40,10 @@ const SANITIZE_OPTS = {
   allowedSchemes: ['http', 'https', 'data', 'mailto']
 };
 
+// Shared with scripts/seedQuickBooksBlog.js so seeded posts get identical treatment.
+exports.SANITIZE_OPTS = SANITIZE_OPTS;
+exports.calcReadingTime = calcReadingTime;
+
 /* ── ADMIN ENDPOINTS ── */
 
 exports.createBlog = async (req, res) => {
