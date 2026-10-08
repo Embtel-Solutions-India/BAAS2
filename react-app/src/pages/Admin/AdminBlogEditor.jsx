@@ -1,29 +1,91 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import ReactQuill from 'react-quill-new';
+import ReactQuill, { Quill } from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import AdminLayout from '../../components/Portal/AdminLayout';
 import { api } from '../../utils/api';
 
 const CATEGORIES = ['General', 'Tax Planning', 'Bookkeeping', 'Business Tips', 'Payroll', 'Cash Flow', 'Business Formation', 'Compliance', 'Industry News'];
 
+/* ── Google-Docs-style toolbar ──
+   Fonts, sizes and line spacing are stored as inline styles so they render
+   on the public blog without any editor CSS (the sanitizer keeps `style`). */
+const FONTS = ['Arial', 'Georgia', 'Times New Roman', 'Verdana', 'Trebuchet MS', 'Courier New'];
+const SIZES = ['10px', '12px', '14px', '16px', '18px', '20px', '24px', '28px', '32px', '36px', '48px'];
+const DEFAULT_SIZE = '18px'; // matches .blog-rich-content base size
+const LINE_HEIGHTS = ['1', '1.15', '1.5', '2', '2.5'];
+const TOOLBAR_ID = 'blog-editor-toolbar';
+
+const FontStyle = Quill.import('attributors/style/font');
+FontStyle.whitelist = FONTS;
+Quill.register(FontStyle, true);
+
+const SizeStyle = Quill.import('attributors/style/size');
+SizeStyle.whitelist = SIZES;
+Quill.register(SizeStyle, true);
+
+const Parchment = Quill.import('parchment');
+Quill.register(
+  new Parchment.StyleAttributor('lineheight', 'line-height', { scope: Parchment.Scope.BLOCK, whitelist: LINE_HEIGHTS }),
+  true
+);
+
+function stepSize(quill, dir) {
+  if (!quill.getSelection()) return;
+  const current = quill.getFormat().size || DEFAULT_SIZE;
+  const next = SIZES[Math.min(SIZES.length - 1, Math.max(0, SIZES.indexOf(current) + dir))];
+  quill.format('size', next === DEFAULT_SIZE ? false : next);
+}
+
 const QUILL_MODULES = {
-  toolbar: [
-    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-    ['bold', 'italic', 'underline', 'strike'],
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    ['blockquote', 'code-block'],
-    [{ align: [] }],
-    ['link', 'image'],
-    [{ color: [] }, { background: [] }],
-    ['clean']
-  ]
+  toolbar: {
+    container: `#${TOOLBAR_ID}`,
+    handlers: {
+      undo() { this.quill.history.undo(); },
+      redo() { this.quill.history.redo(); },
+      sizeDown() { stepSize(this.quill, -1); },
+      sizeUp() { stepSize(this.quill, 1); }
+    }
+  },
+  history: { userOnly: true }
 };
 
 const QUILL_FORMATS = [
-  'header', 'bold', 'italic', 'underline', 'strike',
-  'list', 'blockquote', 'code-block',
-  'align', 'link', 'image', 'color', 'background'
+  'font', 'size', 'lineheight', 'header', 'bold', 'italic', 'underline',
+  'list', 'indent', 'align', 'link', 'image', 'color', 'background'
+];
+
+// Dropdown labels for the toolbar pickers (Quill renders them from CSS).
+const PICKER_CSS = `
+#${TOOLBAR_ID} .ql-picker.ql-header { width: 118px; }
+#${TOOLBAR_ID} .ql-picker.ql-font { width: 128px; }
+#${TOOLBAR_ID} .ql-picker.ql-size { width: 54px; }
+#${TOOLBAR_ID} .ql-picker.ql-lineheight { width: 74px; }
+#${TOOLBAR_ID} .ql-picker.ql-header .ql-picker-label::before,
+#${TOOLBAR_ID} .ql-picker.ql-header .ql-picker-item::before { content: 'Normal text'; }
+#${TOOLBAR_ID} .ql-picker.ql-header [data-value="1"]::before { content: 'Heading 1'; }
+#${TOOLBAR_ID} .ql-picker.ql-header [data-value="2"]::before { content: 'Heading 2'; }
+#${TOOLBAR_ID} .ql-picker.ql-header [data-value="3"]::before { content: 'Heading 3'; }
+#${TOOLBAR_ID} .ql-picker.ql-header [data-value="4"]::before { content: 'Heading 4'; }
+#${TOOLBAR_ID} .ql-picker.ql-font .ql-picker-label::before,
+#${TOOLBAR_ID} .ql-picker.ql-font .ql-picker-item::before { content: 'Default'; }
+${FONTS.map(f => `#${TOOLBAR_ID} .ql-picker.ql-font [data-value="${f}"]::before { content: '${f}'; font-family: '${f}'; }`).join('\n')}
+#${TOOLBAR_ID} .ql-picker.ql-size .ql-picker-label::before,
+#${TOOLBAR_ID} .ql-picker.ql-size .ql-picker-item::before { content: '${parseInt(DEFAULT_SIZE)}'; }
+${SIZES.map(s => `#${TOOLBAR_ID} .ql-picker.ql-size [data-value="${s}"]::before { content: '${parseInt(s)}'; }`).join('\n')}
+#${TOOLBAR_ID} .ql-picker.ql-lineheight .ql-picker-label::before,
+#${TOOLBAR_ID} .ql-picker.ql-lineheight .ql-picker-item::before { content: 'Spacing'; }
+${LINE_HEIGHTS.map(l => `#${TOOLBAR_ID} .ql-picker.ql-lineheight [data-value="${l}"]::before { content: '${l}'; }`).join('\n')}
+#${TOOLBAR_ID} .ql-sizeDown, #${TOOLBAR_ID} .ql-sizeUp, #${TOOLBAR_ID} .ql-undo, #${TOOLBAR_ID} .ql-redo { font-weight: 700; font-size: 16px; line-height: 1; }
+`;
+
+// Markup the visual (Quill) editor can't represent: it would strip these on load/save.
+const needsHtmlMode = (html) => /<(div|table|figure|section|small|i)[\s>]|class="(?!ql-)|style=/i.test(html || '');
+
+const MODE_TABS = [
+  { key: 'visual', label: 'Visual' },
+  { key: 'html', label: 'HTML' },
+  { key: 'preview', label: 'Preview' }
 ];
 
 export default function AdminBlogEditor() {
@@ -50,6 +112,51 @@ export default function AdminBlogEditor() {
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [mode, setMode] = useState('visual');
+  const [importing, setImporting] = useState(false);
+  const docxInputRef = useRef(null);
+
+  // Converts an uploaded Word (.docx) file to HTML and loads it into the editor.
+  const handleDocxImport = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.docx')) {
+      setError('Please choose a Word .docx file');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setError('Word file must be under 10MB');
+      return;
+    }
+    if (form.content.trim() && !window.confirm('Replace the current content with the contents of this Word file?')) return;
+
+    setError('');
+    setImporting(true);
+    try {
+      const mammoth = (await import('mammoth/mammoth.browser')).default;
+      const { value } = await mammoth.convertToHtml({ arrayBuffer: await file.arrayBuffer() });
+      setForm(prev => ({
+        ...prev,
+        content: value,
+        title: prev.title || file.name.replace(/\.docx$/i, '').replace(/[_-]+/g, ' ').trim()
+      }));
+      setMode('visual');
+    } catch (err) {
+      console.error('Word import error:', err);
+      setError('Could not read that Word file. Make sure it is a valid .docx document.');
+    } finally {
+      setImporting(false);
+    }
+  };
+
+  const switchMode = (next) => {
+    if (next === 'visual' && needsHtmlMode(form.content) &&
+        !window.confirm('This post uses custom HTML/CSS (classes, tables, figures). The Visual editor will strip it. Switch anyway?')) {
+      return;
+    }
+    setMode(next);
+  };
 
   useEffect(() => {
     if (!isEdit) return;
@@ -70,6 +177,7 @@ export default function AdminBlogEditor() {
           featured: b.featured || false,
           status: b.status || 'draft'
         });
+        if (needsHtmlMode(b.content)) setMode('html');
         if (b.thumbnail) setThumbnailPreview(b.thumbnail);
       } catch (err) {
         console.error('Load blog error:', err);
@@ -219,18 +327,128 @@ export default function AdminBlogEditor() {
 
           {/* Rich Text Editor */}
           <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Content</label>
-            <div className="border border-gray-200 rounded-lg overflow-hidden focus-within:border-[#d4001f] focus-within:ring-3 focus-within:ring-[#d4001f]/10 transition-all">
-              <ReactQuill
-                theme="snow"
-                value={form.content}
-                onChange={val => setForm(prev => ({ ...prev, content: val }))}
-                modules={QUILL_MODULES}
-                formats={QUILL_FORMATS}
-                placeholder="Write your blog content here..."
-                style={{ minHeight: '350px' }}
+            <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">Content</label>
+              <button
+                type="button"
+                onClick={() => docxInputRef.current?.click()}
+                disabled={importing}
+                className="ml-auto px-3.5 py-1.5 rounded-lg border border-gray-200 hover:border-[#d4001f] hover:text-[#d4001f] bg-white text-xs font-bold text-gray-600 cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {importing ? 'Importing...' : 'Import Word (.docx)'}
+              </button>
+              <input
+                ref={docxInputRef}
+                type="file"
+                accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                className="hidden"
+                onChange={handleDocxImport}
               />
+              <div className="inline-flex rounded-lg border border-gray-200 overflow-hidden">
+                {MODE_TABS.map(t => (
+                  <button
+                    key={t.key}
+                    type="button"
+                    onClick={() => switchMode(t.key)}
+                    className={`px-3.5 py-1.5 text-xs font-bold cursor-pointer border-none transition-all ${mode === t.key ? 'bg-[#d4001f] text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
             </div>
+
+            {mode === 'visual' && (
+              <div className="border border-gray-200 rounded-lg overflow-hidden focus-within:border-[#d4001f] focus-within:ring-3 focus-within:ring-[#d4001f]/10 transition-all">
+                <style>{PICKER_CSS}</style>
+                <div id={TOOLBAR_ID} className="ql-toolbar ql-snow">
+                  <span className="ql-formats">
+                    <button type="button" className="ql-undo" title="Undo">&#8630;</button>
+                    <button type="button" className="ql-redo" title="Redo">&#8631;</button>
+                  </span>
+                  <span className="ql-formats">
+                    <select className="ql-header" defaultValue="" title="Paragraph style">
+                      <option value="1" /><option value="2" /><option value="3" /><option value="4" /><option value="" />
+                    </select>
+                  </span>
+                  <span className="ql-formats">
+                    <select className="ql-font" defaultValue="" title="Font">
+                      <option value="" />
+                      {FONTS.map(f => <option key={f} value={f} />)}
+                    </select>
+                  </span>
+                  <span className="ql-formats">
+                    <button type="button" className="ql-sizeDown" title="Decrease font size">&minus;</button>
+                    <select className="ql-size" defaultValue="" title="Font size">
+                      <option value="" />
+                      {SIZES.filter(s => s !== DEFAULT_SIZE).map(s => <option key={s} value={s} />)}
+                    </select>
+                    <button type="button" className="ql-sizeUp" title="Increase font size">+</button>
+                  </span>
+                  <span className="ql-formats">
+                    <button type="button" className="ql-bold" title="Bold" />
+                    <button type="button" className="ql-italic" title="Italic" />
+                    <button type="button" className="ql-underline" title="Underline" />
+                    <select className="ql-color" title="Text color" />
+                    <select className="ql-background" title="Highlight color" />
+                  </span>
+                  <span className="ql-formats">
+                    <button type="button" className="ql-link" title="Insert link" />
+                    <button type="button" className="ql-image" title="Insert image" />
+                  </span>
+                  <span className="ql-formats">
+                    <select className="ql-align" title="Alignment" />
+                    <select className="ql-lineheight" defaultValue="" title="Line spacing">
+                      <option value="" />
+                      {LINE_HEIGHTS.map(l => <option key={l} value={l} />)}
+                    </select>
+                  </span>
+                  <span className="ql-formats">
+                    <button type="button" className="ql-list" value="bullet" title="Bulleted list" />
+                    <button type="button" className="ql-list" value="ordered" title="Numbered list" />
+                    <button type="button" className="ql-indent" value="-1" title="Decrease indent" />
+                    <button type="button" className="ql-indent" value="+1" title="Increase indent" />
+                  </span>
+                  <span className="ql-formats">
+                    <button type="button" className="ql-clean" title="Clear formatting" />
+                  </span>
+                </div>
+                <ReactQuill
+                  theme="snow"
+                  value={form.content}
+                  onChange={val => setForm(prev => ({ ...prev, content: val }))}
+                  modules={QUILL_MODULES}
+                  formats={QUILL_FORMATS}
+                  placeholder="Write your blog content here..."
+                  style={{ minHeight: '350px' }}
+                />
+              </div>
+            )}
+
+            {mode === 'html' && (
+              <>
+                <textarea
+                  spellCheck={false}
+                  className="w-full px-3.5 py-3 rounded-lg border border-gray-200 focus:border-[#d4001f] focus:ring-3 focus:ring-[#d4001f]/10 outline-none text-xs font-mono leading-relaxed transition-all bg-gray-50 min-h-[480px] resize-y"
+                  placeholder="Paste or write the blog's HTML here (classes and inline styles are kept)..."
+                  value={form.content}
+                  onChange={e => setForm(prev => ({ ...prev, content: e.target.value }))}
+                />
+                <div className="mt-2 text-[11px] text-gray-400 font-medium">
+                  Raw HTML. Classes and inline styles are preserved; scripts and unsafe tags are removed on save. Use the Preview tab to see it as readers will.
+                </div>
+              </>
+            )}
+
+            {mode === 'preview' && (
+              <div className="border border-gray-200 rounded-lg bg-white p-6 sm:p-8 max-h-[720px] overflow-auto">
+                {form.content ? (
+                  <div className="blog-rich-content" dangerouslySetInnerHTML={{ __html: form.content }} />
+                ) : (
+                  <div className="text-sm text-gray-400">Nothing to preview yet.</div>
+                )}
+              </div>
+            )}
             <div className="mt-3 text-xs text-gray-400 font-semibold tracking-wide">
               Est. reading time: {readingTime}
             </div>
@@ -321,7 +539,7 @@ export default function AdminBlogEditor() {
                 value={form.category}
                 onChange={handleChange}
               >
-                {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                {(CATEGORIES.includes(form.category) ? CATEGORIES : [...CATEGORIES, form.category]).map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div className="mb-4">

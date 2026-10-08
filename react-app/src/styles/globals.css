@@ -683,6 +683,20 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
   display: block;
 }
 
+/* Formatting produced by the admin Word-style (Quill) editor */
+.blog-rich-content .ql-align-center { text-align: center; }
+.blog-rich-content .ql-align-right { text-align: right; }
+.blog-rich-content .ql-align-justify { text-align: justify; }
+.blog-rich-content .ql-font-serif { font-family: Georgia, 'Times New Roman', serif; }
+.blog-rich-content .ql-font-monospace { font-family: Consolas, Monaco, 'Courier New', monospace; }
+.blog-rich-content .ql-size-small { font-size: .8em; }
+.blog-rich-content .ql-size-large { font-size: 1.4em; }
+.blog-rich-content .ql-size-huge { font-size: 2em; }
+.blog-rich-content .ql-indent-1 { padding-left: 3em; }
+.blog-rich-content .ql-indent-2 { padding-left: 6em; }
+.blog-rich-content .ql-indent-3 { padding-left: 9em; }
+.blog-rich-content iframe.ql-video { width: 100%; aspect-ratio: 16 / 9; height: auto; border: 0; }
+
 /* ── Rich-post design: QuickBooks Online article (.qb-post) ──
    Scoped wrapper used inside blog content (class survives the sanitizer). */
 .blog-rich-content .qb-post {
