@@ -14,6 +14,7 @@ import {
   Globe,
 } from "lucide-react";
 import FaqItem from "../../components/UI/FaqItem";
+import LatestBlogs from "../../components/Sections/LatestBlogs";
 import { usePortal } from "../../hooks/usePortal";
 import SEOHead from "../../components/SEO/SEOHead";
 import { SITE_URL } from "../../components/SEO/seoConfig";
@@ -971,6 +972,9 @@ export default function Home() {
         class="elfsight-app-8c3a1505-8573-49f8-a9ca-e0959d3c787a"
         data-elfsight-app-lazy
       ></div>
+      {/* ═══ LATEST BLOG POSTS ════════════════════════════════════════ */}
+      <LatestBlogs />
+
       {/* ═══ FAQ ══════════════════════════════════════════════════════ */}
       <section className="section bg-white">
         <div className="container">
