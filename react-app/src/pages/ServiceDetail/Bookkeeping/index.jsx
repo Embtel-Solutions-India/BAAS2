@@ -190,8 +190,8 @@ export default function Bookkeeping() {
   return (
     <>
       <SEOHead
-        title="Bookkeeping & Accounting Services | BAAS"
-        description="Monthly bookkeeping and accounting for Bay Area businesses: bank reconciliation, financial statements, custom dashboards, and a dedicated bookkeeper."
+        title="Bay Area Bookkeeping Services | Dedicated Bookkeeper | Fremont"
+        description="Monthly bookkeeping for Bay Area businesses from a Fremont firm with 500+ clients: dedicated bookkeeper, bank reconciliation & financial statements. Free clarity session."
         url={`${SITE_URL}/services/bookkeeping`}
         type="website"
         structuredData={BOOKKEEPING_SCHEMA}

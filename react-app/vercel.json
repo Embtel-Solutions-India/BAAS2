@@ -1,4 +1,9 @@
 {
+  "redirects": [
+    { "source": "/step-by-step-guide-filing-form-990-for-the-first-time", "destination": "/services/tax-services", "permanent": true },
+    { "source": "/business-meals-gifts-and-client-entertainment", "destination": "/services/tax-services", "permanent": true },
+    { "source": "/fremont-business-license", "destination": "/services/consulting", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/((?!api|_next|favicon\\.ico|.*\\.).*)", "destination": "/index.html" }
   ],

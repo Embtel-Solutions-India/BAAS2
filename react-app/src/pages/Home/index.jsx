@@ -107,8 +107,8 @@ export default function Home() {
   return (
     <>
       <SEOHead
-        title="Bay Area Bookkeeping & Accounting Services | BAAS"
-        description="Full-range bookkeeping, tax, payroll, and business formation for Bay Area businesses. 500+ clients served across all 50 states. Free clarity session available."
+        title="Bay Area Bookkeeper & Accountants in Fremont | 500+ Clients"
+        description="Fremont-based bookkeepers and accountants trusted by 500+ Bay Area businesses. Monthly bookkeeping, taxes & payroll. Book a free clarity session — we reply within 24 hours."
         url={`${SITE_URL}/`}
         type="website"
         structuredData={FAQ_SCHEMA}
