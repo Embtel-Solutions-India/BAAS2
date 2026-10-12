@@ -108,7 +108,7 @@ export default function Home() {
     <>
       <SEOHead
         title="Bay Area Bookkeeper & Accountants in Fremont | 500+ Clients"
-        description="Fremont-based bookkeepers and accountants trusted by 500+ Bay Area businesses. Monthly bookkeeping, taxes & payroll. Book a free clarity session — we reply within 24 hours."
+        description="Fremont bookkeepers & accountants trusted by 500+ Bay Area businesses. Bookkeeping, taxes & payroll. Book a free clarity session."
         url={`${SITE_URL}/`}
         type="website"
         structuredData={FAQ_SCHEMA}
@@ -339,6 +339,13 @@ export default function Home() {
             Results vary by business. Figures reflect typical client outcomes
             and are not guaranteed.
           </p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "20px", flexWrap: "wrap", marginTop: "32px" }}>
+            <img src="/proadvisor-badge.png" alt="Intuit QuickBooks Level 1 Certified ProAdvisor badge" width="96" height="96" loading="lazy" style={{ width: "96px", height: "auto" }} />
+            <div style={{ maxWidth: "360px" }}>
+              <strong>QuickBooks Level 1 Certified ProAdvisor</strong>
+              <div style={{ fontSize: "14px", color: "var(--tf)" }}>Certified by Intuit to set up, clean up and manage your QuickBooks Online books.</div>
+            </div>
+          </div>
         </div>
       </section>
 

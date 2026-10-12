@@ -1,4 +1,4 @@
-const { S3Client, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const { S3Client, PutObjectCommand, DeleteObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
 const { v4: uuidv4 } = require('uuid');
 
 const s3Client = new S3Client({
@@ -73,4 +73,24 @@ async function deleteFromS3(urlOrKey) {
   }
 }
 
-module.exports = { uploadToS3, deleteFromS3 };
+/**
+ * Fetch an object from S3 (using server credentials, so the bucket can stay private).
+ * @param {string} key S3 object key
+ */
+async function getFromS3(key) {
+  return s3Client.send(new GetObjectCommand({ Bucket: BUCKET, Key: key }));
+}
+
+/**
+ * Rewrite a raw S3 object URL into a URL served by our own /api/media proxy,
+ * so images render even when the bucket blocks public reads. Other values pass through.
+ */
+function toPublicMediaUrl(url) {
+  if (typeof url !== 'string' || !BUCKET) return url;
+  const prefix = `https://${BUCKET}.s3.${process.env.AWS_REGION || 'us-east-1'}.amazonaws.com/`;
+  if (!url.startsWith(prefix)) return url;
+  const base = (process.env.PUBLIC_API_URL || '/api').replace(/\/$/, '');
+  return `${base}/media/${url.slice(prefix.length)}`;
+}
+
+module.exports = { uploadToS3, deleteFromS3, getFromS3, toPublicMediaUrl };

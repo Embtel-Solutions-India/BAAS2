@@ -72,7 +72,7 @@ export default function RegisteredAgent() {
   ];
 
   const steps = [
-    ['01','Choose Your Plan','We offer simple pricing — just choose your plan and sign up in minutes.'],
+    ['01','Choose Your Plan','Registered agent service starts at $125/year, or $199/year bundled with business formation. Final quote on a quick call.'],
     ['02','We File the Change','If you already have a business, we handle the paperwork to switch your registered agent.'],
     ['03','Legal Notices Come to Us','We receive any state or federal correspondence on your behalf — and notify you instantly.'],
     ['04','Stay Compliant Year After Year','We track and remind you about renewals, compliance filings, and anything that requires attention.'],

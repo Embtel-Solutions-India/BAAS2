@@ -86,7 +86,7 @@ function DiagnosticQuiz() {
   };
 
   const n = checked.size;
-  let verdict = '', verdictColor = 'var(--ok, #0e7a3d)', advice = '', cta = 'Book My Free Diagnostic Review';
+  let verdict = '', verdictColor = 'var(--ok, #0e7a3d)', advice = '', cta = 'Book My Free Clarity Session';
 
   if (n === 0) {
     verdict = 'Check the boxes above to see your result';
@@ -94,7 +94,7 @@ function DiagnosticQuiz() {
   } else if (n <= 2) {
     verdict = 'Mostly clean — with a couple of loose ends';
     advice = 'Small issues are cheapest to fix now, before tax season turns them into big ones. A quick diagnostic will confirm nothing bigger is hiding underneath.';
-    cta = 'Book a Quick Diagnostic — Free';
+    cta = 'Book a Free Clarity Session';
   } else if (n <= 5) {
     verdict = 'Cleanup recommended — sooner is cheaper';
     verdictColor = 'var(--accent)';
@@ -103,7 +103,7 @@ function DiagnosticQuiz() {
     verdict = 'Urgent — your books need attention now';
     verdictColor = 'var(--accent)';
     advice = "Penalties, lost deductions, and audit risk are actively compounding. We've fixed far worse, fast, and with zero judgment. Let's find out exactly where you stand — free.";
-    cta = 'Book My Free Diagnostic — Today';
+    cta = 'Book My Free Clarity Session — Today';
   }
 
   return (
@@ -201,7 +201,7 @@ export default function BookkeepingCleanup() {
   ];
 
   const steps = [
-    ['S1', 'Diagnose', 'Free diagnostic review of your books. We tell you exactly what\'s wrong, how long the fix takes, and a flat price. No surprises.', 'Free · 30 min'],
+    ['S1', 'Diagnose', 'Free clarity session on your books. We tell you exactly what\'s wrong, how long the fix takes, and a flat price. No surprises.', 'Free · 30 min'],
     ['S2', 'Clean Up', 'We fix what exists: re-categorize, reconcile, de-duplicate, and repair your balance sheet. AI does the heavy lifting; accountants verify every result.', 'Days, not months'],
     ['S3', 'Catch Up', 'We fill the gaps: every missing month entered and reconciled, from bank statements if needed, until your books are current to today.', 'Audit-ready'],
     ['S4', 'Keep Clean', 'Monthly bookkeeping keeps you current forever — and with taxes, payroll, and formation in-house, you\'ll never juggle providers again.', 'Never behind again'],
@@ -220,7 +220,7 @@ export default function BookkeepingCleanup() {
     ['How long does a cleanup take?', 'Most cleanups finish in 1–3 weeks, depending on transaction volume and how many months are behind. Our AI-assisted process moves dramatically faster than manual bookkeeping, and every result is verified by a professional accountant before delivery.'],
     ['Will messy books trigger an IRS audit?', 'Messy books don\'t directly trigger audits — but they create the red flags that do: 1099s that don\'t match your return, unreported income, and inconsistent filings. The bigger danger is being audited with messy books: without documentation, the IRS can disallow deductions you legitimately earned and add an accuracy-related penalty of 20% of the underpayment. Clean books are your best audit defense.'],
     ['What do you need from me to get started?', 'Usually just read-only access to your QuickBooks or Xero file and your bank/credit card statements (PDFs are fine). If you\'ve got receipts in a shoebox, a drawer, or your email — that works too. We handle the sorting.'],
-    ['What does it cost?', 'Every cleanup gets a flat quote after the free diagnostic review, based on transaction volume and months behind — so you know the full price before we start, and it never changes mid-project. No hourly meters running.'],
+    ['What does it cost?', 'Every cleanup gets a flat quote after the free clarity session, based on transaction volume and months behind — so you know the full price before we start, and it never changes mid-project. No hourly meters running.'],
     ['Do I have to keep using you afterward?', 'No — the cleanup is yours either way, delivered clean and documented for whoever does your books next. That said, most clients stay for monthly bookkeeping so they never fall behind again, and many bring their taxes and payroll over once they see the difference clean books make.'],
     ["I'm embarrassed about how bad it is. Seriously.", "You'd be amazed how often we hear this — and how normal your situation is. We've rebuilt books from grocery bags of receipts and five years of silence. No judgment, no lectures. You focused on running your business; now we'll handle this part."],
   ];
@@ -288,7 +288,7 @@ export default function BookkeepingCleanup() {
           <SectionHeader
             label="60-Second Self-Check"
             title="The Messy Books Diagnostic"
-            sub="Check every statement that's true for your business. Your score tells you how urgent a cleanup is — and it's the first thing we'll review together on your free diagnostic call."
+            sub="Check every statement that's true for your business. Your score tells you how urgent a cleanup is — and it's the first thing we'll review together on your free clarity session."
           />
           <RevealWrapper>
             <DiagnosticQuiz />
@@ -380,7 +380,7 @@ export default function BookkeepingCleanup() {
                   </div>
                 ))}
                 <p style={{fontSize:'12px',color:'#d9a7af',marginTop:'16px',lineHeight:1.5}}>
-                  Typical timelines — actual duration depends on transaction volume and record availability. We confirm yours in the free diagnostic.
+                  Typical timelines — actual duration depends on transaction volume and record availability. We confirm yours in the free clarity session.
                 </p>
               </div>
             </RevealWrapper>
@@ -400,7 +400,7 @@ export default function BookkeepingCleanup() {
             </p>
             <a href={BOOK} target="_blank" rel="noopener noreferrer"
               style={{display:'inline-flex',alignItems:'center',gap:'8px',background:'#fff',color:'var(--accent)',textDecoration:'none',fontWeight:700,padding:'15px 30px',borderRadius:'8px',fontSize:'16px',border:'2px solid #fff',transition:'background .18s'}}>
-              Start With a Free Diagnostic
+              Start With a Free Clarity Session
               <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 9h10M10 5l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </a>
             <div style={{marginTop:'36px',display:'flex',justifyContent:'center',gap:'10px',flexWrap:'wrap'}}>
@@ -447,7 +447,7 @@ export default function BookkeepingCleanup() {
 
             <RevealWrapper delay={0.2}>
               <div className="sidebar-cta">
-                <h4>Free Diagnostic Call</h4>
+                <h4>Free Clarity Session</h4>
                 <p>30 minutes with our team. We tell you exactly what shape your books are in and what it'll take to fix them — at no charge.</p>
                 <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
               </div>
@@ -472,7 +472,7 @@ export default function BookkeepingCleanup() {
 
       <CtaBar
         heading="The best day to fix your books was months ago. The second best is today."
-        sub="Free 30-minute diagnostic call. Know exactly where you stand — no obligation."
+        sub="Free 30-minute clarity session. Know exactly where you stand — no obligation."
       />
     </>
   );

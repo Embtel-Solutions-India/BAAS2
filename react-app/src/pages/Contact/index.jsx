@@ -50,11 +50,15 @@ export default function Contact() {
 
     setSubmitting(true);
     try {
-      await fetch('https://formspree.io/f/maqgdzzy', {
+      const res = await fetch('https://formspree.io/f/maqgdzzy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ ...form, _subject: `New inquiry from ${form.first_name} ${form.last_name}` }),
       });
+      // Google Ads conversion: "Contact" form submitted
+      if (res.ok && typeof window.gtag === 'function') {
+        window.gtag('event', 'conversion', { send_to: 'AW-18506219893/GsyoCJ6Qx5gdEPWCuvhE' });
+      }
       setSubmitted(true);
     } catch {
       // fallback: still show success
@@ -87,7 +91,7 @@ export default function Contact() {
               <RevealWrapper delay={0.1}>
                 <StaggerGrid style={{display:'grid',gridTemplateColumns:'1fr',gap:'16px'}}>
                   <StaggerItem>
-                    <a href="https://goo.gl/maps/dxnzFBXp66m" target="_blank" rel="noopener noreferrer" className="contact-info-card">
+                    <a href="https://share.google/txzJx1AKFhGdkltWT" target="_blank" rel="noopener noreferrer" className="contact-info-card">
                       <div className="contact-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
                       <div><div style={{fontSize:'16px',fontWeight:600,marginBottom:'4px'}}>Office Address</div><div style={{fontSize:'15px',color:'var(--tm)'}}>39159 Paseo Padre Parkway, Suite 115<br/>Fremont, CA 94538, United States</div></div>
                     </a>

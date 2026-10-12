@@ -64,6 +64,7 @@ app.use('/api/admin/payments', require('./routes/adminPayments'));
 app.use('/api/admin/invoices', require('./routes/adminInvoices'));
 app.use('/api/admin/services', require('./routes/adminServices'));
 app.use('/api/admin/blogs',   require('./routes/adminBlogs'));
+app.use('/api/media',         require('./routes/media'));
 app.use('/api/blogs',         require('./routes/blogs'));
 app.use('/api/quickbooks',    require('./routes/quickbooks'));
 app.use('/api/chat',          require('./routes/chat'));

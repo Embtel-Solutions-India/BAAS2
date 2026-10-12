@@ -1,4 +1,4 @@
-const REVIEWS_URL = 'https://goo.gl/maps/dxnzFBXp66m';
+const REVIEWS_URL = 'https://share.google/txzJx1AKFhGdkltWT';
 
 function GoogleG() {
   return (

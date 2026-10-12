@@ -37,7 +37,7 @@ export default function Services() {
     <>
       <SEOHead
         title="Bay Area Accountants & Bookkeepers | Services | Fremont, CA"
-        description="Bookkeeping, taxes, payroll, business formation, registered agent and cleanup for Bay Area businesses. Fremont accountants with 500+ clients. Get a quote within 24 hours."
+        description="Bookkeeping, taxes, payroll, business formation & registered agent for Bay Area businesses. Book a free clarity session."
         url={`${SITE_URL}/services`}
         type="website"
         structuredData={SERVICES_SCHEMA}

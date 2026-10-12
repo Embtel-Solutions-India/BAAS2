@@ -39,6 +39,12 @@ export default function About() {
               <h2>What Sets Us Apart</h2>
               <p>Unlike traditional accounting firms that speak in jargon and disappear after tax season, we provide year-round, proactive support. We&apos;re based in Fremont, CA, but serve clients across all 50 states through our secure client portal.</p>
 
+              <h3>Credentials</h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap', margin: '12px 0 24px' }}>
+                <img src="/proadvisor-badge.png" alt="Intuit QuickBooks Level 1 Certified ProAdvisor badge" width="110" height="110" loading="lazy" style={{ width: '110px', height: 'auto' }} />
+                <p style={{ margin: 0, maxWidth: '420px' }}><strong>QuickBooks Level 1 Certified ProAdvisor.</strong> Certified by Intuit, so your QuickBooks setup, cleanup and day-to-day bookkeeping are handled by someone who has proven their expertise on the platform.</p>
+              </div>
+
               <h3>Enrolled Agent Expertise</h3>
               <p>Our team includes Enrolled Agents — tax professionals who have earned the privilege of representing taxpayers before the Internal Revenue Service. This means when the IRS comes calling, we don&apos;t just prepare your taxes — we stand beside you.</p>
 
@@ -49,7 +55,7 @@ export default function About() {
                 {[
                   [<><circle key="a" cx="12" cy="12" r="9"/><circle key="b" cx="12" cy="12" r="5"/><circle key="c" cx="12" cy="12" r="1.4" fill="currentColor"/></>,'500+ Businesses','Served across all 50 states since 2014'],
                   [<><line key="a" x1="12" y1="2" x2="12" y2="22"/><path key="b" d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></>,'$12M+ Saved','In total tax savings for our clients'],
-                  [<><path key="a" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle key="b" cx="9" cy="7" r="4"/><path key="c" d="M23 21v-2a4 4 0 0 0-3-3.87"/><path key="d" d="M16 3.13a4 4 0 0 1 0 7.75"/></>,'98% Retention','Because results speak louder than promises'],
+                  [<><path key="a" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle key="b" cx="9" cy="7" r="4"/><path key="c" d="M23 21v-2a4 4 0 0 0-3-3.87"/><path key="d" d="M16 3.13a4 4 0 0 1 0 7.75"/></>,'90%+ Retention','Because results speak louder than promises'],
                 ].map(([svg,h,p]) => (
                   <StaggerItem key={h} className="feat">
                     <div className="feat-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{verticalAlign:'-.14em'}} aria-hidden="true">{svg}</svg></div>

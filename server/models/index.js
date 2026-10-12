@@ -22,6 +22,8 @@ const Conversation      = require('./Conversation');
 const ChatMessage       = require('./ChatMessage');
 const Otp               = require('./Otp');
 
+const { toPublicMediaUrl } = require('../config/s3');
+
 function toRow(doc) {
   if (!doc) return doc;
   const obj = doc.toObject ? doc.toObject() : { ...doc };
@@ -30,6 +32,7 @@ function toRow(doc) {
     delete obj._id;
   }
   delete obj.__v;
+  if (obj.thumbnail) obj.thumbnail = toPublicMediaUrl(obj.thumbnail);
   return obj;
 }
 
