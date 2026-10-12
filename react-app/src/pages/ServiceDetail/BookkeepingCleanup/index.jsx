@@ -457,7 +457,7 @@ export default function BookkeepingCleanup() {
                   ['Timeline', '1–3 weeks typical'],
                   ['Pricing', 'Flat quote, no surprises'],
                   ['Software', 'QuickBooks · Xero · Spreadsheets'],
-                  ['Service area', 'All 50 states (remote)'],
+                  ['Service area', 'Nationwide (remote)'],
                 ].map(([k, v]) => (
                   <div key={k} style={{display:'flex',justifyContent:'space-between',padding:'10px 0',borderBottom:'1px solid var(--cb)',fontSize:'14px'}}>
                     <span style={{color:'var(--tm)'}}>{k}</span>

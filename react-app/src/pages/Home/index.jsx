@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import FaqItem from "../../components/UI/FaqItem";
 import LatestBlogs from "../../components/Sections/LatestBlogs";
+import GoogleReviewsWidget from "../../components/Sections/GoogleReviewsWidget";
 import { usePortal } from "../../hooks/usePortal";
 import SEOHead from "../../components/SEO/SEOHead";
 import { SITE_URL } from "../../components/SEO/seoConfig";
@@ -143,7 +144,7 @@ export default function Home() {
               >
                 <span className="pill-light">
                   <span className="pill-dot" aria-hidden="true" />
-                  Serving 500+ businesses across all 50 states
+                  Serving 500+ businesses nationwide
                 </span>
               </motion.div>
 
@@ -318,7 +319,7 @@ export default function Home() {
               ["500+", "Businesses Served"],
 
               ["90%+", "Client Retention"],
-              ["All 50", "States Served"],
+              ["Nationwide", "Remote Service"],
               ["24hr", "Average Response Time"],
             ].map(([n, l]) => (
               <motion.div variants={fadeUp} key={l} className="stat-card">
@@ -471,7 +472,7 @@ export default function Home() {
               [
                 "02",
                 "Local Expertise, National Reach",
-                "Based in Fremont, CA. We understand Bay Area business but serve clients in all 50 states.",
+                "Based in Fremont, CA. We understand Bay Area business but serve clients nationwide.",
               ],
               [
                 "03",
@@ -974,11 +975,7 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-      <script src="https://elfsightcdn.com/platform.js" async></script>
-      <div
-        class="elfsight-app-8c3a1505-8573-49f8-a9ca-e0959d3c787a"
-        data-elfsight-app-lazy
-      ></div>
+      <GoogleReviewsWidget />
       {/* ═══ LATEST BLOG POSTS ════════════════════════════════════════ */}
       <LatestBlogs />
 

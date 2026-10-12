@@ -4,6 +4,7 @@ import StaggerGrid from '../../components/UI/StaggerGrid';
 import StaggerItem from '../../components/UI/StaggerItem';
 import PageHero from '../../components/Sections/PageHero';
 import CtaBar from '../../components/Sections/CtaBar';
+import GoogleReviewsWidget from '../../components/Sections/GoogleReviewsWidget';
 import SEOHead from '../../components/SEO/SEOHead';
 import { SITE_URL, breadcrumbSchema } from '../../components/SEO/seoConfig';
 
@@ -37,7 +38,7 @@ export default function About() {
               <p>We exist to change that. BAAS is your full-range accounting partner: bookkeeper, accountant, controller, part-time CFO, and business advisor — all in one team. We don&apos;t just process transactions. We translate your numbers into clarity, confidence, and growth.</p>
 
               <h2>What Sets Us Apart</h2>
-              <p>Unlike traditional accounting firms that speak in jargon and disappear after tax season, we provide year-round, proactive support. We&apos;re based in Fremont, CA, but serve clients across all 50 states through our secure client portal.</p>
+              <p>Unlike traditional accounting firms that speak in jargon and disappear after tax season, we provide year-round, proactive support. We&apos;re based in Fremont, CA, but serve clients nationwide through our secure client portal.</p>
 
               <h3>Credentials</h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap', margin: '12px 0 24px' }}>
@@ -53,8 +54,8 @@ export default function About() {
 
               <StaggerGrid className="feat-grid">
                 {[
-                  [<><circle key="a" cx="12" cy="12" r="9"/><circle key="b" cx="12" cy="12" r="5"/><circle key="c" cx="12" cy="12" r="1.4" fill="currentColor"/></>,'500+ Businesses','Served across all 50 states since 2014'],
-                  [<><line key="a" x1="12" y1="2" x2="12" y2="22"/><path key="b" d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></>,'$12M+ Saved','In total tax savings for our clients'],
+                  [<><circle key="a" cx="12" cy="12" r="9"/><circle key="b" cx="12" cy="12" r="5"/><circle key="c" cx="12" cy="12" r="1.4" fill="currentColor"/></>,'500+ Businesses','Served through our secure client portal, nationwide'],
+                  [<><line key="a" x1="12" y1="2" x2="12" y2="22"/><path key="b" d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></>,'Tax Savings','Proactive planning to help you keep more of what you earn'],
                   [<><path key="a" d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle key="b" cx="9" cy="7" r="4"/><path key="c" d="M23 21v-2a4 4 0 0 0-3-3.87"/><path key="d" d="M16 3.13a4 4 0 0 1 0 7.75"/></>,'90%+ Retention','Because results speak louder than promises'],
                 ].map(([svg,h,p]) => (
                   <StaggerItem key={h} className="feat">
@@ -106,8 +107,7 @@ export default function About() {
             <div className="slabel">Reviewed by Clients</div>
             <h2 className="stitle">What our clients say on Google</h2>
           </RevealWrapper>
-          <script src="https://elfsightcdn.com/platform.js" async></script>
-<div class="elfsight-app-8c3a1505-8573-49f8-a9ca-e0959d3c787a" data-elfsight-app-lazy></div>
+          <GoogleReviewsWidget />
         </div>
       </section>
 
