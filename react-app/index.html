@@ -44,10 +44,26 @@
       gtag('js', new Date());
       gtag('config', 'AW-18506219893');
     </script>
-    <!-- Contentsquare (includes Hotjar) -->
-    <script defer src="https://t.contentsquare.net/uxa/e2ce6050ea013.js"></script>
     <!-- Zoho SalesIQ -->
-    <script>window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}</script>
+    <!-- Contentsquare (includes Hotjar) is loaded after Zoho is ready (or after 8s fallback):
+         it patches navigator.language, which crashes Zoho's widget if it loads first. -->
+    <script>
+      window.$zoho = window.$zoho || {};
+      (function () {
+        var csLoaded = false;
+        function loadContentsquare() {
+          if (csLoaded) return;
+          csLoaded = true;
+          var s = document.createElement('script');
+          s.src = 'https://t.contentsquare.net/uxa/e2ce6050ea013.js';
+          s.async = true;
+          document.head.appendChild(s);
+        }
+        $zoho.salesiq = $zoho.salesiq || {};
+        $zoho.salesiq.ready = loadContentsquare;
+        setTimeout(loadContentsquare, 8000);
+      })();
+    </script>
     <script id="zsiqscript" src="https://salesiq.zohopublic.in/widget?wc=siq1c59b58efb89cf1b054148d2a4e450574731f31bca4500739638acff884858983357279766d32e9acf7e0de409254e38" defer></script>
   </head>
   <body>
