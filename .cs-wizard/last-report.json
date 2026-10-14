@@ -1,0 +1,26 @@
+{
+  "url": "http://localhost:5173",
+  "projectId": null,
+  "tagId": "e2ce6050ea013",
+  "tagScriptLoaded": false,
+  "tagIdMismatch": false,
+  "initialPageview": false,
+  "navigations": [
+    {
+      "type": "load",
+      "url": "http://localhost:5173/",
+      "top": true,
+      "ts": 1791999013749
+    },
+    {
+      "type": "replaceState",
+      "url": "http://localhost:5173/",
+      "top": true,
+      "ts": 1791999014617
+    }
+  ],
+  "pageviewBeacons": [],
+  "cspViolations": [],
+  "result": "fail",
+  "recommendation": null
+}
