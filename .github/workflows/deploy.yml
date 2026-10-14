@@ -4,8 +4,11 @@ on:
   push:
     branches:
       - main
-
   workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
 
 concurrency:
   group: baas-production-deploy
@@ -15,51 +18,160 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      AWS_REGION: us-east-1
+      EC2_INSTANCE_ID: i-02b7b8b1b4991922a
+      DEPLOY_SHA: ${{ github.sha }}
+
     steps:
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.PORT }}
-          script: |
-            set -eu
+          role-to-assume: arn:aws:iam::637442130394:role/BAAS2-GitHubActions-Role
+          aws-region: ${{ env.AWS_REGION }}
 
-            REPO="$HOME/BAAS2"
-            DEPLOY_DIR="$HOME/BAAS2-CICD"
-            DEPLOY_SHA="${{ github.sha }}"
+      - name: Prepare deployment script
+        shell: bash
+        run: |
+          set -euo pipefail
 
-            echo "Checking out deployment commit: $DEPLOY_SHA"
+          cat > /tmp/baas2-deploy.sh <<'DEPLOY_SCRIPT'
+          set -euo pipefail
 
-            if [ ! -d "$DEPLOY_DIR/.git" ]; then
-              git clone "$REPO" "$DEPLOY_DIR"
+          DEPLOY_DIR="/home/ubuntu/BAAS2-CICD"
+          PROD_DIR="/home/ubuntu/BAAS2"
+          DEPLOY_SHA="__DEPLOY_SHA__"
+
+          echo "Preparing deployment checkout..."
+
+          if [ ! -d "$DEPLOY_DIR/.git" ]; then
+            git clone git@github-baas2:Embtel-Solutions-India/BAAS2.git "$DEPLOY_DIR"
+          fi
+
+          git -C "$DEPLOY_DIR" fetch origin main
+          git -C "$DEPLOY_DIR" checkout --detach "$DEPLOY_SHA"
+
+          echo "Building frontend..."
+          cd "$DEPLOY_DIR/react-app"
+          npm ci --include=optional
+          npm run build
+
+          echo "Installing deployment backend dependencies..."
+          cd "$DEPLOY_DIR/server"
+          npm ci --omit=dev
+
+          echo "Deploying frontend..."
+          mkdir -p "$PROD_DIR/react-app/dist"
+          rsync -a --delete \
+            "$DEPLOY_DIR/react-app/dist/" \
+            "$PROD_DIR/react-app/dist/"
+
+          echo "Deploying backend files..."
+          rsync -a \
+            --exclude='.env' \
+            --exclude='node_modules/' \
+            --exclude='uploads/' \
+            "$DEPLOY_DIR/server/" \
+            "$PROD_DIR/server/"
+
+          echo "Installing production backend dependencies..."
+          cd "$PROD_DIR/server"
+          npm ci --omit=dev
+
+          echo "Restarting BAAS2 backend..."
+          pm2 restart baas-server --update-env
+
+          echo "Checking API health..."
+          for i in $(seq 1 12); do
+            if curl -fsS http://127.0.0.1:4000/api/health; then
+              echo
+              echo "BAAS2 deployment completed successfully."
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "API health check failed." >&2
+          exit 1
+          DEPLOY_SCRIPT
+
+          sed -i "s/__DEPLOY_SHA__/${DEPLOY_SHA}/g" /tmp/baas2-deploy.sh
+          base64 -w 0 /tmp/baas2-deploy.sh > /tmp/baas2-deploy.b64
+
+          echo "Deployment script prepared."
+
+      - name: Send deployment through SSM
+        id: ssm
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SCRIPT_B64=$(cat /tmp/baas2-deploy.b64)
+
+          COMMANDS=$(jq -n --arg script "$SCRIPT_B64" \
+            '[
+              "echo \"" + $script + "\" | base64 -d | sudo -u ubuntu -H bash"
+            ]')
+
+          COMMAND_ID=$(aws ssm send-command \
+            --instance-ids "$EC2_INSTANCE_ID" \
+            --document-name "AWS-RunShellScript" \
+            --comment "BAAS2 deployment $DEPLOY_SHA" \
+            --parameters "$(
+              jq -n --argjson commands "$COMMANDS" \
+                '{commands: $commands}'
+            )" \
+            --region "$AWS_REGION" \
+            --query 'Command.CommandId' \
+            --output text)
+
+          echo "SSM command ID: $COMMAND_ID"
+          echo "command_id=$COMMAND_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for deployment result
+        shell: bash
+        env:
+          COMMAND_ID: ${{ steps.ssm.outputs.command_id }}
+        run: |
+          set -euo pipefail
+
+          for i in $(seq 1 60); do
+            STATUS=$(aws ssm get-command-invocation \
+              --command-id "$COMMAND_ID" \
+              --instance-id "$EC2_INSTANCE_ID" \
+              --region "$AWS_REGION" \
+              --query 'Status' \
+              --output text 2>/dev/null || true)
+
+            echo "Deployment status: ${STATUS:-Pending}"
+
+            if [ "$STATUS" = "Success" ]; then
+              aws ssm get-command-invocation \
+                --command-id "$COMMAND_ID" \
+                --instance-id "$EC2_INSTANCE_ID" \
+                --region "$AWS_REGION" \
+                --query 'StandardOutputContent' \
+                --output text
+              exit 0
             fi
 
-            cd "$DEPLOY_DIR"
-            git fetch origin main
-            git checkout --detach "$DEPLOY_SHA"
+            if [[ "$STATUS" == "Failed" ||
+                  "$STATUS" == "Cancelled" ||
+                  "$STATUS" == "TimedOut" ]]; then
+              echo "Deployment failed."
 
-            echo "Building frontend..."
-            cd react-app
-            npm ci --include=optional
-            npm run build
+              aws ssm get-command-invocation \
+                --command-id "$COMMAND_ID" \
+                --instance-id "$EC2_INSTANCE_ID" \
+                --region "$AWS_REGION" \
+                --query '[StandardOutputContent,StandardErrorContent]' \
+                --output text
 
-            echo "Installing backend dependencies..."
-            cd ../server
-            npm ci --include=optional
+              exit 1
+            fi
 
-            echo "Restarting BAAS backend..."
-            pm2 restart baas-server --update-env
+            sleep 5
+          done
 
-            echo "Checking API health..."
-            for i in $(seq 1 12); do
-              if curl -fsS http://127.0.0.1:4000/api/health; then
-                echo "Deployment completed successfully."
-                exit 0
-              fi
-              sleep 5
-            done
-
-            echo "API health check failed."
-            exit 1
+          echo "Timed out waiting for SSM deployment."
+          exit 1
