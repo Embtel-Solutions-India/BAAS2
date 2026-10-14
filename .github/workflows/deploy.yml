@@ -1,0 +1,65 @@
+name: Deploy BAAS to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+concurrency:
+  group: baas-production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            set -eu
+
+            REPO="$HOME/BAAS2"
+            DEPLOY_DIR="$HOME/BAAS2-CICD"
+            DEPLOY_SHA="${{ github.sha }}"
+
+            echo "Checking out deployment commit: $DEPLOY_SHA"
+
+            if [ ! -d "$DEPLOY_DIR/.git" ]; then
+              git clone "$REPO" "$DEPLOY_DIR"
+            fi
+
+            cd "$DEPLOY_DIR"
+            git fetch origin main
+            git checkout --detach "$DEPLOY_SHA"
+
+            echo "Building frontend..."
+            cd react-app
+            npm ci --include=optional
+            npm run build
+
+            echo "Installing backend dependencies..."
+            cd ../server
+            npm ci --include=optional
+
+            echo "Restarting BAAS backend..."
+            pm2 restart baas-server --update-env
+
+            echo "Checking API health..."
+            for i in $(seq 1 12); do
+              if curl -fsS http://127.0.0.1:4000/api/health; then
+                echo "Deployment completed successfully."
+                exit 0
+              fi
+              sleep 5
+            done
+
+            echo "API health check failed."
+            exit 1
