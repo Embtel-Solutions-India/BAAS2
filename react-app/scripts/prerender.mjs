@@ -24,6 +24,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST = path.resolve(__dirname, '..', 'dist');
 const PORT = 5178;
 
+// Third-party hosts that must not run during prerender (see main loop).
+const THIRD_PARTY = /zoho|salesiq|contentsquare|hotjar|googletagmanager|google-analytics|doubleclick|googleadservices|google\.com\/(ccm|rmkt|pagead)|elfsight/i;
+
 // Public, static content routes worth indexing (must match App.jsx routes).
 const ROUTES = [
   '/',
@@ -135,6 +138,11 @@ async function main() {
     for (const route of ROUTES) {
       const page = await browser.newPage();
       await page.setViewport({ width: 1280, height: 900 });
+      // Keep third-party widgets (chat, cookie banner, reviews, analytics) out of the
+      // snapshot: their injected DOM would be baked into the HTML as dead static
+      // copies that sit on top of the live widgets and swallow clicks.
+      await page.setRequestInterception(true);
+      page.on('request', (req) => (THIRD_PARTY.test(req.url()) ? req.abort() : req.continue()));
       const url = `http://127.0.0.1:${PORT}${route}`;
       try {
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 45000 });
@@ -153,6 +161,32 @@ async function main() {
 
       // Mark as prerendered so the client entry can hydrate instead of re-rendering.
       await page.evaluate(() => document.documentElement.setAttribute('data-prerendered', 'true'));
+
+      // Belt and braces: strip anything third-party scripts managed to inject anyway.
+      await page.evaluate(() => {
+        const remove = (sel) => document.querySelectorAll(sel).forEach((el) => el.remove());
+        remove('#consent_container, #__EAAPS_PORTAL, [id^="zsiq"]:not(script), [class*="zsiq_theme"]');
+        remove('link[href*="zohocdn"], link[href*="zohopublic"]');
+        document.querySelectorAll('style').forEach((el) => {
+          if (/zsiq|zoho|gdpr_banner/i.test(el.textContent)) el.remove();
+        });
+        // Scripts: keep only those that came from index.html (gtag + the Zoho loader tag).
+        document.querySelectorAll('script[src]').forEach((el) => {
+          const src = el.getAttribute('src');
+          const isOriginal = el.id === 'zsiqscript' || /googletagmanager\.com\/gtag\/js/.test(src) || src.startsWith('/');
+          if (!isOriginal) el.remove();
+        });
+        // Elfsight fills the widget container; leave it empty for the live script to populate.
+        document.querySelectorAll('[class*="elfsight-app-"]').forEach((el) => { el.innerHTML = ''; });
+        const root = document.documentElement;
+        [...root.style].filter((p) => p.startsWith('--zsiq')).forEach((p) => root.style.removeProperty(p));
+        if (!root.getAttribute('style')) root.removeAttribute('style');
+        // Zoho/Contentsquare may leave marker classes/attributes on <html>/<body>.
+        [root, document.body].forEach((el) => {
+          el.className = [...el.classList].filter((c) => !/zsiq|zoho|gdpr|cs-|hj-/i.test(c)).join(' ');
+          if (!el.className) el.removeAttribute('class');
+        });
+      });
 
       let html = await page.content();
       // Runtime-injected modulepreload/asset links get resolved against the local
