@@ -170,10 +170,11 @@ async function main() {
         document.querySelectorAll('style').forEach((el) => {
           if (/zsiq|zoho|gdpr_banner/i.test(el.textContent)) el.remove();
         });
-        // Scripts: keep only those that came from index.html (gtag + the Zoho loader tag).
+        // Scripts: keep only those that came from index.html (gtag, Contentsquare/Hotjar tag, Zoho loader tag).
         document.querySelectorAll('script[src]').forEach((el) => {
           const src = el.getAttribute('src');
-          const isOriginal = el.id === 'zsiqscript' || /googletagmanager\.com\/gtag\/js/.test(src) || src.startsWith('/');
+          const isOriginal = el.id === 'zsiqscript' || /googletagmanager\.com\/gtag\/js/.test(src)
+            || /contentsquare\.net\/uxa\//.test(src) || src.startsWith('/');
           if (!isOriginal) el.remove();
         });
         // Elfsight fills the widget container; leave it empty for the live script to populate.
