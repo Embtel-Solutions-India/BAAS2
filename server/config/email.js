@@ -13,8 +13,8 @@ const transporter = nodemailer.createTransport({
 const FROM = process.env.EMAIL_FROM ||
   '"Bay Area Accounting Solutions" <noreply@bayareaaccountingsolutions.com>';
 
-async function sendMail({ to, subject, html }) {
-  return transporter.sendMail({ from: FROM, to, subject, html });
+async function sendMail({ to, subject, html, replyTo }) {
+  return transporter.sendMail({ from: FROM, to, subject, html, ...(replyTo ? { replyTo } : {}) });
 }
 
 module.exports = { sendMail };

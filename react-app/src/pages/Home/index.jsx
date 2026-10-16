@@ -16,6 +16,7 @@ import {
 import FaqItem from "../../components/UI/FaqItem";
 import LatestBlogs from "../../components/Sections/LatestBlogs";
 import GoogleReviewsWidget from "../../components/Sections/GoogleReviewsWidget";
+import RushServiceSection from "../../components/Sections/RushServiceSection";
 import { usePortal } from "../../hooks/usePortal";
 import SEOHead from "../../components/SEO/SEOHead";
 import { SITE_URL } from "../../components/SEO/seoConfig";
@@ -952,6 +953,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ═══ RUSH SERVICE ═════════════════════════════════════════════ */}
+      <RushServiceSection />
 
       {/* ═══ INDUSTRIES ═══════════════════════════════════════════════ */}
       <section className="section bg-surface" style={{ paddingTop: "40px" }}>

@@ -5,6 +5,7 @@ import StaggerGrid from '../../components/UI/StaggerGrid';
 import StaggerItem from '../../components/UI/StaggerItem';
 import PageHero from '../../components/Sections/PageHero';
 import CtaBar from '../../components/Sections/CtaBar';
+import RushServiceSection from '../../components/Sections/RushServiceSection';
 import SEOHead from '../../components/SEO/SEOHead';
 import { SITE_URL, breadcrumbSchema } from '../../components/SEO/seoConfig';
 
@@ -81,6 +82,8 @@ export default function Services() {
           </div>
         </section>
       </RevealWrapper>
+
+      <RushServiceSection />
 
       <CtaBar
         heading="Not sure which service you need?"

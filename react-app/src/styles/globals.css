@@ -106,7 +106,7 @@ body .container{max-width:var(--mw);margin:0 auto;padding:0 var(--gut);width:100
 
 /* MOBILE NAV */
 .mob-toggle{display:none;background:none;border:none;color:#1a1a1a;cursor:pointer}
-.mob-menu{display:none;position:fixed;top:72px;left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;background:rgba(255,255,255,0.98);backdrop-filter:blur(20px);padding:20px 24px 40px;border-top:1px solid var(--border);z-index:1001;animation:slideDown .3s ease}
+.mob-menu{display:none;position:fixed;top:calc(72px + var(--ticker-h,0px));left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;background:rgba(255,255,255,0.98);backdrop-filter:blur(20px);padding:20px 24px 40px;border-top:1px solid var(--border);z-index:1001;animation:slideDown .3s ease}
 .mob-menu.open{display:block}
 .mob-link{display:block;padding:12px 0;color:#1a1a1a;font-size:18px;border-bottom:1px solid var(--border)}
 .mob-sub-label{color:var(--td);font-size:13px;text-transform:uppercase;letter-spacing:.15em;padding:16px 0 8px}
@@ -131,7 +131,7 @@ body .container{max-width:var(--mw);margin:0 auto;padding:0 var(--gut);width:100
 /* CONTENT */
 .content{padding:clamp(40px,6vw,60px) 0 clamp(64px,9vw,100px)}
 .content-grid{display:grid;grid-template-columns:2fr 1fr;gap:clamp(32px,4.5vw,64px);align-items:start}
-.content-grid>aside{position:sticky;top:96px}
+.content-grid>aside{position:sticky;top:132px}
 .prose{font-size:17px;color:rgba(0,0,0,0.65);line-height:1.8;max-width:760px}
 .prose h2{font-family:'DM Serif Display',serif;font-size:31px;color:#1a1a1a;margin:40px 0 16px;letter-spacing:-.01em}
 .prose h3{font-family:'DM Serif Display',serif;font-size:25px;color:#1a1a1a;margin:32px 0 12px}
@@ -770,3 +770,25 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 }
 
 
+
+/* TOP TICKER (sub header) */
+.nav{--ticker-h:36px}
+.ticker{height:var(--ticker-h);background:var(--accent2);overflow:hidden;display:flex;align-items:center;font-size:13px;color:rgba(255,255,255,.92)}
+.ticker-track{display:flex;width:max-content;animation:tickerScroll 55s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker-row{display:flex;flex-shrink:0}
+.ticker-item{white-space:nowrap;padding:0 22px;position:relative}
+.ticker-item::after{content:"·";position:absolute;right:-3px;color:rgba(255,255,255,.6)}
+.ticker-item b{color:#fff;font-weight:700}
+.ticker-item i{font-style:normal;color:rgba(255,255,255,.75)}
+.ticker-rush{color:inherit}
+.ticker-rush b{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.ticker-rush:hover{text-decoration:underline}
+@keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ticker-track{animation:none}.ticker{overflow-x:auto}}
+#rush-service{scroll-margin-top:108px}
+
+/* Once the page is scrolled, the info strip jumps to the top, above the logo/menu bar. */
+.nav{display:flex;flex-direction:column}
+.nav-inner,.ticker{width:100%}
+.nav.scrolled .ticker{order:-1}

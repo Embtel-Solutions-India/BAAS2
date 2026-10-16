@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { usePortal } from '../../hooks/usePortal';
+import TopTicker from './TopTicker';
 
 const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
 
@@ -117,6 +118,8 @@ export default function Header() {
           </svg>
         </button>
       </div>
+
+      <TopTicker />
 
       {mobileOpen && (
         <div className="mob-menu open" id="mobMenu" role="menu">

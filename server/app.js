@@ -68,6 +68,7 @@ app.use('/api/media',         require('./routes/media'));
 app.use('/api/blogs',         require('./routes/blogs'));
 app.use('/api/quickbooks',    require('./routes/quickbooks'));
 app.use('/api/chat',          require('./routes/chat'));
+app.use('/api/rush-requests', require('./routes/rushRequests'));
 
 app.get('/api/health', (req, res) =>
   res.json({ status: 'ok', ts: new Date().toISOString() })
