@@ -1,12 +1,11 @@
 const router = require('express').Router();
 const rateLimit = require('express-rate-limit');
 const { sendMail } = require('../config/email');
+const { EMAIL_RE, PHONE_RE, esc, clean, row } = require('../utils/formUtils');
 
 // Public "Request Rush Service" form (website popup). Emails the request to the firm.
 const TO = () => process.env.RUSH_REQUEST_TO || 'info@bayareaaccountingsolutions.com';
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const PHONE_RE = /^\+?[0-9\s().-]{7,20}$/;
 const SERVICES = [
   'Bookkeeping & Accounting', 'Business & Individual Taxes', 'Payroll Management',
   'Business Formation', 'Registered Agent', 'Accounting Cleanup', 'Other',
@@ -20,10 +19,6 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-// Single-line fields get CR/LF stripped (they end up in the email subject).
-const clean = (v, max, multiline = false) =>
-  (typeof v === 'string' ? (multiline ? v : v.replace(/[\r\n]+/g, ' ')).trim().slice(0, max) : '');
 
 router.post('/', limiter, async (req, res) => {
   const b = req.body || {};
@@ -51,8 +46,6 @@ router.post('/', limiter, async (req, res) => {
     b.consent !== true;
   if (bad) return res.status(400).json({ error: 'Please check the form and try again.' });
 
-  const row = (label, value) =>
-    `<tr><td style="padding:8px 12px;color:#666;white-space:nowrap;vertical-align:top">${label}</td><td style="padding:8px 12px;color:#111">${value}</td></tr>`;
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px">
       <h2 style="color:#a4001a;margin:0 0 4px">Rush Service Request</h2>

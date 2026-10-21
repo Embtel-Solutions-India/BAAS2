@@ -1,10 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../utils/api';
+import { RUSH_MODAL_EVENT } from './rushModalEvents';
 
-// Any button can open this popup with: openRushModal()
-export const RUSH_MODAL_EVENT = 'open-rush-modal';
-export const openRushModal = () => window.dispatchEvent(new Event(RUSH_MODAL_EVENT));
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^\+?[0-9\s().-]{7,20}$/;

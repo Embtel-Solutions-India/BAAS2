@@ -1,73 +1,15 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import RevealWrapper from '../../components/UI/RevealWrapper';
 import StaggerGrid from '../../components/UI/StaggerGrid';
 import StaggerItem from '../../components/UI/StaggerItem';
 import PageHero from '../../components/Sections/PageHero';
 import CtaBar from '../../components/Sections/CtaBar';
+import ContactForm from '../../components/Sections/ContactForm';
 import SEOHead from '../../components/SEO/SEOHead';
 import { SITE_URL, breadcrumbSchema } from '../../components/SEO/seoConfig';
 
 const CONTACT_BREADCRUMB = breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }]);
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const PHONE_RE = /^\+?[0-9\s().-]{7,20}$/;
-
 export default function Contact() {
-  const [form, setForm] = useState({ first_name:'', last_name:'', email:'', phone:'', service:'', message:'' });
-  const [consent, setConsent] = useState(false);
-  const [errors, setErrors] = useState({});
-  const [consentError, setConsentError] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-
-  const validate = (name, value) => {
-    switch(name) {
-      case 'first_name': return !value ? 'First name is required.' : value.length < 2 ? 'First name must be at least 2 characters.' : '';
-      case 'last_name':  return !value ? 'Last name is required.'  : value.length < 2 ? 'Last name must be at least 2 characters.'  : '';
-      case 'email':   return !value ? 'Email address is required.' : !EMAIL_RE.test(value) ? 'Please enter a valid email address.' : '';
-      case 'phone':   return !value ? 'Phone number is required.'  : !PHONE_RE.test(value)  ? 'Please enter a valid phone number.'  : '';
-      case 'service': return !value ? 'Please select a service.' : '';
-      case 'message': return !value ? 'Message is required.' : value.length < 10 ? 'Message must be at least 10 characters.' : '';
-      default: return '';
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(f => ({ ...f, [name]: value }));
-    setErrors(err => ({ ...err, [name]: validate(name, value) }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newErrors = {};
-    Object.entries(form).forEach(([k,v]) => { const err = validate(k,v); if(err) newErrors[k] = err; });
-    setErrors(newErrors);
-    if (!consent) { setConsentError(true); return; }
-    setConsentError(false);
-    if (Object.keys(newErrors).length) return;
-
-    setSubmitting(true);
-    try {
-      const res = await fetch('https://formspree.io/f/maqgdzzy', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ ...form, _subject: `New inquiry from ${form.first_name} ${form.last_name}` }),
-      });
-      // Google Ads conversion: "Contact" form submitted
-      if (res.ok && typeof window.gtag === 'function') {
-        window.gtag('event', 'conversion', { send_to: 'AW-18506219893/GsyoCJ6Qx5gdEPWCuvhE' });
-      }
-      setSubmitted(true);
-    } catch {
-      // fallback: still show success
-      setSubmitted(true);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
     <>
       <SEOHead
@@ -141,60 +83,7 @@ export default function Contact() {
 
             <div>
               <RevealWrapper delay={0.2}>
-                <div style={{padding:'36px',borderRadius:'20px',background:'var(--card)',border:'1px solid var(--cb)'}}>
-                  <h3 className="serif" style={{fontSize:'25px',marginBottom:'6px'}}>Send us a message</h3>
-                  <p style={{fontSize:'15px',color:'var(--td)',marginBottom:'24px'}}>We&apos;ll get back to you within 24 hours.</p>
-                  {submitted ? (
-                    <div style={{textAlign:'center',padding:'20px 0'}}>
-                      <div style={{fontSize:'32px',marginBottom:'10px'}}>✅</div>
-                      <p style={{fontSize:'17px',fontWeight:600,color:'#1a1a1a',marginBottom:'6px'}}>Message sent!</p>
-                      <p style={{fontSize:'15px',color:'var(--tm)'}}>We&apos;ll get back to you within 24 hours.</p>
-                    </div>
-                  ) : (
-                    <form onSubmit={handleSubmit} noValidate>
-                      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'16px'}}>
-                        {[['first_name','First Name','John'],['last_name','Last Name','Doe']].map(([n,l,p]) => (
-                          <div className="form-group" key={n}>
-                            <label htmlFor={n}>{l}</label>
-                            <input id={n} type="text" name={n} className={`form-input${errors[n] ? ' input-invalid':''}`} placeholder={p} value={form[n]} onChange={handleChange} required/>
-                            {errors[n] && <div className="field-error">{errors[n]}</div>}
-                          </div>
-                        ))}
-                      </div>
-                      {[['email','Email','email','you@company.com'],['phone','Phone','tel','(510) 000-0000']].map(([n,l,t,p]) => (
-                        <div className="form-group" key={n}>
-                          <label htmlFor={n}>{l}</label>
-                          <input id={n} type={t} name={n} className={`form-input${errors[n] ? ' input-invalid':''}`} placeholder={p} value={form[n]} onChange={handleChange} required/>
-                          {errors[n] && <div className="field-error">{errors[n]}</div>}
-                        </div>
-                      ))}
-                      <div className="form-group">
-                        <label htmlFor="service">Service Interested In</label>
-                        <select id="service" name="service" className={`form-input${errors.service ? ' input-invalid':''}`} value={form.service} onChange={handleChange} required>
-                          <option value="">Select a service...</option>
-                          {['Bookkeeping & Accounting','Business & Individual Taxes','Bookkeeping Cleanup','Payroll Management','Business Formation','Registered Agent','Foreign Subsidiary','Other'].map(s => <option key={s}>{s}</option>)}
-                        </select>
-                        {errors.service && <div className="field-error">{errors.service}</div>}
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="message">Message</label>
-                        <textarea id="message" name="message" className={`form-input${errors.message ? ' input-invalid':''}`} placeholder="Tell us about your business and how we can help..." value={form.message} onChange={handleChange} required/>
-                        {errors.message && <div className="field-error">{errors.message}</div>}
-                      </div>
-                      <div className={`consent-row${consent ? ' checked':''}`} style={{display:'flex',alignItems:'flex-start',gap:'10px',marginBottom:'20px',padding:'14px 16px',borderRadius:'10px',border:`1px solid ${consent ? 'rgba(212,0,31,.3)' : 'var(--bl)'}`,background:consent ? 'rgba(212,0,31,.03)' : 'rgba(0,0,0,0.02)',transition:'border-color .2s'}}>
-                        <input type="checkbox" id="consentCheck" checked={consent} onChange={e => { setConsent(e.target.checked); setConsentError(false); }} style={{width:'18px',height:'18px',minWidth:'18px',marginTop:'2px',accentColor:'var(--accent)',cursor:'pointer'}}/>
-                        <label htmlFor="consentCheck" style={{fontSize:'14px',color:'var(--tm)',lineHeight:1.5,cursor:'pointer'}}>
-                          I agree to receive updates about my application or service information via SMS, email, and phone from Bay Area Accounting Solutions. Message frequency varies. Message and data rates may apply. Reply <strong>STOP</strong> to opt out at any time. View our <Link to="/privacy-policy" target="_blank" style={{color:'var(--accent)',textDecoration:'underline'}}>Privacy Policy</Link>. <span style={{color:'var(--accent)',fontWeight:600}}>*</span>
-                        </label>
-                      </div>
-                      {consentError && <div style={{color:'#d4001f',fontSize:'13px',margin:'-12px 0 14px'}}>Please tick the box above to continue.</div>}
-                      <button type="submit" className="form-submit" disabled={submitting}>
-                        {submitting ? 'Sending...' : 'Send Message'}
-                      </button>
-                    </form>
-                  )}
-                  <p style={{fontSize:'13px',color:'var(--tf)',marginTop:'12px',textAlign:'center'}}>Or call us directly: <a href="tel:+15109627300" style={{color:'var(--accent)'}}>(510) 962-7300</a></p>
-                </div>
+                <ContactForm source="Contact page" />
               </RevealWrapper>
             </div>
           </div>

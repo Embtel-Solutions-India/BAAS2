@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { openRushModal } from './RushRequestModal';
+import { openRushModal } from './rushModalEvents';
 import { BookOpen, Calculator, Users, Building2, ShieldCheck, FileText } from 'lucide-react';
 
 const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';

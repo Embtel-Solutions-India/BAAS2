@@ -1,10 +1,10 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, Brain, HeartPulse, Clock, GitBranch, Users, TrendingUp, EyeOff, BrainCircuit, Frown, Flame, CalendarClock, HeartCrack, Moon, Activity, UserX, BarChart3, Target, FileText, RefreshCw, CheckCircle, PieChart, ClipboardList, Calendar, User } from 'lucide-react';
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import ContactForm from '../../../components/Sections/ContactForm';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
@@ -42,93 +42,6 @@ function PainGroup({ icon: Icon, title, items }) {
         ))}
       </motion.div>
     </div>
-  );
-}
-
-const BUSINESS_TYPES = ['LLC','S-Corporation','C-Corporation','Partnership','Sole Proprietor','Non-Profit'];
-const INDUSTRIES = ['Technology / SaaS','E-commerce / Retail','Professional Services','Healthcare','Construction','Real Estate','Restaurants / Food','Manufacturing','Transportation / Logistics','Creative / Media','Education / Training','Other'];
-const REVENUE_RANGES = ['$0 – $10K','$10K – $25K','$25K – $50K','$50K – $100K','$100K – $250K','$250K – $500K','$500K+'];
-const EMPLOYEE_COUNTS = ['Just me','1 – 5','6 – 10','11 – 25','26 – 50','50+'];
-const TRANSACTION_RANGES = ['0 – 50','51 – 100','101 – 250','251 – 500','500+'];
-const SOFTWARE_OPTIONS = ['QuickBooks','Xero','FreshBooks','Wave','Excel / Spreadsheet','None','Other'];
-const SERVICE_OPTIONS = ['Monthly Bookkeeping','Bank Reconciliation','Financial Statements','Tax Preparation','Payroll','Bookkeeping Cleanup','Software Setup','Accounts Payable/Receivable','Advisory / CFO Services'];
-
-function QuoteForm() {
-  const [form, setForm] = useState({ fullName:'', businessName:'', email:'', phone:'', businessType:'', industry:'', revenue:'', employees:'', transactions:'', software:'', notes:'', services:[] });
-  const [status, setStatus] = useState('idle');
-
-  const toggleService = (s) => {
-    setForm(f => ({...f, services: f.services.includes(s) ? f.services.filter(x => x !== s) : [...f.services,s]}));
-  };
-
-  const submit = (e) => {
-    e.preventDefault();
-    if (!form.fullName || !form.businessName || !form.email || !form.businessType || !form.industry || !form.revenue) {
-      setStatus('error'); setTimeout(() => setStatus('idle'), 2500); return;
-    }
-    setStatus('sending');
-    setTimeout(() => { setStatus('sent'); setTimeout(() => setStatus('idle'), 4000); }, 1500);
-  };
-
-  const fieldStyle = { display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', gap:'16px' };
-
-  if (status === 'sent') {
-    return (
-      <div style={{marginTop:'24px',padding:'40px 32px',borderRadius:'20px',background:'rgba(74,222,128,.08)',border:'1px solid rgba(74,222,128,.35)',textAlign:'center'}}>
-        <div style={{width:'56px',height:'56px',borderRadius:'50%',background:'rgba(74,222,128,.15)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',color:'#22c55e'}}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        </div>
-        <h3 className="serif" style={{fontSize:'24px',marginBottom:'10px',color:'#1a1a1a'}}>Thank you — we received your request.</h3>
-        <p style={{fontSize:'16px',color:'var(--tm)',lineHeight:1.6,maxWidth:'440px',margin:'0 auto 24px'}}>Our team will review your details and send a tailored bookkeeping proposal within 24 hours. No spam, no obligation.</p>
-        <button type="button" onClick={() => setStatus('idle')} className="btn-ghost" style={{margin:'0 auto'}}>Submit another request</button>
-      </div>
-    );
-  }
-
-  return (
-    <form onSubmit={submit} style={{marginTop:'24px',padding:'32px',borderRadius:'20px',background:'var(--card)',border:'1px solid var(--cb)',boxShadow:'0 1px 3px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)'}}>
-      <div style={fieldStyle}>
-        <div className="form-group"><label>Your Full Name *</label><input type="text" className="form-input" placeholder="John Doe" value={form.fullName} onChange={e => setForm(f => ({...f, fullName:e.target.value}))}/></div>
-        <div className="form-group"><label>Business Name *</label><input type="text" className="form-input" placeholder="Your Company LLC" value={form.businessName} onChange={e => setForm(f => ({...f, businessName:e.target.value}))}/></div>
-      </div>
-      <div style={fieldStyle}>
-        <div className="form-group"><label>Email Address *</label><input type="email" className="form-input" placeholder="you@company.com" value={form.email} onChange={e => setForm(f => ({...f, email:e.target.value}))}/></div>
-        <div className="form-group"><label>Phone Number</label><input type="tel" className="form-input" placeholder="(510) 000-0000" value={form.phone} onChange={e => setForm(f => ({...f, phone:e.target.value}))}/></div>
-      </div>
-      <div style={fieldStyle}>
-        <div className="form-group"><label>Business Type *</label><select className="form-input" value={form.businessType} onChange={e => setForm(f => ({...f, businessType:e.target.value}))}><option value="">Select your business type...</option>{BUSINESS_TYPES.map(o => <option key={o}>{o}</option>)}</select></div>
-        <div className="form-group"><label>Industry *</label><select className="form-input" value={form.industry} onChange={e => setForm(f => ({...f, industry:e.target.value}))}><option value="">Select your industry...</option>{INDUSTRIES.map(o => <option key={o}>{o}</option>)}</select></div>
-      </div>
-      <div style={fieldStyle}>
-        <div className="form-group"><label>Monthly Revenue Range *</label><select className="form-input" value={form.revenue} onChange={e => setForm(f => ({...f, revenue:e.target.value}))}><option value="">Select range...</option>{REVENUE_RANGES.map(o => <option key={o}>{o}</option>)}</select></div>
-        <div className="form-group"><label>Number of Employees</label><select className="form-input" value={form.employees} onChange={e => setForm(f => ({...f, employees:e.target.value}))}><option value="">Select...</option>{EMPLOYEE_COUNTS.map(o => <option key={o}>{o}</option>)}</select></div>
-      </div>
-      <div style={fieldStyle}>
-        <div className="form-group"><label>Monthly Transactions (approx)</label><select className="form-input" value={form.transactions} onChange={e => setForm(f => ({...f, transactions:e.target.value}))}><option value="">Select range...</option>{TRANSACTION_RANGES.map(o => <option key={o}>{o}</option>)}</select></div>
-        <div className="form-group"><label>Current Software</label><select className="form-input" value={form.software} onChange={e => setForm(f => ({...f, software:e.target.value}))}><option value="">Select...</option>{SOFTWARE_OPTIONS.map(o => <option key={o}>{o}</option>)}</select></div>
-      </div>
-
-      <div className="form-group" style={{marginTop:'24px'}}>
-        <label>Services Needed</label>
-        <div style={{display:'flex',flexWrap:'wrap',gap:'8px',marginTop:'8px'}}>
-          {SERVICE_OPTIONS.map(s => (
-            <button type="button" key={s} onClick={() => toggleService(s)}
-              style={{padding:'8px 14px',borderRadius:'8px',border:'1px solid var(--cb)',background:form.services.includes(s)?'var(--accent)':'var(--card)',color:form.services.includes(s)?'#fff':'var(--tm)',fontSize:'14px',cursor:'pointer',transition:'all .2s'}}>
-              {s}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="form-group" style={{marginTop:'20px'}}>
-        <label>Anything else we should know?</label>
-        <textarea className="form-input" rows={4} placeholder="Tell us about your biggest bookkeeping challenge, current pain points, or specific goals..." value={form.notes} onChange={e => setForm(f => ({...f, notes:e.target.value}))}/>
-      </div>
-
-      <button type="submit" className="form-submit" id="quoteSubmitBtn" style={{marginTop:'24px',opacity: status === 'sending' ? .7 : 1}} disabled={status === 'sending'}>
-        {status === 'error' ? 'Please fill required fields' : status === 'sending' ? 'Sending...' : status === 'sent' ? 'Quote Request Sent!' : "Get My Custom Quote \u2192"}
-      </button>
-    </form>
   );
 }
 
@@ -303,10 +216,10 @@ export default function Bookkeeping() {
         <div className="container">
           <div className="content-grid">
             <RevealWrapper className="prose" delay={0.1}>
-              <h2>Request Your Custom Quote</h2>
-              <p>Tell us about your business and we&apos;ll send you a tailored bookkeeping proposal within 24 hours. No obligation, no pushy sales calls.</p>
-              <QuoteForm/>
-              <p style={{fontSize:'14px',color:'var(--td)',marginTop:'16px',textAlign:'center'}}>We respond within 24 hours. No spam. No obligation. Just a clear proposal.</p>
+              <h2>Contact Us About Bookkeeping</h2>
+              <p>Tell us about your business and how we can help. We&apos;ll get back to you within 24 hours. No obligation, no pushy sales calls.</p>
+              <ContactForm source="Bookkeeping page" idPrefix="bk" />
+              <p style={{fontSize:'14px',color:'var(--td)',marginTop:'16px',textAlign:'center'}}>We respond within 24 hours. No spam. No obligation.</p>
             </RevealWrapper>
 
             <aside>
