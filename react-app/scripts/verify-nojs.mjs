@@ -18,6 +18,7 @@ const ROUTES = [
   '/privacy-policy', '/terms-and-conditions', '/services/bookkeeping',
   '/services/tax-services', '/services/payroll', '/services/accounting',
   '/services/consulting', '/services/registered-agent', '/services/bookkeeping-cleanup',
+  '/rush-service',
 ];
 
 function serveDist() {

@@ -5,6 +5,7 @@ import { Brain, Coins, ShieldOff, TrendingDown, User, Building2, Percent, Landma
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
@@ -289,6 +290,7 @@ export default function Consulting() {
         </div>
       </section>
 
+      <RushStrip service="Business Formation &amp; Consulting" />
       <CtaBar heading="Ready to launch the right way?" sub="We'll handle the formation so you can focus on building your business."/>
     </>
   );

@@ -4,6 +4,7 @@ import { AlertTriangle, CloudFog, Receipt, FileWarning, Percent, CalendarClock, 
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
@@ -261,6 +262,7 @@ export default function TaxServices() {
         </div>
       </section>
 
+      <RushStrip service="Business &amp; Individual Taxes" />
       <CtaBar heading="Don't wait until the deadline." sub="Upload your documents now or schedule a free tax strategy session — and never face a tax surprise again."/>
     </>
   );

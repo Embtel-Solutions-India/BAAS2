@@ -10,6 +10,7 @@ import {
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
@@ -470,6 +471,7 @@ export default function BookkeepingCleanup() {
         </div>
       </section>
 
+      <RushStrip service="Bookkeeping Cleanup &amp; Catch-Up" />
       <CtaBar
         heading="The best day to fix your books was months ago. The second best is today."
         sub="Free 30-minute clarity session. Know exactly where you stand — no obligation."

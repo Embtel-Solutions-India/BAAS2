@@ -1,7 +1,11 @@
+import { Link } from 'react-router-dom';
+import { RUSH_FROM, RUSH_PATH } from '../../data/rush';
+import { trackRush } from '../../utils/rush';
+
 // Scrolling info strip shown under the logo/nav bar (sub header).
 const ITEMS = [
   <>Bookkeeping, Taxes &amp; Payroll for <b>Bay Area</b> Businesses</>,
-  <><a href="/#rush-service" className="ticker-rush"><b>Rush Service</b> Available</a> for urgent deadlines <i>(subject to availability)</i></>,
+  <><Link to={RUSH_PATH} className="ticker-rush" onClick={() => trackRush('rush_badge_click', { page: window.location.pathname })}><b>Rush Service</b> from {RUSH_FROM} · next-business-day options</Link> <i>(subject to availability)</i></>,
   <><b>4.4★</b> Google Reviews</>,
   <><b>500+</b> Businesses Served</>,
   <>QuickBooks Level 1 <b>Certified ProAdvisor</b></>,

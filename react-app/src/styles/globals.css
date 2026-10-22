@@ -792,3 +792,25 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 .nav{display:flex;flex-direction:column}
 .nav-inner,.ticker{width:100%}
 .nav.scrolled .ticker{order:-1}
+
+/* Rush landing page: sticky "Request Rush Service" button, mobile only */
+.rush-sticky{display:none}
+@media (max-width:768px){
+  .rush-sticky{display:block;position:fixed;left:16px;right:84px;bottom:16px;z-index:900;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .25s,transform .25s}
+  .rush-sticky.show{opacity:1;transform:none;pointer-events:auto}
+  .rush-sticky a,.rush-sticky button{width:100%;justify-content:center;box-shadow:0 8px 24px rgba(212,0,31,.35)}
+}
+
+/* Rush landing page layout helpers */
+.rush-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.rush-pkg-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:22px}
+.rush-pkg-grid>*{grid-column:span 2}
+.rush-pkg-grid>:nth-child(4){grid-column:2 / span 2}
+.rush-request-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px}
+@media (max-width:1000px){.rush-pkg-grid{grid-template-columns:repeat(2,1fr)}.rush-pkg-grid>*,.rush-pkg-grid>:nth-child(4){grid-column:auto}.rush-pkg-grid>:nth-child(5){grid-column:1 / -1;justify-self:center;width:calc(50% - 11px)}}
+@media (max-width:900px){.rush-steps{grid-template-columns:repeat(2,1fr)}.rush-request-grid{grid-template-columns:1fr}}
+@media (max-width:768px){.rush-steps{grid-template-columns:1fr}.rush-pkg-grid{grid-template-columns:1fr}.rush-pkg-grid>:nth-child(5){width:auto;justify-self:stretch}}
+
+/* Rush landing page: rules (left) + request form (right) */
+.rush-rules-request{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,4vw,56px);align-items:start}
+@media (max-width:1000px){.rush-rules-request{grid-template-columns:minmax(0,1fr)}}

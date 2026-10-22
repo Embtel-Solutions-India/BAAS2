@@ -17,6 +17,7 @@ import FaqItem from "../../components/UI/FaqItem";
 import LatestBlogs from "../../components/Sections/LatestBlogs";
 import GoogleReviewsWidget from "../../components/Sections/GoogleReviewsWidget";
 import RushServiceSection from "../../components/Sections/RushServiceSection";
+import { RUSH_FAQS, pricingAnchor } from "../../data/rush";
 import { usePortal } from "../../hooks/usePortal";
 import SEOHead from "../../components/SEO/SEOHead";
 import { SITE_URL } from "../../components/SEO/seoConfig";
@@ -49,7 +50,18 @@ const FAQS = [
     q: "What happens in a free clarity session?",
     a: "A 30-minute call where we assess your situation, identify pain points, and recommend a path forward. No obligation.",
   },
+  ...RUSH_FAQS,
 ];
+
+// "Rush available" tags on the service cards. Foreign Subsidiary Setup is intentionally untagged
+// (EIN and banking timelines are outside BAAS control).
+const RUSH_TAGS = {
+  "Bookkeeping & Accounting": { label: "Rush available", to: pricingAnchor("bookkeeping") },
+  "Business & Individual Taxes": { label: "Rush available", to: pricingAnchor("business-tax") },
+  "Payroll Management": { label: "Rush available", to: pricingAnchor("payroll") },
+  "Business Formation": { label: "Rush available", to: pricingAnchor("formation") },
+  "Registered Agent Services": { label: "Same-day activation", to: pricingAnchor("registered-agent") },
+};
 
 const INDUSTRIES = [
   "Technology & SaaS",
@@ -579,7 +591,9 @@ export default function Home() {
                 "Expanding into the U.S.? We handle incorporation, EIN, banking setup, and compliance.",
                 "/services",
               ],
-            ].map(([Icon, title, desc, href]) => (
+            ].map(([Icon, title, desc, href]) => {
+              const tag = RUSH_TAGS[title];
+              return (
               <motion.div
                 variants={fadeUp}
                 key={title}
@@ -588,12 +602,25 @@ export default function Home() {
                   display: "flex",
                   flexDirection: "column",
                   cursor: "pointer",
+                  position: "relative",
                 }}
                 whileHover={{
                   y: -5,
                   boxShadow: "0 8px 32px rgba(212,0,31,0.15)",
                 }}
               >
+                {tag && (
+                  <Link
+                    to={tag.to}
+                    style={{
+                      position: "absolute", top: "14px", right: "14px", zIndex: 2, fontSize: "11px", fontWeight: 700,
+                      padding: "4px 10px", borderRadius: "100px", background: "rgba(212,0,31,.08)",
+                      border: "1px solid rgba(212,0,31,.2)", color: "var(--accent)", whiteSpace: "nowrap",
+                    }}
+                  >
+                    {tag.label}
+                  </Link>
+                )}
                 <Link
                   to={href}
                   style={{
@@ -651,7 +678,8 @@ export default function Home() {
                   </span>
                 </Link>
               </motion.div>
-            ))}
+              );
+            })}
           </motion.div>
         </div>
       </section>
@@ -990,8 +1018,8 @@ export default function Home() {
             <h2 className="stitle">Common questions</h2>
           </Reveal>
           <div style={{ maxWidth: "720px", margin: "0 auto" }}>
-            {FAQS.map(({ q, a }) => (
-              <FaqItem key={q} question={q} answer={a} />
+            {FAQS.map(({ q, a, link }) => (
+              <FaqItem key={q} question={q} answer={a} link={link} />
             ))}
           </div>
         </div>

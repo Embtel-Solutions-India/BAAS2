@@ -5,6 +5,7 @@ import { Scale, FolderOpen, Copy, FileX, Search, RefreshCw, ListChecks, FileText
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
@@ -200,6 +201,7 @@ export default function Accounting() {
         </div>
       </section>
 
+      <RushStrip service="Accounting Cleanup" />
       <CtaBar heading="Ready to get started?" sub="Let us handle your bookkeeping cleanup services so you can focus on growing your business."/>
     </>
   );

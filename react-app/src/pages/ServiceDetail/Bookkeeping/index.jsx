@@ -4,6 +4,7 @@ import { Zap, Brain, HeartPulse, Clock, GitBranch, Users, TrendingUp, EyeOff, Br
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import RushStrip from '../../../components/Sections/RushStrip';
 import ContactForm from '../../../components/Sections/ContactForm';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
@@ -241,6 +242,7 @@ export default function Bookkeeping() {
         </div>
       </section>
 
+      <RushStrip service="Bookkeeping &amp; Accounting" />
       <CtaBar heading="Ready for books you can actually trust?" sub="Get a custom quote within 24 hours — no obligation."/>
     </>
   );

@@ -1,10 +1,9 @@
 const router = require('express').Router();
 const rateLimit = require('express-rate-limit');
 const { sendMail } = require('../config/email');
-const { EMAIL_RE, PHONE_RE, esc, clean, row } = require('../utils/formUtils');
+const { FORM_RECIPIENT, EMAIL_RE, PHONE_RE, esc, clean, row } = require('../utils/formUtils');
 
 // Public contact form (Contact page + service pages). Emails the enquiry to the firm.
-const TO = () => process.env.CONTACT_REQUEST_TO || process.env.RUSH_REQUEST_TO || 'info@bayareaaccountingsolutions.com';
 const SOURCES = ['Contact page', 'Bookkeeping page'];
 
 const limiter = rateLimit({
@@ -52,7 +51,7 @@ router.post('/', limiter, async (req, res) => {
 
   try {
     await sendMail({
-      to: TO(),
+      to: FORM_RECIPIENT,
       replyTo: d.email,
       subject: `New inquiry from ${d.first_name} ${d.last_name} (${d.source})`,
       html,

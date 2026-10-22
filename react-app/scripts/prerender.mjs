@@ -45,6 +45,7 @@ const ROUTES = [
   '/services/consulting',
   '/services/registered-agent',
   '/services/bookkeeping-cleanup',
+  '/rush-service',
   '/404',
 ];
 

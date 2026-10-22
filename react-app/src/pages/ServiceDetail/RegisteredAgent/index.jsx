@@ -5,6 +5,7 @@ import { Mail, Home, ShieldAlert, CalendarClock, MapPin, ScanLine, Eye, Globe, C
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
@@ -206,6 +207,7 @@ export default function RegisteredAgent() {
         </div>
       </section>
 
+      <RushStrip special />
       <CtaBar heading="Get Peace of Mind with a Professional Registered Agent" sub="Avoid late penalties, legal confusion, and public privacy exposure. We've got your back — all year long."/>
     </>
   );

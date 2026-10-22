@@ -83,6 +83,7 @@ export default function Header() {
                 {services.map(([label, path]) => (
                   <Link className="dropdown-item" to={path} role="menuitem" key={path}>{label}</Link>
                 ))}
+                <Link className="dropdown-item" to="/rush-service" role="menuitem">Rush Service</Link>
                 <div style={{borderTop:'1px solid var(--border)',marginTop:'6px',paddingTop:'6px'}}>
                   <Link className="dropdown-item" to="/services" role="menuitem" style={{color:'var(--accent)'}}>View all services</Link>
                 </div>
@@ -129,6 +130,7 @@ export default function Header() {
           {services.map(([label, path]) => (
             <Link className="mob-sub-link" to={path} onClick={close} role="menuitem" key={path}>{label}</Link>
           ))}
+          <Link className="mob-sub-link" to="/rush-service" onClick={close} role="menuitem">Rush Service</Link>
           <Link className="mob-sub-link" to="/services" onClick={close} role="menuitem">View all services</Link>
           <Link className="mob-link" to="/industries" onClick={close} role="menuitem">Industries</Link>
           <Link className="mob-link" to="/blog" onClick={close} role="menuitem">Blog</Link>
