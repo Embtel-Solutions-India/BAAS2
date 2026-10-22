@@ -49,6 +49,7 @@ export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }
       // Google Ads conversion: "Contact" form submitted
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'conversion', { send_to: 'AW-18506219893/GsyoCJ6Qx5gdEPWCuvhE' });
+        window.gtag('event', 'generate_lead', { form: source });
       }
       setSubmitted(true);
     } catch (err) {

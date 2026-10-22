@@ -5,11 +5,13 @@ import { Brain, Coins, ShieldOff, TrendingDown, User, Building2, Percent, Landma
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import { sendQuote, contactIssue, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
+import FormSafeguards from '../../../components/UI/FormSafeguards';
 import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
-const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
+const BOOK = '/book'; // on-site booking page (embeds the calendar)
 
 const fadeUp = { hidden:{opacity:0,y:36}, visible:{opacity:1,y:0,transition:{duration:.7,ease:[.16,1,.3,1]}} };
 const stagger = { hidden:{}, visible:{transition:{staggerChildren:.08}} };
@@ -27,16 +29,27 @@ function SectionHeader({ label, title, sub }) {
 function ConsultForm() {
   const [form, setForm] = useState({ name:'', email:'', biz:'', entity:'', question:'' });
   const [status, setStatus] = useState('idle');
-  const submit = (e) => {
+  const [consent, setConsent] = useState(false);
+  const [hp, setHp] = useState('');
+  const flash = (st) => { setStatus(st); setTimeout(() => setStatus('idle'), 2500); };
+
+  const submit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.biz) { setStatus('error'); setTimeout(() => setStatus('idle'), 2500); return; }
+    const { name, email, biz, entity, question } = form;
+    if (!biz) return flash('error');
+    const issue = contactIssue({ name, email });
+    if (issue) return flash(issue);
+    if (!consent) return flash('consent');
     setStatus('sending');
-    setTimeout(() => { setStatus('sent'); setTimeout(() => setStatus('idle'), 4000); }, 1500);
+    try {
+      await sendQuote({ source: 'Consulting page', name, email, consent: true, website: hp, fields: { 'Business Name': biz, 'Entity being considered': entity, 'About the business': question } });
+      setStatus('sent');
+    } catch { setStatus('failed'); }
   };
 
   if (status === 'sent') {
     return (
-      <div style={{marginTop:'24px',padding:'40px 32px',borderRadius:'20px',background:'rgba(74,222,128,.08)',border:'1px solid rgba(74,222,128,.35)',textAlign:'center'}}>
+      <div role="status" style={{marginTop:'24px',padding:'40px 32px',borderRadius:'20px',background:'rgba(74,222,128,.08)',border:'1px solid rgba(74,222,128,.35)',textAlign:'center'}}>
         <div style={{width:'56px',height:'56px',borderRadius:'50%',background:'rgba(74,222,128,.15)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',color:'#22c55e'}}>
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
         </div>
@@ -66,8 +79,10 @@ function ConsultForm() {
         <label>Tell us about your business</label>
         <textarea className="form-input" rows={3} placeholder="What you do, how many owners, goals, concerns..." value={form.question} onChange={e => setForm(f => ({...f,question:e.target.value}))}/>
       </div>
-      <button type="submit" className="form-submit" style={{marginTop:'8px'}}>
-        {status==='error'?'Please fill required fields':status==='sending'?'Sending...':'Book My Free Clarity Session'}
+      <FormSafeguards id="quote-consent" consent={consent} setConsent={setConsent} hp={hp} setHp={setHp} />
+      {status === 'failed' && <div role="alert" style={{color:'#d4001f',fontSize:'14px',marginBottom:'12px'}}>{QUOTE_FAILED_NOTE}</div>}
+      <button type="submit" className="form-submit" style={{marginTop:'8px'}} disabled={status==='sending'}>
+        {QUOTE_STATUS[status] || 'Request My Free Clarity Session'}
       </button>
     </form>
   );
@@ -143,7 +158,7 @@ export default function Consulting() {
   return (
     <>
       <SEOHead
-        title="Business Formation & Consulting | BAAS"
+        title="Business Formation & Consulting | Bay Area Accounting Solutions"
         description="LLC, S-Corp, and C-Corp formation for Bay Area businesses — EIN registration, operating agreements, tax election, and ongoing compliance support."
         url={`${SITE_URL}/services/consulting`}
         type="website"
@@ -282,7 +297,7 @@ export default function Consulting() {
                 <div className="sidebar-cta">
                   <h4>Entity Consultation</h4>
                   <p>Not sure which entity is right? We&apos;ll walk you through the pros and cons for your specific situation.</p>
-                  <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
+                  <a href={BOOK} className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
                 </div>
               </RevealWrapper>
             </aside>

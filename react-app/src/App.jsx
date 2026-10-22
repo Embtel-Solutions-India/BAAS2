@@ -23,6 +23,7 @@ const Consulting     = lazy(() => import('./pages/ServiceDetail/Consulting'));
 const RegisteredAgent = lazy(() => import('./pages/ServiceDetail/RegisteredAgent'));
 const BookkeepingCleanup = lazy(() => import('./pages/ServiceDetail/BookkeepingCleanup'));
 const RushService   = lazy(() => import('./pages/RushService'));
+const Book          = lazy(() => import('./pages/Book'));
 const NotFound      = lazy(() => import('./pages/NotFound'));
 
 // Client Portal Auth pages
@@ -91,6 +92,7 @@ function AnimatedRoutes() {
             <Route path="/industries"            element={<Industries />} />
             <Route path="/resources"             element={<Resources />} />
             <Route path="/blog"                  element={<Blog />} />
+            <Route path="/blog/page/:page"       element={<Blog />} />
             <Route path="/blog/:slug"            element={<BlogDetail />} />
             <Route path="/contact"               element={<Contact />} />
             <Route path="/privacy-policy"        element={<PrivacyPolicy />} />
@@ -103,6 +105,7 @@ function AnimatedRoutes() {
             <Route path="/services/registered-agent" element={<RegisteredAgent />} />
             <Route path="/services/bookkeeping-cleanup" element={<BookkeepingCleanup />} />
             <Route path="/rush-service"          element={<RushService />} />
+            <Route path="/book"                  element={<Book />} />
 
             {/* Client Portal Auth Routes */}
             <Route path="/client-portal/login"           element={<PortalLogin />} />

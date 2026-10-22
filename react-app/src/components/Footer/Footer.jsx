@@ -47,7 +47,7 @@ export default function Footer() {
             <Link className="footer-link" to="/industries">Industries</Link>
             <Link className="footer-link" to="/resources">Resources</Link>
             <Link className="footer-link" to="/contact">Contact</Link>
-            <button className="footer-link" onClick={open} style={{background:'none',border:'none',cursor:'pointer',padding:0,textAlign:'left'}}>Client Portal</button>
+            <a href="/client-portal/login" className="footer-link" onClick={(e) => { e.preventDefault(); open(); }}>Client Portal</a>
           </div>
 
           <div>

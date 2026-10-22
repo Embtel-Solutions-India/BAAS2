@@ -5,11 +5,13 @@ import { Scale, FolderOpen, Copy, FileX, Search, RefreshCw, ListChecks, FileText
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import { sendQuote, contactIssue, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
+import FormSafeguards from '../../../components/UI/FormSafeguards';
 import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
-const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
+const BOOK = '/book'; // on-site booking page (embeds the calendar)
 
 const fadeUp = { hidden:{opacity:0,y:36}, visible:{opacity:1,y:0,transition:{duration:.7,ease:[.16,1,.3,1]}} };
 const stagger = { hidden:{}, visible:{transition:{staggerChildren:.08}} };
@@ -27,16 +29,27 @@ function SectionHeader({ label, title, sub }) {
 function CleanupQuoteForm() {
   const [form, setForm] = useState({ name:'', email:'', biz:'', behind:'' });
   const [status, setStatus] = useState('idle');
-  const submit = (e) => {
+  const [consent, setConsent] = useState(false);
+  const [hp, setHp] = useState('');
+  const flash = (st) => { setStatus(st); setTimeout(() => setStatus('idle'), 2500); };
+
+  const submit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.biz) { setStatus('error'); setTimeout(() => setStatus('idle'), 2500); return; }
+    const { name, email, biz, behind } = form;
+    if (!biz) return flash('error');
+    const issue = contactIssue({ name, email });
+    if (issue) return flash(issue);
+    if (!consent) return flash('consent');
     setStatus('sending');
-    setTimeout(() => { setStatus('sent'); setTimeout(() => setStatus('idle'), 4000); }, 1500);
+    try {
+      await sendQuote({ source: 'Accounting Cleanup page', name, email, consent: true, website: hp, fields: { 'Business Name': biz, 'How far behind are the books': behind } });
+      setStatus('sent');
+    } catch { setStatus('failed'); }
   };
 
   if (status === 'sent') {
     return (
-      <div style={{marginTop:'24px',padding:'40px 32px',borderRadius:'20px',background:'rgba(74,222,128,.08)',border:'1px solid rgba(74,222,128,.35)',textAlign:'center'}}>
+      <div role="status" style={{marginTop:'24px',padding:'40px 32px',borderRadius:'20px',background:'rgba(74,222,128,.08)',border:'1px solid rgba(74,222,128,.35)',textAlign:'center'}}>
         <div style={{width:'56px',height:'56px',borderRadius:'50%',background:'rgba(74,222,128,.15)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',color:'#22c55e'}}>
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
         </div>
@@ -58,8 +71,10 @@ function CleanupQuoteForm() {
           {['1–3 months','4–6 months','7–12 months','1–2 years','2+ years'].map(o => <option key={o}>{o}</option>)}
         </select>
       </div>
-      <button type="submit" className="form-submit" style={{marginTop:'8px'}}>
-        {status==='error'?'Please fill required fields':status==='sending'?'Sending...':'Get My Cleanup Quote'}
+      <FormSafeguards id="quote-consent" consent={consent} setConsent={setConsent} hp={hp} setHp={setHp} />
+      {status === 'failed' && <div role="alert" style={{color:'#d4001f',fontSize:'14px',marginBottom:'12px'}}>{QUOTE_FAILED_NOTE}</div>}
+      <button type="submit" className="form-submit" style={{marginTop:'8px'}} disabled={status==='sending'}>
+        {QUOTE_STATUS[status] || 'Get My Cleanup Quote'}
       </button>
     </form>
   );
@@ -107,9 +122,10 @@ export default function Accounting() {
   return (
     <>
       <SEOHead
-        title="Accounting & Bookkeeping Cleanup | BAAS"
+        title="Accounting Cleanup | Bay Area Accounting Solutions"
         description="Rescue bookkeeping for Bay Area businesses — we fix messy QuickBooks, reconcile every account, and get your books audit-ready with flat-fee cleanup pricing."
         url={`${SITE_URL}/services/accounting`}
+        canonical={`${SITE_URL}/services/bookkeeping-cleanup`}
         type="website"
         structuredData={ACCOUNTING_SCHEMA}
       />
@@ -184,7 +200,7 @@ export default function Accounting() {
                 <div className="sidebar-cta">
                   <h4>Need Help?</h4>
                   <p>Schedule a free 30-minute clarity session with our team. No obligation.</p>
-                  <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
+                  <a href={BOOK} className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
                 </div>
                 <div className="sidebar-card" style={{marginTop:'20px'}}>
                   <h4>Contact</h4>

@@ -17,10 +17,18 @@ const BUCKET = process.env.AWS_BUCKET_NAME || '';
  * @param {string} folder   S3 folder path (e.g. 'blogs/thumbnails')
  * @param {string} mimeType e.g. 'image/jpeg'
  * @param {string} ext      e.g. '.jpg'
+ * @param {string} [nameHint] optional readable name (e.g. the blog slug) used in the file name
  * @returns {Promise<string>} Public S3 URL
  */
-async function uploadToS3(buffer, folder, mimeType, ext) {
-  const key = `${folder}/${uuidv4()}${ext}`;
+function buildKey(folder, ext, nameHint) {
+  const id = uuidv4();
+  const hint = String(nameHint || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60).replace(/-+$/g, '');
+  // keys must stay within [A-Za-z0-9._-] (see routes/media.js)
+  return hint ? `${folder}/${hint}-${id.slice(0, 8)}${ext}` : `${folder}/${id}${ext}`;
+}
+
+async function uploadToS3(buffer, folder, mimeType, ext, nameHint) {
+  const key = buildKey(folder, ext, nameHint);
 
   const command = new PutObjectCommand({
     Bucket:      BUCKET,
@@ -93,4 +101,4 @@ function toPublicMediaUrl(url) {
   return `${base}/media/${url.slice(prefix.length)}`;
 }
 
-module.exports = { uploadToS3, deleteFromS3, getFromS3, toPublicMediaUrl };
+module.exports = { uploadToS3, deleteFromS3, getFromS3, toPublicMediaUrl, buildKey };

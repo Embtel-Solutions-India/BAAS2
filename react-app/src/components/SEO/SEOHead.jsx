@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { SITE_URL } from './seoConfig';
 
-const DEFAULT_IMAGE = `${SITE_URL}/logo-512.png`;
+// 1200x630 branded share image (the square logo was being cropped in social previews)
+const DEFAULT_IMAGE = `${SITE_URL}/og-default.png`;
 
 /**
  * SEOHead — sets document title, meta tags, canonical link, robots directive,
@@ -11,7 +12,7 @@ const DEFAULT_IMAGE = `${SITE_URL}/logo-512.png`;
  * ships to crawlers.
  */
 export default function SEOHead({
-  title, description, image = DEFAULT_IMAGE, url, type = 'article',
+  title, description, image = DEFAULT_IMAGE, url, canonical: canonicalUrl, type = 'article',
   author, publishedTime, tags, noindex = false, structuredData
 }) {
   useEffect(() => {
@@ -66,7 +67,7 @@ export default function SEOHead({
         canonical.setAttribute('rel', 'canonical');
         document.head.appendChild(canonical);
       }
-      canonical.setAttribute('href', url);
+      canonical.setAttribute('href', canonicalUrl || url); // canonicalUrl lets a near-duplicate page point at the page that should rank
     }
 
     // JSON-LD Structured Data — replace whatever the previous page left behind.
@@ -107,7 +108,7 @@ export default function SEOHead({
     return () => {
       document.querySelectorAll('script[data-seo-ld]').forEach((el) => el.remove());
     };
-  }, [title, description, image, url, type, author, publishedTime, tags, noindex, structuredData]);
+  }, [title, description, image, url, canonicalUrl, type, author, publishedTime, tags, noindex, structuredData]);
 
   return null;
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import RevealWrapper from '../../components/UI/RevealWrapper';
 import StaggerGrid from '../../components/UI/StaggerGrid';
@@ -18,7 +18,13 @@ export default function Blog() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
+  // Unfiltered browsing is URL-driven (/blog, /blog/page/2) so every page has a crawlable link.
+  // While a category/search filter is active the list is filtered client-side, so paging stays in state.
+  const { page: pageParam } = useParams();
+  const urlPage = /^\d+$/.test(pageParam || '') ? Math.max(1, parseInt(pageParam, 10)) : 1;
+  const [localPage, setLocalPage] = useState(1);
+  const filtered = activeCategory !== 'All' || !!search;
+  const page = filtered ? localPage : urlPage;
   const [pagination, setPagination] = useState({ pages: 1 });
 
   async function loadPublishedBlogs(p = page, cat = activeCategory) {
@@ -43,25 +49,22 @@ export default function Blog() {
   }
 
   useEffect(() => {
-    loadPublishedBlogs(1, activeCategory);
-  }, [activeCategory, search]);
+    loadPublishedBlogs(page, activeCategory);
+  }, [activeCategory, search, page]);
 
   const handleCategoryClick = (cat) => {
     setActiveCategory(cat);
-    setPage(1);
+    setLocalPage(1);
   };
 
-  const handlePageChange = (p) => {
-    setPage(p);
-    loadPublishedBlogs(p, activeCategory);
-  };
+  const pagePath = (p) => (p === 1 ? '/blog' : `/blog/page/${p}`);
 
   return (
     <>
       <SEOHead
-        title="Blog | Bay Area Accounting Solutions"
-        description="Practical bookkeeping, tax, and business finance advice for Bay Area entrepreneurs — written in plain English, not accountant-speak."
-        url={`${SITE_URL}/blog`}
+        title={urlPage > 1 ? `Blog – Page ${urlPage} | Bay Area Accounting Solutions` : "Blog | Bay Area Accounting Solutions"}
+        description={`Practical bookkeeping, tax, and business finance advice for Bay Area entrepreneurs — written in plain English, not accountant-speak.${urlPage > 1 ? ` Page ${urlPage}.` : ""}`}
+        url={`${SITE_URL}${urlPage > 1 ? `/blog/page/${urlPage}` : "/blog"}`}
         type="website"
         structuredData={BLOG_BREADCRUMB}
       />
@@ -113,7 +116,7 @@ export default function Blog() {
                 }}
                 placeholder="Search articles..."
                 value={search}
-                onChange={e => { setSearch(e.target.value); setPage(1); }}
+                onChange={e => { setSearch(e.target.value); setLocalPage(1); }}
               />
             </div>
 
@@ -172,30 +175,23 @@ export default function Blog() {
                   ))}
                 </StaggerGrid>
 
-                {/* Pagination */}
+                {/* Pagination: real <a href> links (crawlable) when unfiltered, buttons while a client-side filter is active */}
                 {pagination.pages > 1 && (
-                  <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '48px' }}>
-                    {Array.from({ length: pagination.pages }, (_, i) => i + 1).map(p => (
-                      <button
-                        key={p}
-                        onClick={() => handlePageChange(p)}
-                        style={{
-                          width: '40px',
-                          height: '40px',
-                          borderRadius: '50%',
-                          border: '1px solid var(--bl)',
-                          background: p === page ? 'var(--accent)' : '#fff',
-                          color: p === page ? '#fff' : 'var(--tm)',
-                          cursor: 'pointer',
-                          fontSize: '14px',
-                          fontWeight: 600,
-                          transition: 'all .2s'
-                        }}
-                      >
-                        {p}
-                      </button>
-                    ))}
-                  </div>
+                  <nav aria-label="Blog pagination" style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '48px' }}>
+                    {Array.from({ length: pagination.pages }, (_, i) => i + 1).map(p => {
+                      const style = {
+                        width: '40px', height: '40px', borderRadius: '50%', border: '1px solid var(--bl)',
+                        background: p === page ? 'var(--accent)' : '#fff', color: p === page ? '#fff' : 'var(--tm)',
+                        cursor: 'pointer', fontSize: '14px', fontWeight: 600, transition: 'all .2s',
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none'
+                      };
+                      return filtered ? (
+                        <button key={p} onClick={() => setLocalPage(p)} aria-current={p === page ? 'page' : undefined} style={style}>{p}</button>
+                      ) : (
+                        <Link key={p} to={pagePath(p)} aria-current={p === page ? 'page' : undefined} aria-label={`Page ${p}`} style={style}>{p}</Link>
+                      );
+                    })}
+                  </nav>
                 )}
               </>
             )}

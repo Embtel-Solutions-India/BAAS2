@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { usePortal } from '../../hooks/usePortal';
 import TopTicker from './TopTicker';
 
-const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
+const BOOK = '/book'; // on-site booking page (embeds the calendar)
 
 const services = [
   ['Bookkeeping & Accounting',      '/services/bookkeeping'],
@@ -99,13 +99,13 @@ export default function Header() {
         </div>
 
         <div className="nav-cta">
-          <button className="btn-g" onClick={open} aria-label="Open client portal login">
+          <a href="/client-portal/login" className="btn-g" onClick={(e) => { e.preventDefault(); open(); }} aria-label="Open client portal login">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
             </svg>
             Client Login
-          </button>
-          <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-p">Free Consultation</a>
+          </a>
+          <a href={BOOK} className="btn-p">Free Consultation</a>
         </div>
 
         <button
@@ -136,8 +136,8 @@ export default function Header() {
           <Link className="mob-link" to="/blog" onClick={close} role="menuitem">Blog</Link>
           <Link className="mob-link" to="/contact" onClick={close} role="menuitem">Contact</Link>
           <div style={{marginTop:'20px',display:'flex',flexDirection:'column',gap:'12px'}}>
-            <button className="btn-g" style={{justifyContent:'center',padding:'12px'}} onClick={() => { close(); open(); }}>Client Login</button>
-            <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-p" style={{justifyContent:'center',padding:'12px'}} onClick={close}>Free Consultation</a>
+            <a href="/client-portal/login" className="btn-g" style={{justifyContent:'center',padding:'12px'}} onClick={(e) => { e.preventDefault(); close(); open(); }}>Client Login</a>
+            <a href={BOOK} className="btn-p" style={{justifyContent:'center',padding:'12px'}} onClick={close}>Free Consultation</a>
           </div>
         </div>
       )}

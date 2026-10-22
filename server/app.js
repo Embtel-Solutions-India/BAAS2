@@ -70,6 +70,7 @@ app.use('/api/quickbooks',    require('./routes/quickbooks'));
 app.use('/api/chat',          require('./routes/chat'));
 app.use('/api/rush-requests', require('./routes/rushRequests'));
 app.use('/api/contact-requests', require('./routes/contactRequests'));
+app.use('/api/quote-requests', require('./routes/quoteRequests'));
 
 app.get('/api/health', (req, res) =>
   res.json({ status: 'ok', ts: new Date().toISOString() })
@@ -98,39 +99,8 @@ function readShellHtml() {
   return shellHtmlCache;
 }
 
-app.get('/blog/:slug', async (req, res, next) => {
-  try {
-    const shell = readShellHtml();
-    if (!shell) return next();
-    const Blog = require('./models/Blog');
-    const exists = await Blog.exists({ slug: req.params.slug, status: 'published' });
-
-    // The shell's baked-in canonical/robots point at "/" — fine for every
-    // other CSR-only route (which all redirect to "/" anyway), wrong here
-    // since this one URL now serves real, distinct article slugs. Rewrite
-    // both to describe *this* URL instead; SEOHead corrects them again
-    // client-side once React mounts, this is only for non-JS fetches.
-    const selfUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-    let html = shell.replace(
-      /<link rel="canonical" href="[^"]*"\s*\/?>/,
-      `<link rel="canonical" href="${selfUrl}" />`
-    );
-    if (!exists) {
-      html = html.replace(
-        /<meta name="robots" content="[^"]*"\s*\/?>/,
-        '<meta name="robots" content="noindex, follow" />'
-      );
-    }
-
-    // Served by nginx everywhere else with no CSP header; match that here
-    // so this passthrough doesn't behave differently (e.g. block the
-    // Elfsight widget's inline bootstrap script) from every other page.
-    res.removeHeader('Content-Security-Policy');
-    res.status(exists ? 200 : 404).type('html').send(html);
-  } catch (err) {
-    next(err);
-  }
-});
+// /blog/<slug> and /blog/page/<n>: server-rendered SEO + content for crawlers (see routes/blogPages.js)
+app.use(require('./routes/blogPages')({ readShell: readShellHtml }));
 
 app.use((req, res) => res.status(404).json({ error: 'Route not found' }));
 

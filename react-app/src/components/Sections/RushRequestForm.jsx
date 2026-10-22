@@ -93,6 +93,7 @@ export default function RushRequestForm({ prefill }) {
         service: form.service, tier: form.tier, reason: form.reason, days_to_deadline: days,
         docs_ready: form.docs_ready, existing_client: form.existing_client,
       });
+      trackRush('generate_lead', { form: 'Rush Service request' });
       setDone(form.full_name.trim().split(/\s+/)[0]);
     } catch {
       setSendError(FORM_MESSAGES.error);

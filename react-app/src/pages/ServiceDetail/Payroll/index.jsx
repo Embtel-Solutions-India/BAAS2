@@ -5,11 +5,13 @@ import { AlertTriangle, Percent, Scale, CalendarX, Building2, Search, Files, Eye
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import { sendQuote, contactIssue, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
+import FormSafeguards from '../../../components/UI/FormSafeguards';
 import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
-const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
+const BOOK = '/book'; // on-site booking page (embeds the calendar)
 
 const fadeUp = { hidden:{opacity:0,y:36}, visible:{opacity:1,y:0,transition:{duration:.7,ease:[.16,1,.3,1]}} };
 const stagger = { hidden:{}, visible:{transition:{staggerChildren:.08}} };
@@ -50,17 +52,27 @@ function PayrollQuoteForm() {
   const [form, setForm] = useState({ name:'', email:'', biz:'', phone:'', employees:'', frequency:'', notes:'' });
   const [status, setStatus] = useState('idle');
 
-  const submit = (e) => {
+  const [consent, setConsent] = useState(false);
+  const [hp, setHp] = useState('');
+  const flash = (st) => { setStatus(st); setTimeout(() => setStatus('idle'), 2500); };
+
+  const submit = async (e) => {
     e.preventDefault();
-    const { name, email, biz, employees, frequency } = form;
-    if (!name || !email || !biz || !employees || !frequency) { setStatus('error'); setTimeout(() => setStatus('idle'), 2500); return; }
+    const { name, email, biz, phone, employees, frequency, notes } = form;
+    if (!biz || !employees || !frequency) return flash('error');
+    const issue = contactIssue({ name, email, phone });
+    if (issue) return flash(issue);
+    if (!consent) return flash('consent');
     setStatus('sending');
-    setTimeout(() => { setStatus('sent'); setTimeout(() => setStatus('idle'), 4000); }, 1500);
+    try {
+      await sendQuote({ source: 'Payroll page', name, email, phone, consent: true, website: hp, fields: { 'Business Name': biz, 'Number of Employees': employees, 'Payroll Frequency': frequency, 'Notes': notes } });
+      setStatus('sent');
+    } catch { setStatus('failed'); }
   };
 
   if (status === 'sent') {
     return (
-      <div style={{marginTop:'24px',padding:'40px 32px',borderRadius:'20px',background:'rgba(74,222,128,.08)',border:'1px solid rgba(74,222,128,.35)',textAlign:'center'}}>
+      <div role="status" style={{marginTop:'24px',padding:'40px 32px',borderRadius:'20px',background:'rgba(74,222,128,.08)',border:'1px solid rgba(74,222,128,.35)',textAlign:'center'}}>
         <div style={{width:'56px',height:'56px',borderRadius:'50%',background:'rgba(74,222,128,.15)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',color:'#22c55e'}}>
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
         </div>
@@ -101,8 +113,10 @@ function PayrollQuoteForm() {
         <label>Anything else we should know?</label>
         <textarea className="form-input" rows={3} placeholder="Current payroll provider, special pay rules, multiple locations, etc." value={form.notes} onChange={e => setForm(f => ({...f,notes:e.target.value}))}/>
       </div>
-      <button type="submit" className="form-submit" style={{marginTop:'8px'}}>
-        {status==='error'?'Please fill all required fields':status==='sending'?'Sending...':'Get My Payroll Quote'}
+      <FormSafeguards id="quote-consent" consent={consent} setConsent={setConsent} hp={hp} setHp={setHp} />
+      {status === 'failed' && <div role="alert" style={{color:'#d4001f',fontSize:'14px',marginBottom:'12px'}}>{QUOTE_FAILED_NOTE}</div>}
+      <button type="submit" className="form-submit" style={{marginTop:'8px'}} disabled={status==='sending'}>
+        {QUOTE_STATUS[status] || 'Get My Payroll Quote'}
       </button>
     </form>
   );
@@ -259,7 +273,7 @@ export default function Payroll() {
                 <div className="sidebar-cta">
                   <h4>Payroll Audit</h4>
                   <p>Let us review your current payroll setup and identify compliance gaps — free.</p>
-                  <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
+                  <a href={BOOK} className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
                 </div>
               </RevealWrapper>
             </aside>

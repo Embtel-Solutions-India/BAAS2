@@ -41,13 +41,13 @@ export default function Contact() {
                   <StaggerItem>
                     <a href="tel:+15109627300" className="contact-info-card">
                       <div className="contact-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
-                      <div><div style={{fontSize:'16px',fontWeight:600,marginBottom:'4px'}}>Phone</div><div style={{fontSize:'15px',color:'var(--tm)'}}>+1 (510) 962-7300</div></div>
+                      <div><div style={{fontSize:'16px',fontWeight:600,marginBottom:'4px'}}>Phone</div><div style={{fontSize:'15px',color:'var(--tm)'}}><a href="tel:+15109627300" style={{color:'inherit'}}>+1 (510) 962-7300</a></div></div>
                     </a>
                   </StaggerItem>
                   <StaggerItem>
                     <a href="mailto:info@bayareaaccountingsolutions.com" className="contact-info-card">
                       <div className="contact-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg></div>
-                      <div><div style={{fontSize:'16px',fontWeight:600,marginBottom:'4px'}}>Email</div><div style={{fontSize:'15px',color:'var(--tm)'}}>info@bayareaaccountingsolutions.com</div></div>
+                      <div><div style={{fontSize:'16px',fontWeight:600,marginBottom:'4px'}}>Email</div><div style={{fontSize:'15px',color:'var(--tm)'}}><a href="mailto:info@bayareaaccountingsolutions.com" style={{color:'inherit'}}>info@bayareaaccountingsolutions.com</a></div></div>
                     </a>
                   </StaggerItem>
                   <StaggerItem>

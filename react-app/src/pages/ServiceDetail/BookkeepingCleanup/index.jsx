@@ -14,7 +14,7 @@ import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
-const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
+const BOOK = '/book'; // on-site booking page (embeds the calendar)
 
 const fadeUp = { hidden:{opacity:0,y:36}, visible:{opacity:1,y:0,transition:{duration:.7,ease:[.16,1,.3,1]}} };
 const stagger = { hidden:{}, visible:{transition:{staggerChildren:.08}} };
@@ -129,7 +129,7 @@ function DiagnosticQuiz() {
       <div style={{padding:'24px 26px',background:'rgba(212,0,31,.04)',borderTop:'1px solid var(--cb)'}}>
         <p style={{fontFamily:'var(--serif)',fontSize:'22px',marginBottom:'8px',color:verdictColor}}>{verdict}</p>
         <p style={{fontSize:'15px',color:'var(--tm)',marginBottom:'20px',lineHeight:1.6}}>{advice}</p>
-        <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-pl" style={{padding:'13px 26px',fontSize:'15px'}}>
+        <a href={BOOK} className="btn-pl" style={{padding:'13px 26px',fontSize:'15px'}}>
           {cta}
           <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 9h10M10 5l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
         </a>
@@ -226,12 +226,12 @@ export default function BookkeepingCleanup() {
     ["I'm embarrassed about how bad it is. Seriously.", "You'd be amazed how often we hear this — and how normal your situation is. We've rebuilt books from grocery bags of receipts and five years of silence. No judgment, no lectures. You focused on running your business; now we'll handle this part."],
   ];
 
-  const addons = ['Monthly Bookkeeping', 'Business & Individual Taxes', 'Payroll Management', 'Business Formation', 'Registered Agent · 50 States', 'Foreign Subsidiary Setup'];
+  const addons = [['Monthly Bookkeeping', '/services/bookkeeping'], ['Business & Individual Taxes', '/services/tax-services'], ['Payroll Management', '/services/payroll'], ['Business Formation', '/services/consulting'], ['Registered Agent · 50 States', '/services/registered-agent'], ['Foreign Subsidiary Setup', '/contact']];
 
   return (
     <>
       <SEOHead
-        title="Bookkeeping Cleanup & Catch-Up Services | BAAS"
+        title="Bookkeeping Cleanup & Catch-Up | Bay Area Accounting Solutions"
         description="Months or years behind on your books? We fix messy QuickBooks, reconcile every account, and get you audit-ready — fast. AI-assisted, human-verified."
         url={`${SITE_URL}/services/bookkeeping-cleanup`}
         type="website"
@@ -399,14 +399,14 @@ export default function BookkeepingCleanup() {
             <p style={{color:'#ffd9de',maxWidth:'44em',margin:'0 auto 32px',fontSize:'17px',lineHeight:1.7}}>
               Most firms treat cleanup as a nuisance job. We built our practice around it — because clean books are the foundation of everything else your business needs. Once your books are spotless, your taxes, payroll, and compliance all live under one roof.
             </p>
-            <a href={BOOK} target="_blank" rel="noopener noreferrer"
+            <a href={BOOK}
               style={{display:'inline-flex',alignItems:'center',gap:'8px',background:'#fff',color:'var(--accent)',textDecoration:'none',fontWeight:700,padding:'15px 30px',borderRadius:'8px',fontSize:'16px',border:'2px solid #fff',transition:'background .18s'}}>
               Start With a Free Clarity Session
               <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 9h10M10 5l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </a>
             <div style={{marginTop:'36px',display:'flex',justifyContent:'center',gap:'10px',flexWrap:'wrap'}}>
-              {addons.map(a => (
-                <span key={a} style={{border:'1px solid rgba(255,255,255,.45)',borderRadius:'30px',padding:'7px 18px',fontSize:'14px',color:'#fff'}}>{a}</span>
+              {addons.map(([a, to]) => (
+                <Link key={a} to={to} style={{border:'1px solid rgba(255,255,255,.45)',borderRadius:'30px',padding:'7px 18px',fontSize:'14px',color:'#fff',textDecoration:'none'}}>{a}</Link>
               ))}
             </div>
           </RevealWrapper>
@@ -450,7 +450,7 @@ export default function BookkeepingCleanup() {
               <div className="sidebar-cta">
                 <h4>Free Clarity Session</h4>
                 <p>30 minutes with our team. We tell you exactly what shape your books are in and what it'll take to fix them — at no charge.</p>
-                <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
+                <a href={BOOK} className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
               </div>
               <div className="sidebar-card" style={{marginTop:'16px'}}>
                 <h4>Quick Facts</h4>

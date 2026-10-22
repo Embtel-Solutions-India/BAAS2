@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
+const BOOK = '/book'; // on-site booking page (embeds the calendar)
 
 export default function CtaBar({ heading, sub, showPhone = true }) {
   const headingStyle = { maxWidth: '700px', margin: '0 auto 20px' };
@@ -27,7 +27,7 @@ export default function CtaBar({ heading, sub, showPhone = true }) {
         {renderHeading()}
         {sub && <p>{sub}</p>}
         <div className="cta-buttons">
-          <motion.a href={BOOK} target="_blank" rel="noopener noreferrer"
+          <motion.a href={BOOK}
             whileHover={{scale:1.04}} whileTap={{scale:.97}} className="btn-pl">
             Book Your Free Clarity Session
             <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">

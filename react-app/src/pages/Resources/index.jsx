@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import RevealWrapper from '../../components/UI/RevealWrapper';
 import StaggerGrid from '../../components/UI/StaggerGrid';
@@ -20,12 +21,12 @@ const FAQS = [
 ];
 
 const GUIDES = [
-  { cat: 'Tax Planning', title: 'Small Business Tax Deductions Checklist for 2025', desc: 'A comprehensive list of commonly missed deductions that could save your business thousands this tax season.', date: 'January 2025' },
-  { cat: 'Bookkeeping', title: 'How to Set Up a Chart of Accounts for Your LLC', desc: 'Step-by-step guide to organizing your financial accounts from day one — saving you time and headaches at year-end.', date: 'March 2025' },
-  { cat: 'Business Formation', title: 'LLC vs S-Corp: Which Entity is Right for Your Business?', desc: 'We break down the tax and liability differences between LLC and S-Corp structures to help you make the right choice.', date: 'February 2025' },
-  { cat: 'Payroll', title: 'California Payroll Compliance: What Bay Area Businesses Must Know', desc: 'California has some of the strictest payroll laws in the country. This guide covers what employers must do to stay compliant.', date: 'April 2025' },
-  { cat: 'Cash Flow', title: 'How to Build a 13-Week Cash Flow Forecast', desc: 'Avoid cash crunches by building a rolling 13-week forecast. Includes a free template and walk-through.', date: 'May 2025' },
-  { cat: 'Tax Planning', title: 'Understanding Quarterly Estimated Tax Payments', desc: 'Who owes them, how to calculate them, and how to avoid underpayment penalties — explained in plain English.', date: 'June 2025' },
+  { cat: 'Tax Planning', title: 'Small Business Tax Deductions Checklist for 2025', to: '/services/tax-services', desc: 'A comprehensive list of commonly missed deductions that could save your business thousands this tax season.', date: 'January 2025' },
+  { cat: 'Bookkeeping', title: 'How to Set Up a Chart of Accounts for Your LLC', to: '/services/bookkeeping', desc: 'Step-by-step guide to organizing your financial accounts from day one — saving you time and headaches at year-end.', date: 'March 2025' },
+  { cat: 'Business Formation', title: 'LLC vs S-Corp: Which Entity is Right for Your Business?', to: '/services/consulting', desc: 'We break down the tax and liability differences between LLC and S-Corp structures to help you make the right choice.', date: 'February 2025' },
+  { cat: 'Payroll', title: 'California Payroll Compliance: What Bay Area Businesses Must Know', to: '/services/payroll', desc: 'California has some of the strictest payroll laws in the country. This guide covers what employers must do to stay compliant.', date: 'April 2025' },
+  { cat: 'Cash Flow', title: 'How to Build a 13-Week Cash Flow Forecast', to: '/services/bookkeeping', desc: 'Avoid cash crunches by building a rolling 13-week forecast. Includes a free template and walk-through.', date: 'May 2025' },
+  { cat: 'Tax Planning', title: 'Understanding Quarterly Estimated Tax Payments', to: '/services/tax-services', desc: 'Who owes them, how to calculate them, and how to avoid underpayment penalties — explained in plain English.', date: 'June 2025' },
 ];
 
 const RESOURCES_SCHEMA = [
@@ -63,8 +64,9 @@ export default function Resources() {
           <div className="container">
             <div className="tc" style={{marginBottom:'48px'}}><div className="slabel">Guides & Articles</div><h2 className="stitle">Learn from our experts</h2></div>
             <StaggerGrid className="blog-grid">
-              {GUIDES.map(({cat,title,desc,date}) => (
+              {GUIDES.map(({cat,title,desc,date,to}) => (
                 <StaggerItem key={title}>
+                  <Link to={to} style={{textDecoration:'none',color:'inherit'}}>
                   <motion.div className="blog-card" whileHover={{y:-6,boxShadow:'0 14px 44px rgba(0,0,0,0.1)'}}>
                     <div className="blog-thumb">
                       <div className="blog-cat">{cat}</div>
@@ -75,11 +77,12 @@ export default function Resources() {
                       <h3>{title}</h3>
                       <p>{desc}</p>
                       <span className="blog-link hover-arrow">
-                        Read guide
+                        Learn more
                         <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 9h10M10 5l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                       </span>
                     </div>
                   </motion.div>
+                  </Link>
                 </StaggerItem>
               ))}
             </StaggerGrid>

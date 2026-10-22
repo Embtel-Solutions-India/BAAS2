@@ -25,10 +25,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bayareaaccountingsolutions.com/services/accounting</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://bayareaaccountingsolutions.com/services/consulting</loc>
     <priority>0.8</priority>
   </url>
@@ -43,6 +39,10 @@
   <url>
     <loc>https://bayareaaccountingsolutions.com/rush-service</loc>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bayareaaccountingsolutions.com/book</loc>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://bayareaaccountingsolutions.com/industries</loc>

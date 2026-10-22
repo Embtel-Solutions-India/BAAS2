@@ -212,6 +212,16 @@ export default function BlogDetail() {
         </section>
       )}
 
+      {/* Links to the relevant service pages (also present in the server-rendered HTML) */}
+      <nav aria-label="How we can help" className="container" style={{ padding: '40px 0 0', textAlign: 'center' }}>
+        <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: '26px', marginBottom: '18px' }}>How we can help</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px 12px' }}>
+          {[['Bookkeeping & Accounting', '/services/bookkeeping'], ['Business & Individual Taxes', '/services/tax-services'], ['Payroll Management', '/services/payroll'], ['Business Formation & Consulting', '/services/consulting']].map(([label, to]) => (
+            <Link key={to} to={to} style={{ padding: '10px 18px', borderRadius: '100px', border: '1px solid var(--cb)', background: '#fff', color: 'var(--accent)', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>{label}</Link>
+          ))}
+        </div>
+      </nav>
+
       <CtaBar
         heading="Want advice specific to your situation?"
         sub="Book a free 30-minute call and get answers tailored to your business — not generic tips."

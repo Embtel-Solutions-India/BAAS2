@@ -186,7 +186,7 @@ export const FORM_MESSAGES = {
 export const LANDING = {
   h1: 'Rush bookkeeping, tax and payroll help for urgent deadlines',
   sub: 'Published prices, real timelines, and a written yes or no before you pay. Based in Fremont, serving all 50 states.',
-  title: 'Rush Bookkeeping, Tax & Payroll Service | BAAS Fremont',
+  title: 'Rush Bookkeeping, Tax & Payroll | Bay Area Accounting Solutions',
   description: 'Urgent deadline? Rush bookkeeping, tax and payroll from +25%, with next-business-day options. Clear prices, confirmed in writing. Fremont, CA.',
   closingHeading: "Deadline coming up? Let's see what we can do.",
   trust: ['4.4★ Google Reviews', '500+ Businesses Served', 'QuickBooks Level 1 Certified ProAdvisor', '24hr Average Response Time'],

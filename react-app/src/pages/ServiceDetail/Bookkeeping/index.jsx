@@ -9,7 +9,7 @@ import ContactForm from '../../../components/Sections/ContactForm';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
-const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
+const BOOK = '/book'; // on-site booking page (embeds the calendar)
 
 const fadeUp = { hidden:{opacity:0,y:36}, visible:{opacity:1,y:0,transition:{duration:.7,ease:[.16,1,.3,1]}} };
 const stagger = { hidden:{}, visible:{transition:{staggerChildren:.08}} };
@@ -234,7 +234,7 @@ export default function Bookkeeping() {
                 <div className="sidebar-cta">
                   <h4>Free Clarity Session</h4>
                   <p>30 minutes with our team. We answer your questions and recommend exactly what you need.</p>
-                  <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
+                  <a href={BOOK} className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
                 </div>
               </RevealWrapper>
             </aside>

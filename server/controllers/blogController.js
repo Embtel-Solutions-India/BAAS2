@@ -2,17 +2,23 @@ const sanitizeHtml = require('sanitize-html');
 const path = require('path');
 const { Blog, toRow, toRows } = require('../models');
 const { uploadToS3, deleteFromS3 } = require('../config/s3');
+const { relatedPosts } = require('../utils/blogQueries');
 
 /* ── Helpers ── */
 
-function slugify(text) {
-  return text
+function slugify(text, maxLength) {
+  const slug = text
     .toString()
     .toLowerCase()
     .trim()
     .replace(/&/g, '-and-')
     .replace(/[\s\W-]+/g, '-')
     .replace(/^-+|-+$/g, '');
+  if (!maxLength || slug.length <= maxLength) return slug;
+  // Cut at a word boundary so a long title never produces a very long URL (audit B6)
+  const cut = slug.slice(0, maxLength);
+  const lastDash = cut.lastIndexOf('-');
+  return (lastDash > maxLength * 0.5 ? cut.slice(0, lastDash) : cut).replace(/-+$/g, '');
 }
 
 function calcReadingTime(html) {
@@ -42,6 +48,7 @@ const SANITIZE_OPTS = {
 
 // Shared with scripts/seedQuickBooksBlog.js so seeded posts get identical treatment.
 exports.SANITIZE_OPTS = SANITIZE_OPTS;
+exports.slugify = slugify;
 exports.calcReadingTime = calcReadingTime;
 
 /* ── ADMIN ENDPOINTS ── */
@@ -57,7 +64,7 @@ exports.createBlog = async (req, res) => {
     }
 
     // Generate unique slug
-    let baseSlug = slugify(title);
+    let baseSlug = slugify(title, 70);
     let slug = baseSlug;
     let counter = 1;
     while (await Blog.findOne({ slug })) {
@@ -70,7 +77,7 @@ exports.createBlog = async (req, res) => {
     if (req.file) {
       console.log('[createBlog] File found in request. Starting S3 upload...');
       const ext = path.extname(req.file.originalname).toLowerCase() || '.jpg';
-      thumbnailUrl = await uploadToS3(req.file.buffer, 'blogs/thumbnails', req.file.mimetype, ext);
+      thumbnailUrl = await uploadToS3(req.file.buffer, 'blogs/thumbnails', req.file.mimetype, ext, slug);
       console.log('[createBlog] S3 upload successful. URL:', thumbnailUrl);
     } else {
       console.log('[createBlog] No file found in request.');
@@ -193,7 +200,7 @@ exports.updateBlog = async (req, res) => {
         await deleteFromS3(blog.thumbnail);
       }
       const ext = path.extname(req.file.originalname).toLowerCase() || '.jpg';
-      blog.thumbnail = await uploadToS3(req.file.buffer, 'blogs/thumbnails', req.file.mimetype, ext);
+      blog.thumbnail = await uploadToS3(req.file.buffer, 'blogs/thumbnails', req.file.mimetype, ext, blog.slug);
       console.log('[updateBlog] S3 upload successful. New URL:', blog.thumbnail);
     }
 
@@ -321,11 +328,8 @@ exports.getBlogBySlug = async (req, res) => {
     const blog = await Blog.findOne({ slug: req.params.slug, status: 'published' });
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
 
-    // Fetch related blogs (same category, exclude current)
-    const related = await Blog.find({ status: 'published', category: blog.category, _id: { $ne: blog._id } })
-      .select('-content')
-      .sort({ publishedAt: -1 })
-      .limit(3);
+    // Related blogs: same category first, topped up with the newest others so no article is a dead end
+    const related = await relatedPosts(Blog, blog, { lean: false });
 
     res.json({ blog: toRow(blog), related: toRows(related) });
   } catch (err) {

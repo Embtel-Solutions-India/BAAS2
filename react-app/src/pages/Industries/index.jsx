@@ -30,7 +30,7 @@ export default function Industries() {
     <>
       <SEOHead
         title="Industries We Serve | Bay Area Accounting Solutions"
-        description="Specialized bookkeeping and accounting for tech, e-commerce, real estate, restaurants, healthcare, construction, and 12+ other Bay Area industries."
+        description="Specialized bookkeeping and accounting for tech, e-commerce, real estate, restaurants, healthcare, construction, and 6 more Bay Area industries."
         url={`${SITE_URL}/industries`}
         type="website"
         structuredData={INDUSTRIES_BREADCRUMB}

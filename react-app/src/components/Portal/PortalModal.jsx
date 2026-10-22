@@ -160,8 +160,12 @@ export default function PortalModal() {
     setRegData({ ...regData, [e.target.name]: e.target.value });
   };
 
+  // Not rendered while closed: a hidden login form + "Welcome Back" heading on every page cluttered the
+  // page outline for crawlers (audit A9). All hooks/state are above, so form state is kept between opens.
+  if (!isOpen) return null;
+
   return (
-    <div className={`modal-overlay${isOpen ? ' open' : ''}`} id="portalModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div className="modal-overlay open" id="portalModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <div className="modal-backdrop" onClick={close} />
       <div className="modal">
         <div className="modal-header">
@@ -244,7 +248,7 @@ export default function PortalModal() {
 
             <div style={{display:'flex',alignItems:'center',gap:'8px',marginTop:'20px',justifyContent:'center'}}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{color:'var(--td)'}} aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              <span style={{fontSize:'13px',color:'rgba(0,0,0,0.45)'}}>256-bit SSL encrypted &bull; SOC 2 compliant</span>
+              <span style={{fontSize:'13px',color:'rgba(0,0,0,0.45)'}}>256-bit SSL encrypted</span>
             </div>
           </div>
         </div>

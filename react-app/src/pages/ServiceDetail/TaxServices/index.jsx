@@ -1,14 +1,16 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, CloudFog, Receipt, FileWarning, Percent, CalendarClock, Building2, Users, Clock, PiggyBank, Dices, TrendingDown, Shuffle, Coins, Flag, FileX, UserCheck, BookOpen, CalendarDays, FileText, User, Calculator, ShieldCheck, RefreshCw, Inbox, Search, Send } from 'lucide-react';
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
+import { sendQuote, contactIssue, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
+import FormSafeguards from '../../../components/UI/FormSafeguards';
 import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
-const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
+const BOOK = '/book'; // on-site booking page (embeds the calendar)
 
 const fadeUp = { hidden:{opacity:0,y:36}, visible:{opacity:1,y:0,transition:{duration:.7,ease:[.16,1,.3,1]}} };
 const stagger = { hidden:{}, visible:{transition:{staggerChildren:.08}} };
@@ -47,30 +49,35 @@ function PainGroup({ icon: Icon, title, items }) {
 
 function TaxUploadForm() {
   const [form, setForm] = useState({ name:'', email:'', filingType:'' });
-  const [files, setFiles] = useState([]);
   const [status, setStatus] = useState('idle');
-  const [dragging, setDragging] = useState(false);
-  const fileRef = useRef(null);
+  const [consent, setConsent] = useState(false);
+  const [hp, setHp] = useState('');
+  const flash = (st) => { setStatus(st); setTimeout(() => setStatus('idle'), 2500); };
 
-  const addFiles = (newFiles) => setFiles(f => [...f, ...Array.from(newFiles).map(x => ({ name: x.name, size: (x.size/1024).toFixed(1)+' KB' }))]);
-
-  const submit = (e) => {
+  // This form does not take file uploads: documents are uploaded in our secure client portal after we reply.
+  const submit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.filingType) { setStatus('error'); setTimeout(() => setStatus('idle'), 2500); return; }
-    if (!files.length) { setStatus('noFiles'); setTimeout(() => setStatus('idle'), 2500); return; }
+    const { name, email, filingType } = form;
+    if (!filingType) return flash('error');
+    const issue = contactIssue({ name, email });
+    if (issue) return flash(issue);
+    if (!consent) return flash('consent');
     setStatus('sending');
-    setTimeout(() => { setStatus('sent'); setTimeout(() => { setStatus('idle'); setFiles([]); }, 4000); }, 1800);
+    try {
+      await sendQuote({ source: 'Tax Services page', name, email, consent: true, website: hp, fields: { 'Filing Type': filingType, 'Request': 'Wants a secure client-portal link to upload tax documents' } });
+      setStatus('sent');
+    } catch { setStatus('failed'); }
   };
 
   if (status === 'sent') {
     return (
-      <div style={{marginTop:'24px',padding:'40px 32px',borderRadius:'20px',background:'rgba(74,222,128,.08)',border:'1px solid rgba(74,222,128,.35)',textAlign:'center'}}>
+      <div role="status" style={{marginTop:'24px',padding:'40px 32px',borderRadius:'20px',background:'rgba(74,222,128,.08)',border:'1px solid rgba(74,222,128,.35)',textAlign:'center'}}>
         <div style={{width:'56px',height:'56px',borderRadius:'50%',background:'rgba(74,222,128,.15)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',color:'#22c55e'}}>
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
         </div>
-        <h3 className="serif" style={{fontSize:'24px',marginBottom:'10px',color:'#1a1a1a'}}>Documents received — thank you.</h3>
-        <p style={{fontSize:'16px',color:'var(--tm)',lineHeight:1.6,maxWidth:'440px',margin:'0 auto 24px'}}>We&apos;ll review and organize your tax documents within 1 business day and reach out with next steps.</p>
-        <button type="button" onClick={() => setStatus('idle')} className="btn-ghost" style={{margin:'0 auto'}}>Upload more documents</button>
+        <h3 className="serif" style={{fontSize:'24px',marginBottom:'10px',color:'#1a1a1a'}}>Thank you — we received your request.</h3>
+        <p style={{fontSize:'16px',color:'var(--tm)',lineHeight:1.6,maxWidth:'440px',margin:'0 auto 24px'}}>We&apos;ll email you a link to our secure client portal so you can upload your tax documents safely. Once they&apos;re uploaded, we&apos;ll review and organize them within 1 business day and reach out with next steps.</p>
+        <button type="button" onClick={() => setStatus('idle')} className="btn-ghost" style={{margin:'0 auto'}}>Send another request</button>
       </div>
     );
   }
@@ -78,40 +85,24 @@ function TaxUploadForm() {
   return (
     <form onSubmit={submit} style={{marginTop:'24px',padding:'32px',borderRadius:'20px',background:'var(--card)',border:'1px solid var(--cb)',boxShadow:'0 1px 3px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)'}}>
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'16px'}}>
-        <div className="form-group"><label>Full Name *</label><input type="text" className="form-input" placeholder="Jane Smith" value={form.name} onChange={e => setForm(f => ({...f,name:e.target.value}))}/></div>
-        <div className="form-group"><label>Email *</label><input type="email" className="form-input" placeholder="you@company.com" value={form.email} onChange={e => setForm(f => ({...f,email:e.target.value}))}/></div>
+        <div className="form-group"><label htmlFor="tax-name">Full Name *</label><input id="tax-name" type="text" className="form-input" placeholder="Jane Smith" value={form.name} onChange={e => setForm(f => ({...f,name:e.target.value}))}/></div>
+        <div className="form-group"><label htmlFor="tax-email">Email *</label><input id="tax-email" type="email" className="form-input" placeholder="you@company.com" value={form.email} onChange={e => setForm(f => ({...f,email:e.target.value}))}/></div>
       </div>
       <div className="form-group">
-        <label>Filing Type *</label>
-        <select className="form-input" value={form.filingType} onChange={e => setForm(f => ({...f,filingType:e.target.value}))}>
+        <label htmlFor="tax-filing">Filing Type *</label>
+        <select id="tax-filing" className="form-input" value={form.filingType} onChange={e => setForm(f => ({...f,filingType:e.target.value}))}>
           <option value="">Select filing type...</option>
           {['Business Tax Return (S-Corp)','Business Tax Return (C-Corp)','Business Tax Return (Partnership)','Individual (1040)','Self-Employed (Schedule C)','Amended Return','Multiple Years'].map(o => <option key={o}>{o}</option>)}
         </select>
       </div>
-      <div
-        className={`upload-zone${dragging?' dragover':''}`}
-        onClick={() => fileRef.current?.click()}
-        onDragOver={e => { e.preventDefault(); setDragging(true); }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={e => { e.preventDefault(); setDragging(false); addFiles(e.dataTransfer.files); }}
-        role="button" tabIndex={0} aria-label="Upload tax documents"
-      >
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{color:'rgba(0,0,0,0.42)',marginBottom:'12px'}} aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        <p style={{fontSize:'16px',color:'rgba(0,0,0,0.7)',marginBottom:'4px'}}>Drop tax documents here or <span style={{color:'var(--accent)',textDecoration:'underline'}}>browse</span></p>
-        <small style={{fontSize:'13px',color:'rgba(0,0,0,0.42)'}}>W-2, 1099, bank statements, receipts — PDF, JPG, XLSX — Max 25MB</small>
-        <input ref={fileRef} type="file" multiple style={{display:'none'}} onChange={e => addFiles(e.target.files)} aria-label="File input"/>
+      <div style={{display:'flex',gap:'12px',alignItems:'flex-start',padding:'14px 16px',borderRadius:'12px',background:'rgba(212,0,31,.04)',border:'1px solid rgba(212,0,31,.14)',marginBottom:'8px',fontSize:'14px',color:'var(--tm)',lineHeight:1.55}}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{flexShrink:0,marginTop:'2px'}}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span><strong>Your documents stay secure.</strong> Please don&apos;t email tax documents or send them through this form. After you submit, we&apos;ll send you a link to our secure client portal to upload them.</span>
       </div>
-      {files.map((f,i) => (
-        <div className="file-item" key={i}>
-          <div><div style={{fontSize:'15px'}}>{f.name}</div><div style={{fontSize:'13px',color:'var(--tf)'}}>{f.size}</div></div>
-          <div style={{display:'flex',alignItems:'center',gap:'10px'}}>
-            <span style={{fontSize:'13px',color:'var(--accent)'}}>✓ Ready</span>
-            <button onClick={() => setFiles(fs => fs.filter((_,j) => j!==i))} style={{background:'none',border:'none',color:'var(--td)',cursor:'pointer',fontSize:'18px'}} aria-label={`Remove ${f.name}`}>×</button>
-          </div>
-        </div>
-      ))}
-      <button type="submit" className="form-submit" style={{marginTop:'12px'}}>
-        {status==='error' ? 'Please fill name, email & filing type' : status==='noFiles' ? 'Please upload at least one document' : status==='sending' ? 'Uploading securely...' : 'Submit Documents Securely'}
+      <FormSafeguards id="quote-consent" consent={consent} setConsent={setConsent} hp={hp} setHp={setHp} />
+      {status === 'failed' && <div role="alert" style={{color:'#d4001f',fontSize:'14px',marginBottom:'12px'}}>{QUOTE_FAILED_NOTE}</div>}
+      <button type="submit" className="form-submit" style={{marginTop:'8px'}} disabled={status==='sending'}>
+        {QUOTE_STATUS[status] || 'Send Me a Secure Upload Link'}
       </button>
     </form>
   );
@@ -175,7 +166,7 @@ export default function TaxServices() {
   return (
     <>
       <SEOHead
-        title="Business & Individual Tax Services | BAAS"
+        title="Business & Individual Taxes | Bay Area Accounting Solutions"
         description="Business and individual tax preparation, proactive tax planning, and IRS representation for Bay Area business owners. Never miss a deadline again."
         url={`${SITE_URL}/services/tax-services`}
         type="website"
@@ -254,7 +245,7 @@ export default function TaxServices() {
                 <div className="sidebar-cta">
                   <h4>Free Tax Review</h4>
                   <p>Let us review last year&apos;s return and show you how much you could have saved.</p>
-                  <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
+                  <a href={BOOK} className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
                 </div>
               </RevealWrapper>
             </aside>

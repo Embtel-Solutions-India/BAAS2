@@ -15,7 +15,7 @@ export const LOCAL_BUSINESS = {
   email: 'info@bayareaaccountingsolutions.com',
   address: {
     '@type': 'PostalAddress',
-    streetAddress: '39159 Paseo Padre Pkwy #115',
+    streetAddress: '39159 Paseo Padre Parkway, Suite 115',
     addressLocality: 'Fremont',
     addressRegion: 'CA',
     postalCode: '94538',

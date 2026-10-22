@@ -8,7 +8,7 @@ import GoogleReviewsWidget from '../../components/Sections/GoogleReviewsWidget';
 import SEOHead from '../../components/SEO/SEOHead';
 import { SITE_URL, breadcrumbSchema } from '../../components/SEO/seoConfig';
 
-const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
+const BOOK = '/book'; // on-site booking page (embeds the calendar)
 const ABOUT_BREADCRUMB = breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }]);
 
 export default function About() {
@@ -77,7 +77,7 @@ export default function About() {
               <div className="sidebar-cta">
                 <h4>Need Help?</h4>
                 <p>Schedule a free 30-minute clarity session with our team. No obligation.</p>
-                <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
+                <a href={BOOK} className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
               </div>
               </RevealWrapper>
               <RevealWrapper delay={0.3}>
@@ -85,7 +85,7 @@ export default function About() {
                 <h4>Contact</h4>
                 <div style={{fontSize:'15px',color:'var(--tm)',marginBottom:'8px'}}>
                   <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{verticalAlign:'-.14em'}} aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  {' '}39159 Paseo Padre Pkwy, Ste 115, Fremont, CA 94538
+                  {' '}39159 Paseo Padre Parkway, Suite 115, Fremont, CA 94538
                 </div>
                 <div style={{fontSize:'15px',color:'var(--tm)',marginBottom:'8px'}}>
                   <a href="tel:+15109627300" style={{color:'var(--accent)'}}>(510) 962-7300</a>

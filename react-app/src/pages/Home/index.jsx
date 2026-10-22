@@ -22,8 +22,7 @@ import { usePortal } from "../../hooks/usePortal";
 import SEOHead from "../../components/SEO/SEOHead";
 import { SITE_URL } from "../../components/SEO/seoConfig";
 
-const BOOK =
-  "https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt";
+const BOOK = '/book'; // on-site booking page (embeds the calendar)
 
 const FAQS = [
   {
@@ -210,8 +209,6 @@ export default function Home() {
               >
                 <a
                   href={BOOK}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="btn-pl"
                 >
                   Get Your Free Clarity Session
@@ -589,7 +586,7 @@ export default function Home() {
                 Globe,
                 "Foreign Subsidiary Setup",
                 "Expanding into the U.S.? We handle incorporation, EIN, banking setup, and compliance.",
-                "/services",
+                "/contact",
               ],
             ].map(([Icon, title, desc, href]) => {
               const tag = RUSH_TAGS[title];
@@ -659,7 +656,7 @@ export default function Home() {
                       color: "var(--accent)",
                     }}
                   >
-                    Learn more
+                    {href === "/contact" ? "Contact us" : "Learn more"}
                     <svg
                       width="15"
                       height="15"
@@ -852,8 +849,9 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-                <motion.button
-                  onClick={open}
+                <motion.a
+                  href="/client-portal/login"
+                  onClick={(e) => { e.preventDefault(); open(); }}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="btn-pl"
@@ -872,7 +870,7 @@ export default function Home() {
                     <circle cx="12" cy="7" r="4" />
                   </svg>
                   Access Client Portal
-                </motion.button>
+                </motion.a>
               </Reveal>
             </div>
             <motion.div
@@ -1054,8 +1052,6 @@ export default function Home() {
             <div className="cta-buttons">
               <motion.a
                 href={BOOK}
-                target="_blank"
-                rel="noopener noreferrer"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
                 className="btn-pl"

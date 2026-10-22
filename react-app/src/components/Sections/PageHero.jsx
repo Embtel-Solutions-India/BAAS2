@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-const BOOK = 'https://api.leadconnectorhq.com/widget/booking/r0BX2vT5kOTt0jjgAaVt';
+const BOOK = '/book'; // on-site booking page (embeds the calendar)
 
 const fadeUp = { hidden:{opacity:0,y:30}, visible:{opacity:1,y:0,transition:{duration:.7,ease:[.16,1,.3,1]}} };
 const stagger = { hidden:{}, visible:{transition:{staggerChildren:.08,delayChildren:.1}} };
@@ -46,7 +46,7 @@ export default function PageHero({ label, title, description, breadcrumb = [], v
             {description && <motion.p variants={fadeUp} className="page-hero-desc">{description}</motion.p>}
             {showCta && (
               <motion.div variants={fadeUp} style={{display:'flex',gap:'14px',flexWrap:'wrap',marginTop:'28px'}}>
-                <a href={BOOK} target="_blank" rel="noopener noreferrer" className="btn-pl" style={{padding:'14px 28px',fontSize:'16px'}}>
+                <a href={BOOK} className="btn-pl" style={{padding:'14px 28px',fontSize:'16px'}}>
                   Book Free Clarity Session
                   <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 9h10M10 5l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </a>
