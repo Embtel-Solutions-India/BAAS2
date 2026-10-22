@@ -818,3 +818,190 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 /* On-site booking page: embedded calendar (taller on phones, where the calendar stacks) */
 .book-frame{display:block;width:100%;height:820px;border:0}
 @media (max-width:760px){.book-frame{height:1100px}}
+
+/* ===== Contractors landing page (/services/contractors): all rules scoped to .ct-page ===== */
+.ct-page{
+  --ct-red:#d4001f;--ct-red-deep:#a4001a;--ct-red-tint:#d4001f0d;--ct-red-line:#d4001f33;
+  --ct-paper:#f9f8f6;--ct-white:#fff;--ct-ink:#1a1a1a;--ct-body:#3d3d3d;--ct-muted:#6b6b6b;
+  --ct-line:#e5e1db;--ct-field:#cbc5bc;--ct-slate:#22262b;
+  --ct-mw:1200px;--ct-gut:clamp(20px,5vw,56px);
+  --ct-sans:'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  --ct-serif:'DM Serif Display',Georgia,'Times New Roman',serif;
+  font-family:var(--ct-sans);font-size:17px;line-height:1.65;color:var(--ct-body);background:var(--ct-paper);-webkit-font-smoothing:antialiased;
+}
+.ct-page *,.ct-page *::before,.ct-page *::after{box-sizing:border-box}
+.ct-page h1,.ct-page h2,.ct-page h3{color:var(--ct-ink);font-weight:400;margin:0}
+:where(.ct-page) p{margin:0}
+:where(.ct-page) ul,:where(.ct-page) ol{margin:0;padding:0}
+:where(.ct-page) a{color:inherit}
+.ct-page h2{font-family:var(--ct-serif);font-size:clamp(30px,3.6vw,44px);line-height:1.12;letter-spacing:-.015em}
+.ct-wrap{max-width:var(--ct-mw);margin:0 auto;padding:0 var(--ct-gut)}
+.ct-lede{color:var(--ct-muted);font-size:18px;max-width:58ch;margin-top:14px}
+.ct-kicker{color:var(--ct-red);font-weight:600;font-size:15px;margin-bottom:10px}
+.ct-sec{padding:clamp(64px,8vw,104px) 0}
+.ct-sec-head{margin-bottom:44px;max-width:720px}
+.ct-on-white{background:var(--ct-white)}
+#quote,#services,#pricing,#contact{scroll-margin-top:124px}
+
+/* Buttons */
+.ct-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--ct-sans);font-weight:700;font-size:16px;line-height:1.2;text-decoration:none;border-radius:10px;padding:15px 26px;cursor:pointer;border:1px solid transparent;transition:background-color .2s,border-color .2s}
+.ct-btn-red{background:var(--ct-red);color:#fff}
+.ct-btn-red:hover{background:var(--ct-red-deep)}
+.ct-btn-red:disabled{opacity:.7;cursor:default}
+.ct-btn-white-line{background:transparent;border-color:#ffffff59;color:#fff}
+.ct-btn-white-line:hover{border-color:#fff}
+
+/* Hero */
+.ct-hero{padding:calc(108px + clamp(36px,5vw,72px)) 0 0;background:radial-gradient(60% 55% at 92% 0%,#d4001f0d,transparent 65%),var(--ct-paper)}
+.ct-hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(32px,5vw,72px);align-items:start}
+.ct-tag{display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:600;color:var(--ct-red);background:var(--ct-red-tint);border:1px solid var(--ct-red-line);border-radius:100px;padding:6px 14px;margin-bottom:24px}
+.ct-tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ct-red)}
+.ct-page .ct-hero h1{font-family:var(--ct-serif);font-size:clamp(46px,6.4vw,80px);line-height:1;letter-spacing:-.03em;margin-bottom:24px}
+.ct-hero-copy>p{font-size:clamp(18px,1.7vw,20px);max-width:40ch;color:var(--ct-body)}
+.ct-hero-points{list-style:none;margin:28px 0 30px;display:grid;gap:10px}
+.ct-hero-points li{display:flex;gap:12px;align-items:flex-start;font-size:16.5px;color:var(--ct-ink)}
+.ct-hero-points li::before{content:"";flex:none;width:18px;height:18px;margin-top:4px;border-radius:5px;background:var(--ct-red) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.4l2.6 2.6L12 5.6' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+.ct-page .ct-hero-copy .ct-hero-call{font-size:16px;color:var(--ct-muted)}
+.ct-hero-call a{white-space:nowrap;color:var(--ct-ink);font-weight:700;text-decoration-color:var(--ct-red-line);text-underline-offset:4px}
+.ct-hero-call a:hover{color:var(--ct-red)}
+
+/* Quote form ("work order" card) */
+.ct-ticket{background:var(--ct-white);border:1px solid var(--ct-line);border-radius:14px;box-shadow:0 1px 2px #0000000a,0 18px 44px -18px #00000033;overflow:hidden;position:relative}
+.ct-ticket-head{background:var(--ct-slate);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-top:4px solid var(--ct-red)}
+.ct-page .ct-ticket-head h2{color:#fff;font-size:22px;letter-spacing:0}
+.ct-ticket-head span{font-size:13.5px;color:#ffffffb3;white-space:nowrap}
+.ct-ticket-body{padding:22px 24px 24px}
+.ct-row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ct-field{margin-bottom:14px}
+.ct-field label{display:block;font-size:14px;font-weight:600;color:var(--ct-ink);margin-bottom:6px}
+.ct-field label .ct-opt{font-weight:400;color:var(--ct-muted)}
+.ct-field input,.ct-field select{width:100%;font:inherit;font-size:16px;color:var(--ct-ink);background:#fff;border:1px solid var(--ct-field);border-radius:8px;padding:11px 13px;height:48px}
+.ct-field select{appearance:none;-webkit-appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' fill='none' stroke='%236b6b6b' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") right 12px center/16px no-repeat;padding-right:38px}
+.ct-field input:focus,.ct-field select:focus{outline:none;border-color:var(--ct-red);box-shadow:0 0 0 3px #d4001f1f}
+.ct-field input[aria-invalid="true"]{border-color:var(--ct-red)}
+.ct-err{color:var(--ct-red-deep);font-size:13.5px;margin-top:5px}
+.ct-consent{display:flex;gap:11px;align-items:flex-start;background:var(--ct-paper);border:1px solid var(--ct-line);border-radius:10px;padding:12px 14px;margin:4px 0 16px}
+.ct-consent input{flex:none;width:18px;height:18px;margin-top:3px;accent-color:var(--ct-red)}
+.ct-consent label{font-size:13px;line-height:1.55;color:var(--ct-body)}
+.ct-consent a,.ct-fine a{color:var(--ct-ink);text-underline-offset:2px}
+.ct-ticket .ct-btn{width:100%}
+.ct-fine{font-size:12.5px;line-height:1.55;color:var(--ct-muted);margin-top:12px}
+.ct-form-status{font-size:14px;color:var(--ct-red-deep);margin-top:10px}
+.ct-done{padding:30px 26px}
+.ct-done:focus{outline:none}
+.ct-done h3{font-family:var(--ct-serif);font-size:26px;line-height:1.2;margin-bottom:10px}
+.ct-done p{margin-bottom:18px}
+.ct-ticket .ct-done .ct-btn{width:auto}
+
+/* Facts strip */
+.ct-facts{margin-top:clamp(48px,6vw,72px);border-top:1px solid var(--ct-line);border-bottom:1px solid var(--ct-line);display:grid;grid-template-columns:repeat(4,1fr)}
+.ct-facts div{padding:22px 20px;border-left:1px solid var(--ct-line)}
+.ct-facts div:first-child{border-left:0;padding-left:0}
+.ct-facts b{display:block;color:var(--ct-ink);font-size:17px}
+.ct-facts span{font-size:14.5px;color:var(--ct-muted)}
+
+/* Problems */
+.ct-problems{display:grid;grid-template-columns:repeat(3,1fr);gap:36px 40px}
+.ct-problems article{border-top:2px solid var(--ct-ink);padding-top:18px}
+.ct-page .ct-problems h3{font-family:var(--ct-serif);font-size:22px;line-height:1.2;margin-bottom:10px}
+.ct-problems p{font-size:16px}
+
+/* Services */
+.ct-services{display:grid;grid-template-columns:1fr 1fr;gap:0 56px}
+.ct-svc{padding:24px 0 24px 22px;border-bottom:1px solid var(--ct-line);position:relative}
+.ct-svc::before{content:"";position:absolute;left:0;top:30px;width:4px;height:22px;border-radius:2px;background:var(--ct-red)}
+.ct-page .ct-svc h3{font-family:var(--ct-sans);font-size:19px;font-weight:700;margin-bottom:6px}
+.ct-svc p{font-size:16px}
+
+/* Price sheet */
+.ct-sheet{background:var(--ct-white);border:1px solid var(--ct-line);border-radius:14px;overflow:hidden}
+.ct-sheet table{width:100%;border-collapse:collapse}
+.ct-sheet caption{text-align:left;padding:18px 24px;background:var(--ct-slate);color:#fff;font-weight:600;font-size:15px;border-top:4px solid var(--ct-red)}
+.ct-sheet th,.ct-sheet td{padding:18px 24px;border-top:1px solid var(--ct-line);text-align:left;vertical-align:top;background:transparent}
+.ct-sheet thead th{font-size:13.5px;font-weight:600;color:var(--ct-muted);background:var(--ct-paper);border-top:0}
+.ct-sheet td:last-child,.ct-sheet th:last-child{text-align:right;white-space:nowrap}
+.ct-svc-name{display:block;color:var(--ct-ink);font-weight:700;font-size:17px}
+.ct-svc-note{display:block;font-size:14.5px;color:var(--ct-muted);margin-top:2px}
+.ct-price{font-family:var(--ct-serif);font-size:24px;color:var(--ct-ink);font-variant-numeric:tabular-nums;line-height:1.2}
+.ct-price small{display:block;font-family:var(--ct-sans);font-size:13px;color:var(--ct-muted)}
+.ct-quoted{font-size:15px;font-weight:600;color:var(--ct-ink)}
+.ct-sheet-note{font-size:14.5px;color:var(--ct-muted);margin-top:16px;max-width:78ch}
+
+/* Steps */
+.ct-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;counter-reset:ctstep;list-style:none}
+.ct-steps li{counter-increment:ctstep;background:var(--ct-white);border:1px solid var(--ct-line);border-radius:14px;padding:28px}
+.ct-steps li::before{content:counter(ctstep);display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;background:var(--ct-red);color:#fff;font-weight:700;margin-bottom:18px}
+.ct-page .ct-steps h3{font-family:var(--ct-serif);font-size:22px;margin-bottom:8px}
+.ct-steps p{font-size:16px}
+
+/* References + FAQ */
+.ct-split{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(32px,5vw,64px);align-items:start}
+.ct-refs{background:var(--ct-paper);border:1px solid var(--ct-line);border-radius:14px;padding:30px}
+.ct-page .ct-refs h2{font-size:30px;margin-bottom:12px}
+.ct-refs p{margin-bottom:20px}
+.ct-faq details{border-bottom:1px solid var(--ct-line)}
+.ct-faq details:first-of-type{border-top:1px solid var(--ct-line)}
+.ct-faq summary{list-style:none;cursor:pointer;padding:20px 40px 20px 0;font-weight:700;color:var(--ct-ink);font-size:17.5px;position:relative}
+.ct-faq summary::-webkit-details-marker{display:none}
+.ct-faq summary::after{content:"";position:absolute;right:6px;top:50%;width:12px;height:12px;margin-top:-8px;border-right:2px solid var(--ct-red);border-bottom:2px solid var(--ct-red);transform:rotate(45deg);transition:transform .2s}
+.ct-faq details[open] summary::after{transform:rotate(225deg);margin-top:-2px}
+.ct-faq details p{padding:0 40px 20px 0;font-size:16px}
+
+/* Closing CTA */
+.ct-close{background:var(--ct-slate);color:#ffffffcc;padding:clamp(64px,8vw,96px) 0;border-top:4px solid var(--ct-red)}
+.ct-close .ct-wrap{display:grid;grid-template-columns:minmax(0,1.3fr) auto;gap:32px;align-items:end}
+.ct-page .ct-close h2{color:#fff;font-size:clamp(32px,4vw,48px)}
+.ct-close p{margin-top:14px;font-size:18px;max-width:52ch}
+.ct-close-actions{display:flex;flex-wrap:wrap;gap:12px}
+
+/* Disclaimer (the page's own footer text; the site footer follows it) */
+.ct-disclaimer-wrap{padding:36px 0 44px;background:var(--ct-paper)}
+.ct-disclaimer{font-size:13px;line-height:1.6;color:var(--ct-muted);max-width:110ch}
+
+@media (max-width:980px){
+  .ct-hero-grid,.ct-split{grid-template-columns:1fr}
+  .ct-hero-copy>p{max-width:46ch}
+  .ct-problems{grid-template-columns:1fr 1fr}
+  .ct-facts{grid-template-columns:1fr 1fr}
+  .ct-facts div:nth-child(3){border-left:0;padding-left:0}
+  .ct-facts div:nth-child(n+3){border-top:1px solid var(--ct-line)}
+  .ct-close .ct-wrap{grid-template-columns:1fr;align-items:start}
+}
+@media (max-width:720px){
+  .ct-page{font-size:16.5px}
+  .ct-services,.ct-problems,.ct-steps{grid-template-columns:1fr}
+  .ct-services{gap:0}
+  .ct-row2{grid-template-columns:1fr;gap:0}
+  .ct-sheet th,.ct-sheet td{padding:16px 16px}
+  .ct-sheet caption{padding:16px}
+  .ct-price{font-size:21px}
+  .ct-close-actions .ct-btn{flex:1 1 100%}
+}
+@media (max-width:420px){
+  .ct-facts div{padding:16px 12px}
+  .ct-facts div:nth-child(odd){padding-left:0}
+  .ct-facts b{font-size:15.5px}
+  .ct-facts span{font-size:13.5px}
+  .ct-ticket-head{flex-direction:column;gap:2px}
+}
+
+/* Services dropdown: two-column menu, title + short description per item (same colors as before) */
+.dropdown-menu{left:50%;transform:translateX(-50%)}
+.dropdown-inner.dropdown-mega{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:8px;width:min(700px,calc(100vw - 32px));border-radius:16px}
+.dropdown-mega .dropdown-item{padding:14px 18px;border-radius:12px;font-size:inherit;font-weight:inherit}
+.dropdown-title{display:block;font-size:16px;font-weight:600;line-height:1.3;color:#1a1a1a;transition:color .2s}
+.dropdown-desc{display:block;margin-top:3px;font-size:14px;font-weight:400;line-height:1.4;color:var(--td)}
+.dropdown-mega .dropdown-item:hover{background:rgba(212,0,31,.06)}
+.dropdown-mega .dropdown-item:hover .dropdown-title,.dropdown-all .dropdown-title{color:var(--accent)}
+.nav-links{align-self:stretch}
+.nav-links .dropdown{display:flex;align-items:center;height:100%}
+.dropdown-menu{padding-top:6px}
+
+/* Home hero card: checklist scrolls upward continuously (list is duplicated; copy is aria-hidden) */
+.hero-run{height:300px;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(transparent,#000 8%,#000 92%,transparent)}
+.hero-run-track{animation:heroRun 22s linear infinite}
+.hero-run:hover .hero-run-track,.hero-run:focus-within .hero-run-track,.hero-run:focus .hero-run-track{animation-play-state:paused}
+.hero-run-item{display:flex;align-items:flex-start;gap:10px;padding:14px 0;border-bottom:1px solid var(--cb)}
+.hero-run-item span{font-size:14px;color:var(--tm);line-height:1.5}
+@keyframes heroRun{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+@media (prefers-reduced-motion:reduce){.hero-run{height:auto;-webkit-mask-image:none;mask-image:none}.hero-run-track{animation:none}.hero-run-item[aria-hidden]{display:none}}

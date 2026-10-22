@@ -6,7 +6,10 @@ const { FORM_RECIPIENT, EMAIL_RE, PHONE_RE, esc, clean, row } = require('../util
 // Quote / consultation request forms on the service pages (Tax, Payroll, Accounting Cleanup, Consulting).
 // Each form sends its own labelled fields; they are emailed to the firm as a table (audit C1/C2: these
 // forms previously showed a success message but sent nothing).
-const SOURCES = ['Tax Services page', 'Payroll page', 'Accounting Cleanup page', 'Consulting page'];
+const SOURCES = ['Tax Services page', 'Payroll page', 'Accounting Cleanup page', 'Consulting page', 'Contractors page'];
+// The contractors form has no required consent box: sending the request is itself the ask to be contacted,
+// and text-message consent is a separate, optional checkbox whose exact wording is saved with the request.
+const SMS_OPTIONAL = new Set(['Contractors page']);
 const MAX_FIELDS = 15;
 
 const limiter = rateLimit({
@@ -29,6 +32,8 @@ router.post('/', limiter, async (req, res) => {
     phone: clean(String(b.phone || ''), 30),
     source: SOURCES.includes(b.source) ? b.source : '',
   };
+  const smsConsent = SMS_OPTIONAL.has(d.source) && b.sms_consent === true;
+  const smsText = smsConsent ? clean(b.sms_consent_text, 1500, true) : '';
 
   // Labelled extras: { "Business Name": "Acme LLC", "Services": ["A", "B"] } -> [label, value] rows
   const extras = [];
@@ -45,7 +50,7 @@ router.post('/', limiter, async (req, res) => {
     d.name.length < 2 ||
     !EMAIL_RE.test(d.email) ||
     (d.phone && !PHONE_RE.test(d.phone)) ||
-    b.consent !== true;
+    (!SMS_OPTIONAL.has(d.source) && b.consent !== true);
   if (bad) return res.status(400).json({ error: 'Please check the form and try again.' });
 
   const html = `
@@ -57,7 +62,9 @@ router.post('/', limiter, async (req, res) => {
         ${row('Email', `<a href="mailto:${esc(d.email)}">${esc(d.email)}</a>`)}
         ${d.phone ? row('Phone', `<a href="tel:${esc(d.phone)}">${esc(d.phone)}</a>`) : ''}
         ${extras.map(([k, v]) => row(esc(k), esc(v).replace(/\n/g, '<br>'))).join('')}
-        ${row('SMS/email consent', 'Yes')}
+        ${SMS_OPTIONAL.has(d.source)
+          ? row('Text-message consent', smsConsent ? `<strong>Yes</strong><br><span style="color:#666;font-size:12px">${esc(smsText).replace(/\n/g, '<br>')}</span>` : 'No (not ticked)')
+          : row('SMS/email consent', 'Yes')}
       </table>
     </div>`;
 

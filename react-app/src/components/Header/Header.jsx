@@ -2,17 +2,26 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { usePortal } from '../../hooks/usePortal';
 import TopTicker from './TopTicker';
+import { RUSH_FROM } from '../../data/rush';
 
 const BOOK = '/book'; // on-site booking page (embeds the calendar)
 
 const services = [
-  ['Bookkeeping & Accounting',      '/services/bookkeeping'],
-  ['Business & Individual Taxes',   '/services/tax-services'],
-  ['Payroll Management',            '/services/payroll'],
-  ['Accounting Cleanup',            '/services/accounting'],
-  ['Business Formation & Consulting','/services/consulting'],
-  ['Registered Agent',              '/services/registered-agent'],
-  ['Bookkeeping Cleanup & Catch-Up','/services/bookkeeping-cleanup'],
+  ['Bookkeeping & Accounting',      '/services/bookkeeping',  'Monthly books, reports & reconciliation'],
+  ['Business & Individual Taxes',   '/services/tax-services', 'Tax returns & year-round planning'],
+  ['Payroll Management',            '/services/payroll',      'Payroll, tax filings & year-end forms'],
+  ['Accounting Cleanup',            '/services/accounting',   'Rescue bookkeeping & audit-ready books'],
+  ['Business Formation & Consulting','/services/consulting',  'LLC, S-Corp & C-Corp setup'],
+  ['Registered Agent',              '/services/registered-agent', 'State compliance & legal notices'],
+  ['Bookkeeping Cleanup & Catch-Up','/services/bookkeeping-cleanup', 'Fix messy QuickBooks & catch up'],
+  ['For Contractors',               '/services/contractors',  'Job costing, payroll & 1099s'],
+];
+
+// Everything in the Services dropdown: the services above plus Rush Service and the full list.
+const megaItems = [
+  ...services,
+  ['Rush Service', '/rush-service', `Urgent deadlines, from ${RUSH_FROM}`],
+  ['View all services', '/services', 'See everything we offer'],
 ];
 
 const beforeServices = [
@@ -79,14 +88,13 @@ export default function Header() {
               </svg>
             </button>
             <div className="dropdown-menu" style={{display:servicesOpen?'block':'none'}} role="menu">
-              <div className="dropdown-inner">
-                {services.map(([label, path]) => (
-                  <Link className="dropdown-item" to={path} role="menuitem" key={path}>{label}</Link>
+              <div className="dropdown-inner dropdown-mega">
+                {megaItems.map(([label, path, desc]) => (
+                  <Link className={`dropdown-item${path === '/services' ? ' dropdown-all' : ''}`} to={path} role="menuitem" key={path}>
+                    <span className="dropdown-title">{label}</span>
+                    <span className="dropdown-desc">{desc}</span>
+                  </Link>
                 ))}
-                <Link className="dropdown-item" to="/rush-service" role="menuitem">Rush Service</Link>
-                <div style={{borderTop:'1px solid var(--border)',marginTop:'6px',paddingTop:'6px'}}>
-                  <Link className="dropdown-item" to="/services" role="menuitem" style={{color:'var(--accent)'}}>View all services</Link>
-                </div>
               </div>
             </div>
           </div>

@@ -263,48 +263,30 @@ export default function Home() {
               <div className="hero-card">
                 <div className="hero-card-line" aria-hidden="true" />
                 <div className="hero-card-label">The BAAS Difference</div>
-                {[
+                {(() => {
+                  const points = [
                   "Proactive tax planning that can save you thousands",
                   "We take 40+ hours of monthly bookkeeping off your plate",
                   "Clear, easy-to-understand monthly financial reporting",
                   "A strong track record resolving IRS notices and issues",
-                ].map((t, i, arr) => (
-                  <div
-                    key={t}
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-start",
-                      gap: "10px",
-                      padding: "12px 0",
-                      borderBottom:
-                        i < arr.length - 1 ? "1px solid var(--cb)" : "none",
-                    }}
-                  >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="var(--accent)"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      style={{ flexShrink: 0, marginTop: "1px" }}
-                      aria-hidden="true"
-                    >
-                      <path d="M20 6L9 17l-5-5" />
-                    </svg>
-                    <span
-                      style={{
-                        fontSize: "14px",
-                        color: "var(--tm)",
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {t}
-                    </span>
-                  </div>
-                ))}
+                ];
+                  const row = (t, k, aria) => (
+                    <div className="hero-run-item" key={k} aria-hidden={aria || undefined}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: "1px" }} aria-hidden="true">
+                        <path d="M20 6L9 17l-5-5" />
+                      </svg>
+                      <span>{t}</span>
+                    </div>
+                  );
+                  return (
+                    <div className="hero-run" tabIndex={0} aria-label="The BAAS difference">
+                      <div className="hero-run-track">
+                        {points.map((t) => row(t, t))}
+                        {points.map((t) => row(t, t + "-2", true))}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             </motion.div>
           </div>
