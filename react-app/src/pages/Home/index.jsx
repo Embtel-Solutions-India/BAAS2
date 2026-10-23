@@ -333,7 +333,7 @@ export default function Home() {
             and are not guaranteed.
           </p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "20px", flexWrap: "wrap", marginTop: "32px" }}>
-            <img src="/proadvisor-badge.png" alt="Intuit QuickBooks Level 1 Certified ProAdvisor badge" width="96" height="96" loading="lazy" style={{ width: "96px", height: "auto" }} />
+            <img src="/proadvisor-badge.webp" alt="Intuit QuickBooks Level 1 Certified ProAdvisor badge" width="96" height="96" loading="lazy" style={{ width: "96px", height: "auto" }} />
             <div style={{ maxWidth: "360px" }}>
               <strong>QuickBooks Level 1 Certified ProAdvisor</strong>
               <div style={{ fontSize: "14px", color: "var(--tf)" }}>Certified by Intuit to set up, clean up and manage your QuickBooks Online books.</div>

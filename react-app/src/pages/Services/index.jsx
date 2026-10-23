@@ -62,7 +62,7 @@ export default function Services() {
                   <div style={{fontSize:'31px',marginBottom:'16px',color:'var(--accent)'}}>
                     <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{verticalAlign:'-.14em'}} aria-hidden="true">{icon}</svg>
                   </div>
-                  <h3 className="serif" style={{fontSize:'21px',marginBottom:'10px'}}>{title}</h3>
+                  <h3 aria-level="2" className="serif" style={{fontSize:'21px',marginBottom:'10px'}}>{title}</h3>
                   <p style={{fontSize:'15px',color:'var(--td)',lineHeight:1.6,marginBottom:'16px',flex:1}}>{desc}</p>
                   <ul style={{listStyle:'none',padding:0,marginBottom:'20px'}}>
                     {features.map(f => (
@@ -73,7 +73,7 @@ export default function Services() {
                     ))}
                   </ul>
                   <Link to={href} className="hover-arrow" style={{fontSize:'15px',color:'var(--accent)',fontWeight:500,display:'inline-flex',alignItems:'center',gap:'6px',marginTop:'auto'}}>
-                    Learn more
+                    Learn more<span style={{position:'absolute',width:1,height:1,overflow:'hidden',clip:'rect(0 0 0 0)',whiteSpace:'nowrap'}}> about {title}</span>
                     <svg width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4 9h10M10 5l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </Link>
                   </motion.div>

@@ -9,7 +9,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" /></noscript>
     <title>Bay Area Accounting Solutions | Bookkeeping, Taxes &amp; Business Formation</title>
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://bayareaaccountingsolutions.com/" />
@@ -36,19 +37,27 @@
         "priceRange": "$$"
       }
     </script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18506219893"></script>
+    <!-- Google tag (gtag.js), Contentsquare/Hotjar and Zoho SalesIQ load on the visitor's first interaction,
+         which keeps third-party code and cookies out of the initial page load. gtag() calls made before then are queued. -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'AW-18506219893');
+      window.$zoho = window.$zoho || {}; $zoho.salesiq = $zoho.salesiq || { ready: function () {} };
+      (function () {
+        var done = false, evts = ['pointerdown', 'keydown', 'touchstart', 'wheel'];
+        function add(src, id) { var s = document.createElement('script'); s.src = src; if (id) s.id = id; s.async = true; document.head.appendChild(s); }
+        function load() {
+          if (done) return; done = true;
+          evts.forEach(function (e) { removeEventListener(e, load); });
+          add('https://www.googletagmanager.com/gtag/js?id=AW-18506219893');
+          add('https://t.contentsquare.net/uxa/e2ce6050ea013.js');
+          add('https://salesiq.zohopublic.in/widget?wc=siq1c59b58efb89cf1b054148d2a4e450574731f31bca4500739638acff884858983357279766d32e9acf7e0de409254e38', 'zsiqscript');
+        }
+        evts.forEach(function (e) { addEventListener(e, load, { passive: true }); });
+      })();
     </script>
-    <!-- Contentsquare (includes Hotjar) -->
-    <script defer src="https://t.contentsquare.net/uxa/e2ce6050ea013.js"></script>
-    <!-- Zoho SalesIQ -->
-    <script>window.$zoho=window.$zoho || {};$zoho.salesiq=$zoho.salesiq||{ready:function(){}}</script>
-    <script id="zsiqscript" src="https://salesiq.zohopublic.in/widget?wc=siq1c59b58efb89cf1b054148d2a4e450574731f31bca4500739638acff884858983357279766d32e9acf7e0de409254e38" defer></script>
   </head>
   <body>
     <div id="root"></div>

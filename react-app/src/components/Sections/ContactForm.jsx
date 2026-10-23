@@ -74,7 +74,7 @@ export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }
 
   return (
     <div style={{ padding: '36px', borderRadius: '20px', background: 'var(--card)', border: '1px solid var(--cb)' }}>
-      <h3 className="serif" style={{ fontSize: '25px', marginBottom: '6px' }}>Send us a message</h3>
+      <h3 aria-level="2" className="serif" style={{ fontSize: '25px', marginBottom: '6px' }}>Send us a message</h3>
       <p style={{ fontSize: '15px', color: 'var(--td)', marginBottom: '24px' }}>We&apos;ll get back to you within 24 hours.</p>
 
       {submitted ? (

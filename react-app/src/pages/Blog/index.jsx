@@ -137,7 +137,7 @@ export default function Blog() {
               </div>
             ) : !blogs.length ? (
               <div className="empty-state" style={{ padding: '80px 24px', textAlign: 'center' }}>
-                <h3 style={{ fontFamily: "'DM Serif Display', serif", fontSize: '28px', marginBottom: '12px' }}>No Articles Found</h3>
+                <h3 aria-level="2" style={{ fontFamily: "'DM Serif Display', serif", fontSize: '28px', marginBottom: '12px' }}>No Articles Found</h3>
                 <p style={{ color: 'var(--td)', fontSize: '15px' }}>Try adjusting your filters or search term.</p>
               </div>
             ) : (

@@ -197,6 +197,8 @@ async function main() {
       // prerender origin — rewrite them back to root-relative so they work in prod.
       html = html.split(`http://127.0.0.1:${PORT}`).join('').split(`http://localhost:${PORT}`).join('');
       html = '<!doctype html>\n' + html.replace(/^<!doctype html>/i, '').trimStart();
+      // The font stylesheet loads non-blocking (media=print until onload); the snapshot ran after onload, so put it back.
+      html = html.replace(/(<link href="https:\/\/fonts\.googleapis\.com[^>]*?) media="all"( onload="this\.media='all'")/, '$1 media="print"$2');
 
       const outDir = route === '/' ? DIST : path.join(DIST, route);
       fs.mkdirSync(outDir, { recursive: true });

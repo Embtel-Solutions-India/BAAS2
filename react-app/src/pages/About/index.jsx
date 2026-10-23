@@ -42,7 +42,7 @@ export default function About() {
 
               <h3>Credentials</h3>
               <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap', margin: '12px 0 24px' }}>
-                <img src="/proadvisor-badge.png" alt="Intuit QuickBooks Level 1 Certified ProAdvisor badge" width="110" height="110" loading="lazy" style={{ width: '110px', height: 'auto' }} />
+                <img src="/proadvisor-badge.webp" alt="Intuit QuickBooks Level 1 Certified ProAdvisor badge" width="110" height="110" loading="lazy" style={{ width: '110px', height: 'auto' }} />
                 <p style={{ margin: 0, maxWidth: '420px' }}><strong>QuickBooks Level 1 Certified ProAdvisor.</strong> Certified by Intuit, so your QuickBooks setup, cleanup and day-to-day bookkeeping are handled by someone who has proven their expertise on the platform.</p>
               </div>
 
@@ -60,7 +60,7 @@ export default function About() {
                 ].map(([svg,h,p]) => (
                   <StaggerItem key={h} className="feat">
                     <div className="feat-icon"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{verticalAlign:'-.14em'}} aria-hidden="true">{svg}</svg></div>
-                    <h4>{h}</h4><p>{p}</p>
+                    <h4 aria-level="3">{h}</h4><p>{p}</p>
                   </StaggerItem>
                 ))}
               </StaggerGrid>
@@ -69,20 +69,20 @@ export default function About() {
             <aside>
               <RevealWrapper delay={0.2}>
                 <div className="sidebar-card">
-                <h4>Our Services</h4>
+                <h4 aria-level="3">Our Services</h4>
                 {[['Bookkeeping & Accounting','/services/bookkeeping'],['Business & Individual Taxes','/services/tax-services'],['Bookkeeping Cleanup','/services/accounting'],['Payroll Management','/services/payroll'],['Business Formation','/services/consulting'],['Registered Agent','/services'],['Foreign Subsidiary','/services']].map(([label,to]) => (
                   <Link key={label} className="sidebar-link" to={to}>{label}</Link>
                 ))}
               </div>
               <div className="sidebar-cta">
-                <h4>Need Help?</h4>
+                <h4 aria-level="3">Need Help?</h4>
                 <p>Schedule a free 30-minute clarity session with our team. No obligation.</p>
                 <a href={BOOK} className="btn-p" style={{width:'100%',justifyContent:'center'}}>Book Free Call</a>
               </div>
               </RevealWrapper>
               <RevealWrapper delay={0.3}>
               <div className="sidebar-card" style={{marginTop:'20px'}}>
-                <h4>Contact</h4>
+                <h4 aria-level="3">Contact</h4>
                 <div style={{fontSize:'15px',color:'var(--tm)',marginBottom:'8px'}}>
                   <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{verticalAlign:'-.14em'}} aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                   {' '}39159 Paseo Padre Parkway, Suite 115, Fremont, CA 94538

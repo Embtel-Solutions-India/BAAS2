@@ -59,9 +59,9 @@ export default function Header() {
   return (
     <nav className={navClass} id="mainNav" role="navigation" aria-label="Main navigation">
       <div className="nav-inner">
-        <Link to="/" className="nav-logo" aria-label="Bay Area Accounting Solutions – Home">
+        <Link to="/" className="nav-logo">
           <div className="nav-logo-icon">
-            <img src="/logo.webp" alt="Bay Area Accounting Solutions logo" width="52" height="52" />
+            <img src="/logo.webp" alt="" width="52" height="52" />
           </div>
           <div>
             <div className="nav-logo-text">Bay Area Accounting</div>

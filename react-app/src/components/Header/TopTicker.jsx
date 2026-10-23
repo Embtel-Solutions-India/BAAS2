@@ -15,7 +15,7 @@ const ITEMS = [
 export default function TopTicker() {
   // The list is rendered twice so the CSS marquee can loop seamlessly (-50% translate).
   const row = (hidden) => (
-    <div className="ticker-row" aria-hidden={hidden || undefined}>
+    <div className="ticker-row" aria-hidden={hidden || undefined} inert={hidden || undefined}>
       {ITEMS.map((item, i) => (
         <span className="ticker-item" key={i}>{item}</span>
       ))}

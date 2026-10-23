@@ -14,10 +14,12 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          if (id.includes('node_modules')) return 'vendor';
+          // Only the libraries every page needs go in the shared chunk; heavy admin-only ones (quill, mammoth...) stay with their lazy routes.
+          if (/node_modules[/](react|react-dom|react-router|react-router-dom|scheduler|framer-motion|motion-dom|motion-utils)[/]/.test(id)) return 'vendor';
         },
       },
     },
