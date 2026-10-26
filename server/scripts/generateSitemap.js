@@ -29,6 +29,7 @@ const STATIC_PAGES = [
   { loc: '/services/registered-agent',     priority: '0.8' },
   { loc: '/services/bookkeeping-cleanup',  priority: '0.8' },
   { loc: '/services/contractors',          priority: '0.8' },
+  { loc: '/services/foreign-owned-llc-accounting', priority: '0.8' },
   { loc: '/rush-service',                  priority: '0.8' },
   { loc: '/book',                          priority: '0.7' },
   { loc: '/industries',                    priority: '0.7' },

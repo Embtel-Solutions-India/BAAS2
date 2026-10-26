@@ -19,6 +19,7 @@ const ROUTES = [
   '/services/tax-services', '/services/payroll', '/services/accounting',
   '/services/consulting', '/services/registered-agent', '/services/bookkeeping-cleanup',
   '/services/contractors',
+  '/services/foreign-owned-llc-accounting',
   '/rush-service',
   '/book',
 ];

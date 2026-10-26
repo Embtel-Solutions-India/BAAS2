@@ -24,6 +24,7 @@ const RegisteredAgent = lazy(() => import('./pages/ServiceDetail/RegisteredAgent
 const BookkeepingCleanup = lazy(() => import('./pages/ServiceDetail/BookkeepingCleanup'));
 const RushService   = lazy(() => import('./pages/RushService'));
 const Contractors   = lazy(() => import('./pages/ServiceDetail/Contractors'));
+const ForeignOwned  = lazy(() => import('./pages/ServiceDetail/ForeignOwned'));
 const Book          = lazy(() => import('./pages/Book'));
 const NotFound      = lazy(() => import('./pages/NotFound'));
 
@@ -106,6 +107,7 @@ function AnimatedRoutes() {
             <Route path="/services/registered-agent" element={<RegisteredAgent />} />
             <Route path="/services/bookkeeping-cleanup" element={<BookkeepingCleanup />} />
             <Route path="/services/contractors"  element={<Contractors />} />
+            <Route path="/services/foreign-owned-llc-accounting" element={<ForeignOwned />} />
             <Route path="/rush-service"          element={<RushService />} />
             <Route path="/book"                  element={<Book />} />
 
