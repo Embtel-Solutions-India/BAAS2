@@ -5,7 +5,7 @@ import { AlertTriangle, Percent, Scale, CalendarX, Building2, Search, Files, Eye
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
-import { sendQuote, contactIssue, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
+import { sendQuote, contactIssue, smsFields, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
 import FormSafeguards from '../../../components/UI/FormSafeguards';
 import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
@@ -62,10 +62,9 @@ function PayrollQuoteForm() {
     if (!biz || !employees || !frequency) return flash('error');
     const issue = contactIssue({ name, email, phone });
     if (issue) return flash(issue);
-    if (!consent) return flash('consent');
     setStatus('sending');
     try {
-      await sendQuote({ source: 'Payroll page', name, email, phone, consent: true, website: hp, fields: { 'Business Name': biz, 'Number of Employees': employees, 'Payroll Frequency': frequency, 'Notes': notes } });
+      await sendQuote({ source: 'Payroll page', name, email, phone, ...smsFields(consent), website: hp, fields: { 'Business Name': biz, 'Number of Employees': employees, 'Payroll Frequency': frequency, 'Notes': notes } });
       setStatus('sent');
     } catch { setStatus('failed'); }
   };

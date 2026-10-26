@@ -8,6 +8,7 @@
 //
 // Everything here is pure (no database access) so it can be unit tested.
 const sanitizeHtml = require('sanitize-html');
+const { tidyBlogHtml, cleanTitle, seoTitle } = require('./blogContent');
 
 const SITE = 'https://bayareaaccountingsolutions.com';
 const SUFFIX = ' | Bay Area Accounting Solutions';
@@ -45,12 +46,14 @@ function applyShell(shell, { title, description, canonical, robots = 'index, fol
 // ---- Single article -------------------------------------------------------------------------------
 function renderPostPage(shell, blog, related = [], sanitizeOpts) {
   const url = `${SITE}/blog/${blog.slug}`;
-  const title = `${blog.metaTitle || blog.title}${SUFFIX}`;
+  const heading = cleanTitle(blog.title);
+  const title = seoTitle(blog.metaTitle || heading);
   const description = blog.metaDescription || blog.shortDescription || clip(plain(blog.content), 160);
   const image = absolute(blog.thumbnail);
   const published = blog.publishedAt || blog.created_at;
   const modified = blog.updated_at || published;
-  const content = sanitizeHtml(blog.content || '', sanitizeOpts); // content is also sanitized when saved; defence in depth
+  const content = tidyBlogHtml(sanitizeHtml(blog.content || '', sanitizeOpts)); // content is also sanitized when saved; defence in depth
+  const isContractor = /construction|contractor|trades|job.?cost/i.test(`${blog.title} ${blog.category} ${blog.content}`);
 
   const schema = [
     {
@@ -76,12 +79,11 @@ function renderPostPage(shell, blog, related = [], sanitizeOpts) {
     ? `<aside aria-label="Related articles"><h2>Related insights</h2><ul>${related.map((r) => `<li><a href="/blog/${esc(r.slug)}">${esc(r.title)}</a>${r.shortDescription ? ` — ${esc(r.shortDescription)}` : ''}</li>`).join('')}</ul></aside>`
     : '';
   const body = `<main id="app"><article>
-<nav aria-label="Breadcrumb"><a href="/">Home</a> › <a href="/blog">Blog</a> › <span>${esc(blog.title)}</span></nav>
-<header><p>${esc(blog.category)}</p><h1>${esc(blog.title)}</h1>
+<nav aria-label="Breadcrumb"><a href="/">Home</a> › <a href="/blog">Blog</a> › <span>${esc(heading)}</span></nav>
+<header><p>${esc(blog.category)}</p><h1>${esc(heading)}</h1>
 <p>By ${esc(blog.author || 'BAAS Team')} · <time datetime="${esc(iso(published))}">${esc(fmtDate(published))}</time>${blog.readingTime ? ` · ${esc(blog.readingTime)}` : ''}</p></header>
-${blog.thumbnail ? `<img src="${esc(image)}" alt="${esc(blog.title)}" />` : ''}
+${blog.thumbnail ? `<img src="${esc(image)}" alt="${esc(`${blog.category} article: ${heading}`)}" />` : ''}
 <div class="blog-rich-content">${content}</div>
-${(blog.tags || []).length ? `<p>${(blog.tags || []).map((t) => `#${esc(t)}`).join(' ')}</p>` : ''}
 </article>
 ${relatedHtml}
 <nav aria-label="How we can help"><h2>How we can help</h2><ul>
@@ -89,7 +91,7 @@ ${relatedHtml}
 <li><a href="/services/tax-services">Business &amp; Individual Taxes</a></li>
 <li><a href="/services/payroll">Payroll Management</a></li>
 <li><a href="/services/consulting">Business Formation &amp; Consulting</a></li>
-</ul><p><a href="/blog">More articles</a> · <a href="/contact">Contact us</a></p></nav></main>`;
+${isContractor ? '<li><a href="/services/contractors">Bookkeeping for Contractors</a></li>\n' : ''}</ul><p><a href="/blog">More articles</a> · <a href="/contact">Contact us</a></p></nav></main>`;
 
   return applyShell(shell, {
     title, description, canonical: url, image, ogType: 'article',

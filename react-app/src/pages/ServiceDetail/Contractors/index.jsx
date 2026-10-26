@@ -214,7 +214,7 @@ export default function Contractors() {
   return (
     <div className="ct-page">
       <SEOHead
-        title="Bookkeeping, Payroll & Tax Prep for Contractors | Bay Area Accounting Solutions"
+        title="Contractor Bookkeeping & Payroll | Bay Area Accounting Solutions"
         description={DESCRIPTION}
         url={`${SITE_URL}/services/contractors`}
         type="website"

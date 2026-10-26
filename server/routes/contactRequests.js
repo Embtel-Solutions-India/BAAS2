@@ -28,12 +28,14 @@ router.post('/', limiter, async (req, res) => {
     message: clean(b.message, 3000, true),
     source: SOURCES.includes(b.source) ? b.source : 'Website',
   };
+  // Text-message consent is optional; the exact wording the visitor saw is stored with the enquiry.
+  const smsConsent = b.sms_consent === true;
+  const smsText = smsConsent ? clean(b.sms_consent_text, 1500, true) : '';
 
   const bad =
     d.first_name.length < 2 || d.last_name.length < 2 ||
     !EMAIL_RE.test(d.email) || !PHONE_RE.test(d.phone) ||
-    d.message.length < 10 ||
-    b.consent !== true;
+    d.message.length < 10;
   if (bad) return res.status(400).json({ error: 'Please check the form and try again.' });
 
   const html = `
@@ -45,7 +47,7 @@ router.post('/', limiter, async (req, res) => {
         ${row('Email', `<a href="mailto:${esc(d.email)}">${esc(d.email)}</a>`)}
         ${row('Phone', `<a href="tel:${esc(d.phone)}">${esc(d.phone)}</a>`)}
         ${row('Message', esc(d.message).replace(/\n/g, '<br>'))}
-        ${row('SMS/email consent', 'Yes')}
+        ${row('Text-message consent', smsConsent ? `<strong>Yes</strong><br><span style="color:#666;font-size:12px">${esc(smsText).replace(/\n/g, '<br>')}</span>` : 'No (not ticked)')}
       </table>
     </div>`;
 

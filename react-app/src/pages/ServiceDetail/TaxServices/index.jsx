@@ -4,7 +4,7 @@ import { AlertTriangle, CloudFog, Receipt, FileWarning, Percent, CalendarClock, 
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
-import { sendQuote, contactIssue, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
+import { sendQuote, contactIssue, smsFields, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
 import FormSafeguards from '../../../components/UI/FormSafeguards';
 import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
@@ -48,7 +48,7 @@ function PainGroup({ icon: Icon, title, items }) {
 }
 
 function TaxUploadForm() {
-  const [form, setForm] = useState({ name:'', email:'', filingType:'' });
+  const [form, setForm] = useState({ name:'', email:'', phone:'', filingType:'' });
   const [status, setStatus] = useState('idle');
   const [consent, setConsent] = useState(false);
   const [hp, setHp] = useState('');
@@ -57,14 +57,13 @@ function TaxUploadForm() {
   // This form does not take file uploads: documents are uploaded in our secure client portal after we reply.
   const submit = async (e) => {
     e.preventDefault();
-    const { name, email, filingType } = form;
+    const { name, email, phone, filingType } = form;
     if (!filingType) return flash('error');
-    const issue = contactIssue({ name, email });
+    const issue = contactIssue({ name, email, phone });
     if (issue) return flash(issue);
-    if (!consent) return flash('consent');
     setStatus('sending');
     try {
-      await sendQuote({ source: 'Tax Services page', name, email, consent: true, website: hp, fields: { 'Filing Type': filingType, 'Request': 'Wants a secure client-portal link to upload tax documents' } });
+      await sendQuote({ source: 'Tax Services page', name, email, phone, ...smsFields(consent), website: hp, fields: { 'Filing Type': filingType, 'Request': 'Wants a secure client-portal link to upload tax documents' } });
       setStatus('sent');
     } catch { setStatus('failed'); }
   };
@@ -88,6 +87,7 @@ function TaxUploadForm() {
         <div className="form-group"><label htmlFor="tax-name">Full Name *</label><input id="tax-name" type="text" className="form-input" placeholder="Jane Smith" value={form.name} onChange={e => setForm(f => ({...f,name:e.target.value}))}/></div>
         <div className="form-group"><label htmlFor="tax-email">Email *</label><input id="tax-email" type="email" className="form-input" placeholder="you@company.com" value={form.email} onChange={e => setForm(f => ({...f,email:e.target.value}))}/></div>
       </div>
+      <div className="form-group"><label htmlFor="tax-phone">Phone Number (optional)</label><input id="tax-phone" type="tel" className="form-input" placeholder="(510) 000-0000" value={form.phone} onChange={e => setForm(f => ({...f,phone:e.target.value}))}/></div>
       <div className="form-group">
         <label htmlFor="tax-filing">Filing Type *</label>
         <select id="tax-filing" className="form-input" value={form.filingType} onChange={e => setForm(f => ({...f,filingType:e.target.value}))}>
@@ -126,8 +126,8 @@ export default function TaxServices() {
     [FileWarning,'Failure-to-file penalties stack up fast','The IRS charges 5% of unpaid taxes per month for filing late — up to 25% of what you owe. On a $20,000 tax bill, that\'s $5,000 in penalties alone, before interest. Miss one deadline and you\'ve handed the government thousands for nothing.'],
     [Percent,'Interest compounds daily','On top of penalties, the IRS charges interest that compounds daily on unpaid balances. What started as a manageable bill quietly grows every single day until it\'s paid. The longer you wait, the deeper the hole.'],
     [CalendarClock,'Quarterly estimates slip through the cracks','Self-employed and business owners owe estimated taxes four times a year — April, June, September, January. Miss one and you face underpayment penalties even if you pay in full at year-end. Most owners don\'t even know these deadlines exist until it\'s too late.'],
-    [Building2,'Business filing deadlines are different','S-Corps and partnerships file by March 15, not April 15. Miss it and the penalty is $245 per partner/shareholder, per month. A 3-partner LLC that files two months late owes $1,470 in penalties — for a return that may show zero tax due.'],
-    [Users,'Payroll & 1099 deadlines carry separate fines','W-2s and 1099s are due to recipients and the IRS by January 31. Late filing penalties range from $60 to $310 per form. For a business with 15 contractors, missing the 1099 deadline can mean thousands in avoidable fines.'],
+    [Building2,'Business filing deadlines are different','S-Corps and partnerships file by March 15, not April 15. Miss it and, for returns due in 2026, the penalty is $255 per partner/shareholder, per month. A 3-partner LLC that files two months late owes $1,530 in penalties — for a return that may show zero tax due.'],
+    [Users,'Payroll & 1099 deadlines carry separate fines','W-2s and 1099s are due to recipients and the IRS by January 31. For forms due in 2026, late filing penalties range from $60 to $340 per form. For a business with 15 contractors, missing the 1099 deadline can mean thousands in avoidable fines.'],
   ];
 
   const cash = [
@@ -192,7 +192,7 @@ export default function TaxServices() {
           <PainGroup icon={Receipt} title="The Deduction Dilemma: What Can You Actually Write Off?" items={deductions}/>
 
           <blockquote style={{maxWidth:'760px',margin:'0 auto',padding:'28px 32px',borderLeft:'4px solid var(--accent)',borderRadius:'0 16px 16px 0',background:'rgba(212,0,31,.04)',fontSize:'17px',lineHeight:1.7,fontStyle:'italic',color:'var(--tm)'}}>
-            &ldquo;The tax code has over 70,000 pages. You shouldn&apos;t have to read a single one. That&apos;s our job — so you keep more of what you earn, on time, every time.&rdquo;
+            &ldquo;The tax code has over 70,000 pages. You shouldn&apos;t have to read a single one. That&apos;s our job — so you keep more of what you earn, with every deadline tracked for you.&rdquo;
           </blockquote>
         </div>
       </section>
@@ -223,7 +223,7 @@ export default function TaxServices() {
                 label="Secure Document Upload"
                 title="Upload once. We handle the rest."
               />
-              <p>No more email attachments, lost paperwork, or last-minute scrambles. Securely upload your tax documents anytime and we&apos;ll organize, review, and file on time — guaranteed.</p>
+              <p>No more email attachments, lost paperwork, or last-minute scrambles. Securely upload your tax documents anytime and we&apos;ll organize, review, and file before your deadline.</p>
               <TaxUploadForm/>
             </RevealWrapper>
             <aside>

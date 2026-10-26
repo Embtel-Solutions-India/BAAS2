@@ -1,3 +1,4 @@
+const { tidyBlogHtml, cleanTitle } = require('../utils/blogContent');
 const sanitizeHtml = require('sanitize-html');
 const path = require('path');
 const { Blog, toRow, toRows } = require('../models');
@@ -331,7 +332,10 @@ exports.getBlogBySlug = async (req, res) => {
     // Related blogs: same category first, topped up with the newest others so no article is a dead end
     const related = await relatedPosts(Blog, blog, { lean: false });
 
-    res.json({ blog: toRow(blog), related: toRows(related) });
+    const row = toRow(blog);
+    row.content = tidyBlogHtml(row.content);
+    row.title = cleanTitle(row.title);
+    res.json({ blog: row, related: toRows(related) });
   } catch (err) {
     console.error('getBlogBySlug error:', err);
     res.status(500).json({ error: 'Failed to fetch blog' });

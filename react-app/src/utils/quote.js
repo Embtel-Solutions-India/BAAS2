@@ -5,8 +5,13 @@ import { api } from './api';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^\+?[0-9\s().-]{7,20}$/;
 
-export async function sendQuote({ source, name, email, phone, fields, consent, website }) {
-  await api.post('/quote-requests', { source, name, email, phone, fields, consent, website });
+// Optional text-message consent: exact wording the visitor sees; it is saved with the request.
+export const SMS_CONSENT_TEXT = 'Text me about this request. I agree to receive text messages from Bay Area Accounting Solutions at the number above, including appointment reminders, document requests and replies to my inquiry. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of service. See our Privacy Policy.';
+export const smsFields = (on) => ({ sms_consent: !!on, sms_consent_text: on ? SMS_CONSENT_TEXT : '' });
+
+export async function sendQuote(payload) {
+  const { source } = payload;
+  await api.post('/quote-requests', payload);
   try {
     if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { form: source });
   } catch { /* analytics must never break the form */ }

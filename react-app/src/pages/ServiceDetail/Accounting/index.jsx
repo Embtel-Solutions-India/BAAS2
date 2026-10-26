@@ -5,7 +5,7 @@ import { Scale, FolderOpen, Copy, FileX, Search, RefreshCw, ListChecks, FileText
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
-import { sendQuote, contactIssue, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
+import { sendQuote, contactIssue, smsFields, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
 import FormSafeguards from '../../../components/UI/FormSafeguards';
 import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
@@ -27,7 +27,7 @@ function SectionHeader({ label, title, sub }) {
 }
 
 function CleanupQuoteForm() {
-  const [form, setForm] = useState({ name:'', email:'', biz:'', behind:'' });
+  const [form, setForm] = useState({ name:'', email:'', biz:'', phone:'', behind:'' });
   const [status, setStatus] = useState('idle');
   const [consent, setConsent] = useState(false);
   const [hp, setHp] = useState('');
@@ -35,14 +35,13 @@ function CleanupQuoteForm() {
 
   const submit = async (e) => {
     e.preventDefault();
-    const { name, email, biz, behind } = form;
+    const { name, email, biz, phone, behind } = form;
     if (!biz) return flash('error');
-    const issue = contactIssue({ name, email });
+    const issue = contactIssue({ name, email, phone });
     if (issue) return flash(issue);
-    if (!consent) return flash('consent');
     setStatus('sending');
     try {
-      await sendQuote({ source: 'Accounting Cleanup page', name, email, consent: true, website: hp, fields: { 'Business Name': biz, 'How far behind are the books': behind } });
+      await sendQuote({ source: 'Accounting Cleanup page', name, email, phone, ...smsFields(consent), website: hp, fields: { 'Business Name': biz, 'How far behind are the books': behind } });
       setStatus('sent');
     } catch { setStatus('failed'); }
   };
@@ -65,6 +64,7 @@ function CleanupQuoteForm() {
       {[['name','Full Name','text','Jane Smith'],['email','Email','email','you@company.com'],['biz','Business Name','text','Your Company LLC']].map(([k,l,t,p]) => (
         <div className="form-group" key={k}><label>{l} *</label><input type={t} className="form-input" placeholder={p} value={form[k]} onChange={e => setForm(f => ({...f,[k]:e.target.value}))}/></div>
       ))}
+      <div className="form-group"><label htmlFor="cleanup-phone">Phone Number (optional)</label><input id="cleanup-phone" type="tel" className="form-input" placeholder="(510) 000-0000" value={form.phone} onChange={e => setForm(f => ({...f,phone:e.target.value}))}/></div>
       <div className="form-group"><label>How far behind are your books?</label>
         <select className="form-input" value={form.behind} onChange={e => setForm(f => ({...f,behind:e.target.value}))}>
           <option value="">Select...</option>
@@ -132,8 +132,8 @@ export default function Accounting() {
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Services',to:'/services'},{label:'Accounting Cleanup'}]}
         label="Our Services"
-        title="Bookkeeping Cleanup Services"
-        description="Professional bookkeeping cleanup services in the Bay Area. We fix messy books, reconcile accounts, and get your financials back on track."
+        title="Accounting Cleanup Services"
+        description="Professional accounting cleanup services in the Bay Area. We fix messy books, reconcile accounts, and get your financials back on track."
       />
 
       <section className="section bg-surface" style={{paddingTop:'40px'}}>

@@ -7,9 +7,9 @@ const { FORM_RECIPIENT, EMAIL_RE, PHONE_RE, esc, clean, row } = require('../util
 // Each form sends its own labelled fields; they are emailed to the firm as a table (audit C1/C2: these
 // forms previously showed a success message but sent nothing).
 const SOURCES = ['Tax Services page', 'Payroll page', 'Accounting Cleanup page', 'Consulting page', 'Contractors page'];
-// The contractors form has no required consent box: sending the request is itself the ask to be contacted,
+// No quote form has a required consent box: sending the request is itself the ask to be contacted,
 // and text-message consent is a separate, optional checkbox whose exact wording is saved with the request.
-const SMS_OPTIONAL = new Set(['Contractors page']);
+const SMS_OPTIONAL = new Set(SOURCES);
 const MAX_FIELDS = 15;
 
 const limiter = rateLimit({

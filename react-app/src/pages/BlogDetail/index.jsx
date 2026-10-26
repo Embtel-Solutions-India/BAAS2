@@ -8,6 +8,13 @@ import CtaBar from '../../components/Sections/CtaBar';
 import SEOHead from '../../components/SEO/SEOHead';
 import { api, formatDate } from '../../utils/api';
 
+// Keep the page title at ~60 characters so it is not cut off in search results.
+const pageTitle = (t) => {
+  const x = String(t || '').trim();
+  if (x.length + 31 <= 60) return `${x} | Bay Area Accounting Solutions`;
+  return x.length + 7 <= 60 ? `${x} | BAAS` : x;
+};
+
 export default function BlogDetail() {
   const { slug } = useParams();
   const [blog, setBlog] = useState(null);
@@ -67,7 +74,7 @@ export default function BlogDetail() {
   return (
     <>
       <SEOHead
-        title={`${blog.metaTitle || blog.title} | Bay Area Accounting Solutions`}
+        title={pageTitle(blog.metaTitle || blog.title)}
         description={blog.metaDescription || blog.shortDescription}
         image={blog.thumbnail}
         url={currentUrl}
@@ -111,7 +118,7 @@ export default function BlogDetail() {
             <div style={{ width: '100%', borderRadius: '20px', overflow: 'hidden', marginBottom: '40px', boxShadow: '0 20px 50px rgba(0,0,0,0.05)', height: 'clamp(220px, 35vw, 420px)' }}>
               <img 
                 src={blog.thumbnail} 
-                alt={blog.title} 
+                alt={`${blog.category} article: ${blog.title}`} 
                 style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover' }} 
                 loading="lazy" 
                 onError={() => setImgError(true)}
@@ -216,7 +223,7 @@ export default function BlogDetail() {
       <nav aria-label="How we can help" className="container" style={{ padding: '40px 0 0', textAlign: 'center' }}>
         <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: '26px', marginBottom: '18px' }}>How we can help</h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '10px 12px' }}>
-          {[['Bookkeeping & Accounting', '/services/bookkeeping'], ['Business & Individual Taxes', '/services/tax-services'], ['Payroll Management', '/services/payroll'], ['Business Formation & Consulting', '/services/consulting']].map(([label, to]) => (
+          {[['Bookkeeping & Accounting', '/services/bookkeeping'], ['Business & Individual Taxes', '/services/tax-services'], ['Payroll Management', '/services/payroll'], ['Business Formation & Consulting', '/services/consulting'], ...(/construction|contractor|trades|job.?cost/i.test(`${blog.title} ${blog.category} ${blog.content}`) ? [['Bookkeeping for Contractors', '/services/contractors']] : [])].map(([label, to]) => (
             <Link key={to} to={to} style={{ padding: '10px 18px', borderRadius: '100px', border: '1px solid var(--cb)', background: '#fff', color: 'var(--accent)', fontSize: '14px', fontWeight: 600, textDecoration: 'none' }}>{label}</Link>
           ))}
         </div>

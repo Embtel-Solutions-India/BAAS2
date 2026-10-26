@@ -147,16 +147,15 @@ function FaqAccordion({ items }) {
         <div key={i} style={{border:'1px solid var(--cb)',borderRadius:'12px',overflow:'hidden'}}>
           <button
             onClick={() => setOpen(open === i ? null : i)}
+            aria-expanded={open === i}
             style={{width:'100%',padding:'18px 22px',background:'none',border:'none',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center',gap:'14px',textAlign:'left',fontWeight:700,fontSize:'16px',color:'var(--text)',fontFamily:'var(--sans)'}}
           >
             <span>{q}</span>
             <ChevronDown size={20} color="var(--accent)" style={{flexShrink:0,transform:open===i?'rotate(180deg)':'none',transition:'transform .2s'}}/>
           </button>
-          {open === i && (
-            <div style={{padding:'0 22px 20px',fontSize:'15px',color:'var(--tm)',lineHeight:1.7}}>
-              {a}
-            </div>
-          )}
+          <div hidden={open !== i} style={{padding:'0 22px 20px',fontSize:'15px',color:'var(--tm)',lineHeight:1.7}}>
+            {a}
+          </div>
         </div>
       ))}
     </div>
@@ -185,7 +184,7 @@ export default function BookkeepingCleanup() {
     [TrendingDown, '25%+', 'Penalties compound', 'Failure-to-file penalties run 5% of unpaid tax per month, up to 25% — before interest. Add a 20% accuracy-related penalty if messy records lead to understated income. Waiting is the most expensive option.'],
     [FileX, 'Lost $$$', 'Deductions vanish', 'Every uncategorized transaction is a potential deduction you\'ll never claim. Vehicle costs, equipment, subcontractors, home office — if it\'s not in the books, it\'s not on the return.'],
     [CreditCard, 'Denied', 'Loans & credit stall', 'Lenders, landlords, and investors ask for financial statements. "Give me a few weeks to sort my books" kills deals. Clean books mean you can say yes to opportunity the same day.'],
-    [Shield, 'Exposed', 'Your LLC shield weakens', 'Mixing personal and business money — comingling — is one of the ways courts justify piercing the corporate veil, putting your personal assets on the line. Clean books keep the wall standing.'],
+    [Shield, 'Exposed', 'Your LLC shield weakens', 'Mixing personal and business money — commingling — is one of the ways courts justify piercing the corporate veil, putting your personal assets on the line. Clean books keep the wall standing.'],
     [BarChart2, 'Blind', "You're flying without instruments", 'No idea if last month was profitable? Which jobs or clients make money? Whether you can afford to hire? That constant low-grade money stress has a cause — and a fix.'],
   ];
 
@@ -437,7 +436,7 @@ export default function BookkeepingCleanup() {
                   ['Monthly Bookkeeping', '/services/bookkeeping'],
                   ['Business & Individual Taxes', '/services/tax-services'],
                   ['Payroll Management', '/services/payroll'],
-                  ['Accounting & CFO Services', '/services/accounting'],
+                  ['Accounting Cleanup', '/services/accounting'],
                   ['Business Formation', '/services/consulting'],
                   ['Registered Agent', '/services/registered-agent'],
                 ].map(([l, to]) => (

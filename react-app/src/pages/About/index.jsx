@@ -1,3 +1,4 @@
+import { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import RevealWrapper from '../../components/UI/RevealWrapper';
 import StaggerGrid from '../../components/UI/StaggerGrid';
@@ -12,6 +13,8 @@ const BOOK = '/book'; // on-site booking page (embeds the calendar)
 const ABOUT_BREADCRUMB = breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }]);
 
 export default function About() {
+  const [reviewsLoaded, setReviewsLoaded] = useState(false);
+  const showReviews = useCallback(() => setReviewsLoaded(true), []);
   return (
     <>
       <SEOHead
@@ -70,7 +73,7 @@ export default function About() {
               <RevealWrapper delay={0.2}>
                 <div className="sidebar-card">
                 <h4 aria-level="3">Our Services</h4>
-                {[['Bookkeeping & Accounting','/services/bookkeeping'],['Business & Individual Taxes','/services/tax-services'],['Bookkeeping Cleanup','/services/accounting'],['Payroll Management','/services/payroll'],['Business Formation','/services/consulting'],['Registered Agent','/services'],['Foreign Subsidiary','/services']].map(([label,to]) => (
+                {[['Bookkeeping & Accounting','/services/bookkeeping'],['Business & Individual Taxes','/services/tax-services'],['Bookkeeping Cleanup','/services/bookkeeping-cleanup'],['Payroll Management','/services/payroll'],['Business Formation','/services/consulting'],['Registered Agent','/services/registered-agent'],['Foreign Subsidiary','/contact']].map(([label,to]) => (
                   <Link key={label} className="sidebar-link" to={to}>{label}</Link>
                 ))}
               </div>
@@ -103,11 +106,13 @@ export default function About() {
       {/* ═══ GOOGLE REVIEWS ═══════════════════════════════════════════ */}
       <section className="section bg-white" style={{paddingTop:'40px'}}>
         <div className="container">
-          <RevealWrapper className="tc" style={{marginBottom:'40px'}}>
-            <div className="slabel">Reviewed by Clients</div>
-            <h2 className="stitle">What our clients say on Google</h2>
-          </RevealWrapper>
-          <GoogleReviewsWidget />
+          {reviewsLoaded && (
+            <RevealWrapper className="tc" style={{marginBottom:'40px'}}>
+              <div className="slabel">Reviewed by Clients</div>
+              <h2 className="stitle">What our clients say on Google</h2>
+            </RevealWrapper>
+          )}
+          <GoogleReviewsWidget onLoaded={showReviews} />
         </div>
       </section>
 

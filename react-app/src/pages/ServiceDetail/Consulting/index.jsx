@@ -5,7 +5,7 @@ import { Brain, Coins, ShieldOff, TrendingDown, User, Building2, Percent, Landma
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
-import { sendQuote, contactIssue, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
+import { sendQuote, contactIssue, smsFields, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
 import FormSafeguards from '../../../components/UI/FormSafeguards';
 import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
@@ -27,7 +27,7 @@ function SectionHeader({ label, title, sub }) {
 }
 
 function ConsultForm() {
-  const [form, setForm] = useState({ name:'', email:'', biz:'', entity:'', question:'' });
+  const [form, setForm] = useState({ name:'', email:'', biz:'', phone:'', entity:'', question:'' });
   const [status, setStatus] = useState('idle');
   const [consent, setConsent] = useState(false);
   const [hp, setHp] = useState('');
@@ -35,14 +35,13 @@ function ConsultForm() {
 
   const submit = async (e) => {
     e.preventDefault();
-    const { name, email, biz, entity, question } = form;
+    const { name, email, biz, phone, entity, question } = form;
     if (!biz) return flash('error');
-    const issue = contactIssue({ name, email });
+    const issue = contactIssue({ name, email, phone });
     if (issue) return flash(issue);
-    if (!consent) return flash('consent');
     setStatus('sending');
     try {
-      await sendQuote({ source: 'Consulting page', name, email, consent: true, website: hp, fields: { 'Business Name': biz, 'Entity being considered': entity, 'About the business': question } });
+      await sendQuote({ source: 'Consulting page', name, email, phone, ...smsFields(consent), website: hp, fields: { 'Business Name': biz, 'Entity being considered': entity, 'About the business': question } });
       setStatus('sent');
     } catch { setStatus('failed'); }
   };
@@ -68,13 +67,14 @@ function ConsultForm() {
       </div>
       <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'16px'}}>
         <div className="form-group"><label>Email Address *</label><input type="email" className="form-input" placeholder="you@company.com" value={form.email} onChange={e => setForm(f => ({...f,email:e.target.value}))}/></div>
-        <div className="form-group"><label>Entity You\'re Considering</label>
+        <div className="form-group"><label>Entity You&apos;re Considering</label>
           <select className="form-input" value={form.entity} onChange={e => setForm(f => ({...f,entity:e.target.value}))}>
             <option value="">Select type...</option>
             {['Not sure yet','Sole Proprietorship','LLC','S-Corporation','C-Corporation','LLP','Non-Profit 501(c)(3)'].map(o => <option key={o}>{o}</option>)}
           </select>
         </div>
       </div>
+      <div className="form-group"><label htmlFor="consult-phone">Phone Number (optional)</label><input id="consult-phone" type="tel" className="form-input" placeholder="(510) 000-0000" value={form.phone} onChange={e => setForm(f => ({...f,phone:e.target.value}))}/></div>
       <div className="form-group" style={{marginTop:'8px'}}>
         <label>Tell us about your business</label>
         <textarea className="form-input" rows={3} placeholder="What you do, how many owners, goals, concerns..." value={form.question} onChange={e => setForm(f => ({...f,question:e.target.value}))}/>
@@ -82,7 +82,7 @@ function ConsultForm() {
       <FormSafeguards id="quote-consent" consent={consent} setConsent={setConsent} hp={hp} setHp={setHp} />
       {status === 'failed' && <div role="alert" style={{color:'#d4001f',fontSize:'14px',marginBottom:'12px'}}>{QUOTE_FAILED_NOTE}</div>}
       <button type="submit" className="form-submit" style={{marginTop:'8px'}} disabled={status==='sending'}>
-        {QUOTE_STATUS[status] || 'Request My Free Clarity Session'}
+        {QUOTE_STATUS[status] || 'Send My Request'}
       </button>
     </form>
   );
@@ -106,7 +106,7 @@ export default function Consulting() {
     [Brain,'Analysis paralysis','Six structures, each with different tax, liability, and compliance rules. Most founders freeze — or worse, default to whatever a friend chose, which may be completely wrong for them.'],
     [Coins,'Costly tax mistakes','Pick the wrong structure and you could overpay self-employment tax by thousands every year — or miss out on deductions and credits only available to certain entities.'],
     [ShieldOff,'Personal liability exposure','Operate without the right entity and a business lawsuit or debt can reach your home, savings, and personal assets. The wrong choice leaves you unprotected.'],
-    [TrendingDown,'Blocked growth & funding','Investors won\'t fund an LLC. Some structures can\'t issue stock or add partners easily. Choose wrong and you may have to restructure later — expensive and disruptive.'],
+    [TrendingDown,'Blocked growth & funding','Many investors prefer to fund a C-Corp rather than an LLC. Some structures can\'t issue stock or add partners easily. Choose wrong and you may have to restructure later — expensive and disruptive.'],
   ];
 
   const structures = [
@@ -137,7 +137,7 @@ export default function Consulting() {
     ['Women-Owned (WBE / WOSB)','Certification for businesses at least 51% woman-owned. Unlocks federal WOSB set-asides and corporate supplier diversity programs.'],
     ['Minority-Owned (MBE)','For businesses 51%+ owned by minority group members. Opens NMSDC corporate networks and government contracting.'],
     ['Veteran-Owned (VOSB / SDVOSB)','For veteran and service-disabled veteran owners. Access to VA set-asides and federal contracting preferences.'],
-    ['Small Business (SBA 8(a))','SBA’s program for socially & economically disadvantaged owners — a powerful federal contracting advantage.'],
+    ['SBA 8(a) Program (if eligible)','SBA’s program for socially & economically disadvantaged owners — a federal contracting advantage for those who qualify.'],
     ['LGBTQ-Owned (LGBTBE)','NGLCC certification connecting you to corporations actively seeking diverse suppliers.'],
     ['Disability-Owned (DOBE)','Certification for disability-owned businesses through Disability:IN supplier programs.'],
     ['HUBZone','For businesses in Historically Underutilized Business Zones — federal contracting set-asides.'],

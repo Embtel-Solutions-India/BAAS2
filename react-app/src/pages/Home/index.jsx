@@ -121,7 +121,7 @@ export default function Home() {
     <>
       <SEOHead
         title="Bay Area Bookkeeper & Accountants in Fremont | 500+ Clients"
-        description="Fremont bookkeepers & accountants trusted by 500+ Bay Area businesses. Bookkeeping, taxes & payroll. Book a free clarity session."
+        description="Fremont bookkeepers & accountants trusted by 500+ businesses. Bookkeeping, taxes & payroll. Book a free clarity session."
         url={`${SITE_URL}/`}
         type="website"
         structuredData={FAQ_SCHEMA}
@@ -156,7 +156,7 @@ export default function Home() {
               >
                 <span className="pill-light">
                   <span className="pill-dot" aria-hidden="true" />
-                  Serving 500+ businesses nationwide
+                  Serving 500+ businesses, Bay Area and nationwide
                 </span>
               </motion.div>
 
@@ -170,6 +170,7 @@ export default function Home() {
                 }}
                 className="hero-title-light"
               >
+                <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' }}>Bookkeeping, tax and payroll for Bay Area businesses. </span>
                 You built the business.
                 <br />
                 <span className="accent">Let us protect it.</span>
@@ -900,7 +901,7 @@ export default function Home() {
                       marginLeft: "auto",
                     }}
                   >
-                    portal.baas.com
+                    bayareaaccountingsolutions.com/client-portal
                   </span>
                 </div>
                 <div style={{ padding: "16px" }}>
@@ -1028,7 +1029,7 @@ export default function Home() {
               <span className="accent">Start thriving because of them.</span>
             </h2>
             <p>
-              Join 500+ Bay Area business owners who traded financial anxiety
+              Join 500+ business owners who traded financial anxiety
               for financial clarity.
             </p>
             <div className="cta-buttons">

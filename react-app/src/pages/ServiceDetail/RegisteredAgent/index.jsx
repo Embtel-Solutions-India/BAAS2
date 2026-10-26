@@ -26,11 +26,11 @@ function FaqItem({ question, answer }) {
   const [open, setOpen] = useState(false);
   return (
     <div style={{borderBottom:'1px solid var(--border)'}}>
-      <button onClick={() => setOpen(!open)} style={{width:'100%',textAlign:'left',padding:'20px 0',display:'flex',justifyContent:'space-between',alignItems:'center',background:'none',border:'none',cursor:'pointer'}}>
+      <button onClick={() => setOpen(!open)} aria-expanded={open} style={{width:'100%',textAlign:'left',padding:'20px 0',display:'flex',justifyContent:'space-between',alignItems:'center',background:'none',border:'none',cursor:'pointer'}}>
         <span style={{fontSize:'17px',fontWeight:600,color:'#1a1a1a'}}>{question}</span>
         <ChevronDown size={20} style={{transform:open?'rotate(180deg)':'none',transition:'transform .2s',color:'var(--accent)',flexShrink:0}}/>
       </button>
-      {open && <p style={{fontSize:'15px',color:'var(--tm)',lineHeight:1.7,paddingBottom:'20px',marginTop:'-8px'}}>{answer}</p>}
+      <p hidden={!open} style={{fontSize:'15px',color:'var(--tm)',lineHeight:1.7,paddingBottom:'20px',marginTop:'-8px'}}>{answer}</p>
     </div>
   );
 }
@@ -73,7 +73,7 @@ export default function RegisteredAgent() {
   ];
 
   const steps = [
-    ['01','Choose Your Plan','Registered agent service starts at $125/year, or $199/year bundled with business formation. Final quote on a quick call.'],
+    ['01','Choose Your Plan','Registered agent service is $199 per year, with same-day activation. Final quote on a quick call.'],
     ['02','We File the Change','If you already have a business, we handle the paperwork to switch your registered agent.'],
     ['03','Legal Notices Come to Us','We receive any state or federal correspondence on your behalf — and notify you instantly.'],
     ['04','Stay Compliant Year After Year','We track and remind you about renewals, compliance filings, and anything that requires attention.'],
@@ -123,7 +123,7 @@ export default function RegisteredAgent() {
       <section className="section bg-white">
         <div className="container">
           <SectionHeader
-            title="What\'s Included in Our Registered Agent Services"
+            title="What&apos;s Included in Our Registered Agent Services"
           />
           <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{once:true}} className="feat-grid" style={{gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))'}}>
             {included.map(([Icon,h,p]) => (

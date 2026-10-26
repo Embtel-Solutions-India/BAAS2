@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../utils/api';
+import { SMS_CONSENT_TEXT, smsFields } from '../../utils/quote';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^\+?[0-9\s().-]{7,20}$/;
@@ -22,7 +23,6 @@ export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }
   const [form, setForm] = useState(EMPTY);
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState({});
-  const [consentError, setConsentError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [sendError, setSendError] = useState('');
@@ -39,13 +39,12 @@ export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }
     const newErrors = {};
     Object.entries(form).forEach(([k, v]) => { const err = validate(k, v); if (err) newErrors[k] = err; });
     setErrors(newErrors);
-    if (!consent) setConsentError(true);
-    if (!consent || Object.keys(newErrors).length) return;
+    if (Object.keys(newErrors).length) return;
 
     setSubmitting(true); setSendError('');
     try {
       // Backend emails the enquiry to info@bayareaaccountingsolutions.com
-      await api.post('/contact-requests', { ...form, source, consent: true, website: honeypot });
+      await api.post('/contact-requests', { ...form, source, ...smsFields(consent), website: honeypot });
       // Google Ads conversion: "Contact" form submitted
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'conversion', { send_to: 'AW-18506219893/GsyoCJ6Qx5gdEPWCuvhE' });
@@ -115,17 +114,17 @@ export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }
           >
             <input
               type="checkbox" id={`${idPrefix}_consent`} checked={consent}
-              onChange={(e) => { setConsent(e.target.checked); setConsentError(false); }}
+              onChange={(e) => setConsent(e.target.checked)}
               style={{ width: '18px', height: '18px', minWidth: '18px', marginTop: '2px', accentColor: 'var(--accent)', cursor: 'pointer' }}
             />
             <label htmlFor={`${idPrefix}_consent`} style={{ fontSize: '14px', color: 'var(--tm)', lineHeight: 1.5, cursor: 'pointer' }}>
-              I agree to receive updates about my application or service information via SMS, email, and phone from Bay Area Accounting Solutions.
-              Message frequency varies. Message and data rates may apply. Reply <strong>STOP</strong> to opt out at any time. View our{' '}
-              <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link>.{' '}
-              <span style={{ color: 'var(--accent)', fontWeight: 600 }}>*</span>
+              {SMS_CONSENT_TEXT.replace(' See our Privacy Policy.', '')} <span style={{ opacity: 0.8 }}>(optional)</span> View our{' '}
+              <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link>.
             </label>
           </div>
-          {consentError && <div style={{ color: '#d4001f', fontSize: '13px', margin: '-12px 0 14px' }}>Please tick the box above to continue.</div>}
+          <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, margin: '-8px 0 16px' }}>
+            By sending this form you agree we may contact you by email or phone about your enquiry.
+          </p>
           {sendError && <div role="alert" style={{ color: '#d4001f', fontSize: '14px', marginBottom: '12px' }}>{sendError}</div>}
           <button type="submit" className="form-submit" disabled={submitting}>{submitting ? 'Sending...' : 'Send Message'}</button>
         </form>
