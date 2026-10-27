@@ -25,6 +25,7 @@ const BookkeepingCleanup = lazy(() => import('./pages/ServiceDetail/BookkeepingC
 const RushService   = lazy(() => import('./pages/RushService'));
 const Contractors   = lazy(() => import('./pages/ServiceDetail/Contractors'));
 const ForeignOwned  = lazy(() => import('./pages/ServiceDetail/ForeignOwned'));
+const FractionalCfo = lazy(() => import('./pages/ServiceDetail/FractionalCfo'));
 const Book          = lazy(() => import('./pages/Book'));
 const NotFound      = lazy(() => import('./pages/NotFound'));
 
@@ -108,6 +109,7 @@ function AnimatedRoutes() {
             <Route path="/services/bookkeeping-cleanup" element={<BookkeepingCleanup />} />
             <Route path="/services/contractors"  element={<Contractors />} />
             <Route path="/services/foreign-owned-llc-accounting" element={<ForeignOwned />} />
+            <Route path="/services/fractional-cfo" element={<FractionalCfo />} />
             <Route path="/rush-service"          element={<RushService />} />
             <Route path="/book"                  element={<Book />} />
 

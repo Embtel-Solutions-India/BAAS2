@@ -20,6 +20,7 @@ const ROUTES = [
   '/services/consulting', '/services/registered-agent', '/services/bookkeeping-cleanup',
   '/services/contractors',
   '/services/foreign-owned-llc-accounting',
+  '/services/fractional-cfo',
   '/rush-service',
   '/book',
 ];

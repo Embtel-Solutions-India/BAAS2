@@ -16,6 +16,7 @@ const services = [
   ['Bookkeeping Cleanup & Catch-Up','/services/bookkeeping-cleanup', 'Fix messy QuickBooks & catch up'],
   ['For Contractors',               '/services/contractors',  'Job costing, payroll & 1099s'],
   ['Foreign-Owned LLCs',            '/services/foreign-owned-llc-accounting', 'Form 5472, FBAR & visa-ready books'],
+  ['Fractional CFO',                '/services/fractional-cfo', 'Forecasting, budgets & capital raising'],
 ];
 
 // Everything in the Services dropdown: the services above plus Rush Service and the full list.

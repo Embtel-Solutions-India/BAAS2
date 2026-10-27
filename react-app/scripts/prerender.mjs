@@ -47,6 +47,7 @@ const ROUTES = [
   '/services/bookkeeping-cleanup',
   '/services/contractors',
   '/services/foreign-owned-llc-accounting',
+  '/services/fractional-cfo',
   '/rush-service',
   '/book',
   '/404',
