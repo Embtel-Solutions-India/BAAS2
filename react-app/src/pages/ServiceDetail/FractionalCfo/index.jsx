@@ -14,7 +14,7 @@ import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/S
 // structured data always agree. Drop a headshot at public/virender-ahluwalia.jpg to replace the initials avatar.
 
 const PATH = '/services/fractional-cfo';
-const PHOTO = '/virender-ahluwalia.jpg';
+const PHOTO = '/1747408580735.jpeg';
 
 const fadeUp = { hidden: { opacity: 0, y: 36 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } } };
 const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.08 } } };
@@ -118,7 +118,7 @@ function CheckRow({ children }) {
   );
 }
 
-// Headshot with an initials fallback until the photo file is added to /public.
+// Headshot with an initials fallback if the photo fails to load.
 function Avatar({ size, fontSize, alt }) {
   const [failed, setFailed] = useState(false);
   const box = { width: size, height: size, borderRadius: '50%', flexShrink: 0 };
@@ -129,7 +129,7 @@ function Avatar({ size, fontSize, alt }) {
       </div>
     );
   }
-  return <img src={PHOTO} alt={alt} width={size} height={size} loading="lazy" onError={() => setFailed(true)} style={{ ...box, objectFit: 'cover' }} />;
+  return <img src={PHOTO} alt={alt} width={size} height={size} loading="lazy" onError={() => setFailed(true)} style={{ ...box, objectFit: 'cover', objectPosition: 'center top', border: '3px solid var(--dark-border)' }} />;
 }
 
 function CopyRow({ icon: Icon, label, value, href, copy }) {
