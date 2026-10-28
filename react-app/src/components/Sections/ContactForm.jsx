@@ -119,7 +119,7 @@ export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }
             />
             <label htmlFor={`${idPrefix}_consent`} style={{ fontSize: '14px', color: 'var(--tm)', lineHeight: 1.5, cursor: 'pointer' }}>
               {SMS_CONSENT_TEXT.replace(' See our Privacy Policy.', '')} <span style={{ opacity: 0.8 }}>(optional)</span> View our{' '}
-              <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link>.
+              <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link> and <Link to="/terms-and-conditions#sms-terms" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>SMS Terms</Link>.
             </label>
           </div>
           <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, margin: '-8px 0 16px' }}>

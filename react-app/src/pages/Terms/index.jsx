@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import RevealWrapper from '../../components/UI/RevealWrapper';
 import PageHero from '../../components/Sections/PageHero';
 import SEOHead from '../../components/SEO/SEOHead';
@@ -19,7 +20,7 @@ export default function Terms() {
         breadcrumb={[{label:'Home',to:'/'},{label:'Terms & Conditions'}]}
         label="Legal"
         title="Terms & Conditions"
-        description="Last updated: January 1, 2025"
+        description="Last updated: October 28, 2026"
         showCta={false}
       />
       <div className="content">
@@ -41,9 +42,18 @@ export default function Terms() {
             <p>All content on this website, including text, graphics, logos, and software, is the property of Bay Area Accounting Solutions and is protected by applicable intellectual property laws.</p>
             <h2>8. Governing Law</h2>
             <p>These Terms are governed by the laws of the State of California. Any disputes shall be resolved in the courts of Alameda County, California.</p>
-            <h2>9. Changes to Terms</h2>
+            <h2>9. SMS Terms</h2>
+            <div id="sms-terms" style={{scrollMarginTop:'108px'}}>
+              <p><strong>Program.</strong> If you opt in on one of our forms, Bay Area Accounting Solutions will send you text messages about your request or account, such as appointment reminders, document requests, replies to your questions and service updates.</p>
+              <p><strong>Consent.</strong> Opting in to texts is optional and is not a condition of purchasing any goods or services. By checking the box, you agree to receive these messages from us at the mobile number you provided, including messages sent using an automated system.</p>
+              <p><strong>Message frequency and costs.</strong> Message frequency varies. Message and data rates may apply.</p>
+              <p><strong>Opt out and help.</strong> Reply STOP at any time to stop receiving messages. Reply HELP for help, or contact us at (510) 962-7300 or info@bayareaaccountingsolutions.com. After you reply STOP we may send one final message to confirm.</p>
+              <p><strong>Carriers.</strong> Wireless carriers are not liable for delayed or undelivered messages.</p>
+              <p><strong>Privacy.</strong> We do not share mobile phone numbers or text-messaging consent with third parties or affiliates for their marketing purposes. See our <Link to="/privacy-policy" style={{color:'var(--accent)'}}>Privacy Policy</Link>.</p>
+            </div>
+            <h2>10. Changes to Terms</h2>
             <p>We reserve the right to update these Terms at any time. Changes will be posted on this page with an updated date. Continued use of our services after changes constitutes acceptance of the new terms.</p>
-            <h2>10. Contact</h2>
+            <h2>11. Contact</h2>
             <p>Questions about these Terms? Contact us at:<br/><br/>Bay Area Accounting Solutions<br/>39159 Paseo Padre Parkway, Suite 115<br/>Fremont, CA 94538<br/>Phone: (510) 962-7300<br/>Email: info@bayareaaccountingsolutions.com</p>
           </RevealWrapper>
         </div>

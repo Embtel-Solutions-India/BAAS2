@@ -233,30 +233,38 @@ export default function FractionalCfo() {
 
       <section className="section-dark" id="virender">
         <div className="container">
-          <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 'clamp(32px,5vw,64px)', alignItems: 'start' }}>
-            <motion.div variants={fadeUp} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
-              <Avatar size={240} fontSize="64px" alt="Portrait of Virender Ahluwalia" />
-              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
-                {CREDS.map((c) => (
-                  <span key={c} style={{ border: '1px solid var(--dark-border)', borderRadius: '999px', padding: '4px 14px', fontSize: '13px', color: '#fff' }}>{c}</span>
-                ))}
+          <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <motion.div variants={fadeUp} style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(28px,5vw,64px)', alignItems: 'center' }}>
+              <div style={{ flex: '0 0 auto', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '18px', maxWidth: '320px' }}>
+                <div style={{ padding: '6px', borderRadius: '50%', border: '2px solid var(--accent)' }}>
+                  <Avatar size={240} fontSize="64px" alt="Portrait of Virender Ahluwalia" />
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '8px' }}>
+                  {CREDS.map((c) => (
+                    <span key={c} style={{ border: '1px solid var(--dark-border)', borderRadius: '999px', padding: '4px 14px', fontSize: '13px', color: '#fff' }}>{c}</span>
+                  ))}
+                </div>
+              </div>
+              <div style={{ flex: '1 1 340px', minWidth: 0 }}>
+                <div className="slabel">Meet your CFO</div>
+                <h2 className="stitle" style={{ textAlign: 'left', marginBottom: '6px' }}>Virender Ahluwalia</h2>
+                <p style={{ color: 'var(--dtm)', marginBottom: '24px' }}>Fractional CFO, Bay Area Accounting Solutions</p>
+                <div style={{ display: 'grid', gap: '16px', maxWidth: '68ch', color: '#fff', fontSize: '16px', lineHeight: 1.7 }}>
+                  <p>Virender has spent more than 25 years in finance, operations and executive leadership, helping founders turn good ideas into durable, profitable companies. He has served as CFO for pre-IPO companies and Fortune 500 operations, as well as early-stage startups, high-growth ventures and turnarounds.</p>
+                  <p>His work centers on the fundamentals that keep companies alive and growing: cash flow forecasting, burn-rate control, grounded revenue assessment, strong financial controls, and raising equity and debt capital. As Entrepreneur in Residence at Pitch Global, he advises startups across Southeast Asia and the U.S. on financial leadership.</p>
+                  <p style={{ color: 'var(--dtm)' }}>He also serves on the board of Global Women Power as a financial advisor, and on the board of the DaanMatch non-profit technology platform.</p>
+                </div>
               </div>
             </motion.div>
-            <motion.div variants={fadeUp}>
-              <div className="slabel">Meet your CFO</div>
-              <h2 className="stitle" style={{ textAlign: 'left', marginBottom: '6px' }}>Virender Ahluwalia</h2>
-              <p style={{ color: 'var(--dtm)', marginBottom: '22px' }}>Fractional CFO, Bay Area Accounting Solutions</p>
-              <div style={{ display: 'grid', gap: '16px', maxWidth: '64ch', color: '#fff', fontSize: '16px', lineHeight: 1.7 }}>
-                <p>Virender has spent more than 25 years in finance, operations and executive leadership, helping founders turn good ideas into durable, profitable companies. He has served as CFO for pre-IPO companies and Fortune 500 operations, as well as early-stage startups, high-growth ventures and turnarounds.</p>
-                <p>His work centers on the fundamentals that keep companies alive and growing: cash flow forecasting, burn-rate control, grounded revenue assessment, strong financial controls, and raising equity and debt capital. As Entrepreneur in Residence at Pitch Global, he advises startups across Southeast Asia and the U.S. on financial leadership.</p>
-                <p style={{ color: 'var(--dtm)' }}>He also serves on the board of Global Women Power as a financial advisor, and on the board of the DaanMatch non-profit technology platform.</p>
-              </div>
-              <h3 style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--dtm)', margin: '36px 0 8px' }}>Selected leadership roles</h3>
-              <ol style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+
+            <motion.div variants={fadeUp} style={{ marginTop: 'clamp(40px,6vw,72px)' }}>
+              <h3 style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--dtm)', margin: '0 0 20px', paddingBottom: '14px', borderBottom: '1px solid var(--dark-border)' }}>Selected leadership roles</h3>
+              <ol style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,320px),1fr))', gap: '14px' }}>
                 {CAREER.map(([yrs, role, co]) => (
-                  <li key={`${yrs}-${co}`} style={{ display: 'grid', gridTemplateColumns: 'minmax(96px,120px) 1fr', gap: '16px', padding: '12px 0', borderTop: '1px solid var(--dark-border)' }}>
-                    <span style={{ color: 'var(--dtm)', fontSize: '14px', fontVariantNumeric: 'tabular-nums' }}>{yrs}</span>
-                    <span style={{ color: '#fff', fontWeight: 600 }}>{role}<small style={{ display: 'block', fontWeight: 400, color: 'var(--dtm)', fontSize: '14px' }}>{co}</small></span>
+                  <li key={`${yrs}-${co}`} style={{ padding: '16px 18px', borderRadius: '12px', border: '1px solid var(--dark-border)', background: 'rgba(255,255,255,0.03)', minWidth: 0 }}>
+                    <span style={{ display: 'block', color: 'var(--accent)', fontSize: '12px', fontWeight: 700, letterSpacing: '.08em', fontVariantNumeric: 'tabular-nums', marginBottom: '6px' }}>{yrs}</span>
+                    <span style={{ display: 'block', color: '#fff', fontWeight: 600, fontSize: '16px' }}>{role}</span>
+                    <span style={{ display: 'block', color: 'var(--dtm)', fontSize: '14px', lineHeight: 1.5, marginTop: '2px' }}>{co}</span>
                   </li>
                 ))}
               </ol>

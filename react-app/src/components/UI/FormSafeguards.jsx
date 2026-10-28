@@ -26,7 +26,7 @@ export default function FormSafeguards({ id, consent, setConsent, hp, setHp }) {
         />
         <label htmlFor={id} style={{ fontSize: '14px', color: 'var(--tm)', lineHeight: 1.5, cursor: 'pointer' }}>
           {SMS_LABEL} <span style={{ opacity: 0.8 }}>(optional)</span> View our{' '}
-          <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link>.
+          <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link> and <Link to="/terms-and-conditions#sms-terms" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>SMS Terms</Link>.
         </label>
       </div>
       <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, margin: '0 0 16px' }}>

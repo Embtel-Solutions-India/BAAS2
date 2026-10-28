@@ -200,7 +200,7 @@ function QuoteForm() {
 
       <div className="ct-consent">
         <input type="checkbox" id="ct-f-sms" checked={sms} onChange={(e) => setSms(e.target.checked)} />
-        <label htmlFor="ct-f-sms">{SMS_MAIN} See our <Link to="/privacy-policy" target="_blank" rel="noopener">Privacy Policy</Link>.</label>
+        <label htmlFor="ct-f-sms">{SMS_MAIN} See our <Link to="/privacy-policy" target="_blank" rel="noopener">Privacy Policy</Link> and <Link to="/terms-and-conditions#sms-terms" target="_blank" rel="noopener">SMS Terms</Link>.</label>
       </div>
 
       <button type="submit" className="ct-btn ct-btn-red" disabled={sending}>{sending ? 'Sending…' : 'Request my free consultation'}</button>
