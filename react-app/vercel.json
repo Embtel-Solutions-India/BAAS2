@@ -1,5 +1,9 @@
 {
   "redirects": [
+    { "source": "/(.*)", "has": [{ "type": "host", "value": "www.bayareaaccountingsolutions.com" }], "destination": "https://bayareaaccountingsolutions.com/$1", "permanent": true },
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/services/accounting", "destination": "/services/bookkeeping-cleanup", "permanent": true },
+    { "source": "/client-portal", "destination": "/client-portal/login", "permanent": true },
     { "source": "/step-by-step-guide-filing-form-990-for-the-first-time", "destination": "/services/tax-services", "permanent": true },
     { "source": "/business-meals-gifts-and-client-entertainment", "destination": "/services/tax-services", "permanent": true },
     { "source": "/fremont-business-license", "destination": "/services/consulting", "permanent": true }

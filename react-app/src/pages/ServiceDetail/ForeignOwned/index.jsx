@@ -129,7 +129,7 @@ export default function ForeignOwned() {
   return (
     <>
       <SEOHead
-        title="Foreign-Owned LLC Accounting, Form 5472 & FBAR | BAAS"
+        title="Foreign-Owned LLC Accounting | Bay Area Accounting Solutions"
         description="Form 5472 and FBAR filing, bookkeeping and U.S. company registration for non-residents and foreign-owned LLCs. E-2 and EB-5 ready financials. Flat pricing."
         url={`${SITE_URL}${PATH}`}
         type="website"

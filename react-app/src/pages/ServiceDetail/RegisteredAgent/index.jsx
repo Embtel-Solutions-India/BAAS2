@@ -188,7 +188,7 @@ export default function RegisteredAgent() {
               <aside>
                 <div className="sidebar-card">
                   <h4>Our Services</h4>
-                  {[['Bookkeeping & Accounting','/services/bookkeeping'],['Business & Individual Taxes','/services/tax-services'],['Payroll Management','/services/payroll'],['Accounting Cleanup','/services/accounting'],['Business Formation','/services/consulting']].map(([l,to]) => (
+                  {[['Bookkeeping & Accounting','/services/bookkeeping'],['Business & Individual Taxes','/services/tax-services'],['Payroll Management','/services/payroll'],['Bookkeeping Cleanup','/services/bookkeeping-cleanup'],['Business Formation','/services/consulting']].map(([l,to]) => (
                     <Link key={l} className="sidebar-link" to={to}>{l}</Link>
                   ))}
                 </div>

@@ -436,7 +436,6 @@ export default function BookkeepingCleanup() {
                   ['Monthly Bookkeeping', '/services/bookkeeping'],
                   ['Business & Individual Taxes', '/services/tax-services'],
                   ['Payroll Management', '/services/payroll'],
-                  ['Accounting Cleanup', '/services/accounting'],
                   ['Business Formation', '/services/consulting'],
                   ['Registered Agent', '/services/registered-agent'],
                 ].map(([l, to]) => (

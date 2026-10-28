@@ -18,6 +18,8 @@ const Blog = require('../models/Blog');
 const SITE_URL = 'https://bayareaaccountingsolutions.com';
 const OUT_FILE = path.join(__dirname, '..', '..', 'react-app', 'public', 'sitemap.xml');
 
+const TODAY = new Date().toISOString().slice(0, 10);
+
 const STATIC_PAGES = [
   { loc: '/',                              priority: '1.0' },
   { loc: '/about',                         priority: '0.8' },
@@ -58,7 +60,7 @@ async function main() {
   console.log(`[sitemap] ${posts.length} published blog post(s) found.`);
 
   const entries = [
-    ...STATIC_PAGES.map((p) => urlEntry(p.loc, p.priority)),
+    ...STATIC_PAGES.map((p) => urlEntry(p.loc, p.priority, TODAY)),
     ...posts.map((p) =>
       urlEntry(`/blog/${p.slug}`, '0.6', new Date(p.updated_at || p.publishedAt).toISOString().slice(0, 10))
     ),

@@ -6,14 +6,27 @@ import StaggerGrid from '../../components/UI/StaggerGrid';
 import StaggerItem from '../../components/UI/StaggerItem';
 import CtaBar from '../../components/Sections/CtaBar';
 import SEOHead from '../../components/SEO/SEOHead';
+import { breadcrumbSchema } from '../../components/SEO/seoConfig';
 import { api, formatDate } from '../../utils/api';
 
 // Keep the page title at ~60 characters so it is not cut off in search results.
 const pageTitle = (t) => {
   const x = String(t || '').trim();
   if (x.length + 31 <= 60) return `${x} | Bay Area Accounting Solutions`;
-  return x.length + 7 <= 60 ? `${x} | BAAS` : x;
+  if (x.length + 7 <= 60) return `${x} | BAAS`;
+  return clip(x, 60);
 };
+
+// Cut at a word boundary so long CMS titles/descriptions are not truncated mid-word in search results.
+const clip = (s, max) => {
+  const x = String(s || '').trim();
+  if (x.length <= max) return x;
+  const cut = x.slice(0, max - 1);
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), max * 0.6)).replace(/[\s,.;:–—-]+$/, '')}…`;
+};
+
+// Posts were written with http://www links; serve the canonical https, non-www host.
+const canonicalLinks = (html) => String(html || '').replace(/https?:\/\/www\.bayareaaccountingsolutions\.com/gi, 'https://bayareaaccountingsolutions.com').replace(/http:\/\/bayareaaccountingsolutions\.com/gi, 'https://bayareaaccountingsolutions.com');
 
 export default function BlogDetail() {
   const { slug } = useParams();
@@ -75,12 +88,13 @@ export default function BlogDetail() {
     <>
       <SEOHead
         title={pageTitle(blog.metaTitle || blog.title)}
-        description={blog.metaDescription || blog.shortDescription}
+        description={clip(blog.metaDescription || blog.shortDescription, 160)}
         image={blog.thumbnail}
         url={currentUrl}
         author={blog.author}
         publishedTime={blog.publishedAt || blog.created_at}
         tags={blog.tags}
+        structuredData={breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Blog', path: '/blog' }, { name: blog.title, path: `/blog/${blog.slug || slug}` }])}
       />
 
       <article className="blog-detail-container" style={{ padding: '80px 0 40px' }}>
@@ -135,7 +149,7 @@ export default function BlogDetail() {
           <RevealWrapper>
             <div
               className="blog-rich-content"
-              dangerouslySetInnerHTML={{ __html: blog.content }}
+              dangerouslySetInnerHTML={{ __html: canonicalLinks(blog.content) }}
             />
           </RevealWrapper>
 

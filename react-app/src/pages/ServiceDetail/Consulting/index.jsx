@@ -290,7 +290,7 @@ export default function Consulting() {
               <RevealWrapper delay={0.2}>
                 <div className="sidebar-card">
                   <h4>Other Services</h4>
-                  {[['Bookkeeping & Accounting','/services/bookkeeping'],['Business & Individual Taxes','/services/tax-services'],['Payroll Management','/services/payroll'],['Accounting Cleanup','/services/accounting']].map(([l,to]) => (
+                  {[['Bookkeeping & Accounting','/services/bookkeeping'],['Business & Individual Taxes','/services/tax-services'],['Payroll Management','/services/payroll'],['Bookkeeping Cleanup','/services/bookkeeping-cleanup']].map(([l,to]) => (
                     <Link key={l} className="sidebar-link" to={to}>{l}</Link>
                   ))}
                 </div>

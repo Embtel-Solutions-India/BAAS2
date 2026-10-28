@@ -35,7 +35,6 @@ export default function Footer() {
             <Link className="footer-link" to="/services/bookkeeping">Bookkeeping &amp; Accounting</Link>
             <Link className="footer-link" to="/services/tax-services">Business &amp; Individual Taxes</Link>
             <Link className="footer-link" to="/services/payroll">Payroll Management</Link>
-            <Link className="footer-link" to="/services/accounting">Accounting Cleanup</Link>
             <Link className="footer-link" to="/services/consulting">Business Formation &amp; Consulting</Link>
             <Link className="footer-link" to="/services/registered-agent">Registered Agent</Link>
             <Link className="footer-link" to="/services/bookkeeping-cleanup">Bookkeeping Cleanup &amp; Catch-Up</Link>

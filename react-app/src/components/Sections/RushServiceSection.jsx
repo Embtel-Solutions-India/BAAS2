@@ -10,7 +10,7 @@ const LINKS = [
   { Icon: Calculator, label: 'Business & Individual Taxes', to: '/services/tax-services' },
   { Icon: Users, label: 'Payroll Management', to: '/services/payroll' },
   { Icon: Building2, label: 'Business Formation', to: '/services/consulting' },
-  { Icon: FileText, label: 'Accounting Cleanup', to: '/services/accounting' },
+  { Icon: FileText, label: 'Bookkeeping Cleanup', to: '/services/bookkeeping-cleanup' },
   { Icon: ShieldCheck, label: 'Registered Agent (same-day activation included)', to: '/services/registered-agent' },
 ];
 

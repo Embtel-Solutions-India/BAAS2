@@ -113,7 +113,7 @@ export default function Bookkeeping() {
       <PageHero
         breadcrumb={[{label:'Home',to:'/'},{label:'Services',to:'/services'},{label:'Bookkeeping & Accounting'}]}
         label="Our Services"
-        title={<>{'Bookkeeping &'}<br/>{'Accounting'}</>}
+        title={<>{'Bookkeeping & '}<br/>{'Accounting'}</>}
         description="Clear books aren't a luxury — they're the foundation of every business decision you make. Without them, you're running blind."
       />
 
@@ -227,7 +227,7 @@ export default function Bookkeeping() {
               <RevealWrapper delay={0.2}>
                 <div className="sidebar-card">
                   <h4>Other Services</h4>
-                  {[['Business & Individual Taxes','/services/tax-services'],['Payroll Management','/services/payroll'],['Accounting Cleanup','/services/accounting'],['Business Formation','/services/consulting'],['Registered Agent','/services/registered-agent']].map(([l,to]) => (
+                  {[['Business & Individual Taxes','/services/tax-services'],['Payroll Management','/services/payroll'],['Bookkeeping Cleanup','/services/bookkeeping-cleanup'],['Business Formation','/services/consulting'],['Registered Agent','/services/registered-agent']].map(([l,to]) => (
                     <Link key={l} className="sidebar-link" to={to}>{l}</Link>
                   ))}
                 </div>

@@ -16,7 +16,7 @@ const PORT = 5179;
 const ROUTES = [
   '/', '/about', '/services', '/industries', '/resources', '/blog', '/contact',
   '/privacy-policy', '/terms-and-conditions', '/services/bookkeeping',
-  '/services/tax-services', '/services/payroll', '/services/accounting',
+  '/services/tax-services', '/services/payroll',
   '/services/consulting', '/services/registered-agent', '/services/bookkeeping-cleanup',
   '/services/contractors',
   '/services/foreign-owned-llc-accounting',

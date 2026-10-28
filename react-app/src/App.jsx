@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { PortalProvider } from './context/PortalContext';
 import Layout from './components/Layout/Layout';
@@ -18,7 +18,6 @@ const Terms         = lazy(() => import('./pages/Terms'));
 const Bookkeeping   = lazy(() => import('./pages/ServiceDetail/Bookkeeping'));
 const TaxServices   = lazy(() => import('./pages/ServiceDetail/TaxServices'));
 const Payroll       = lazy(() => import('./pages/ServiceDetail/Payroll'));
-const Accounting    = lazy(() => import('./pages/ServiceDetail/Accounting'));
 const Consulting     = lazy(() => import('./pages/ServiceDetail/Consulting'));
 const RegisteredAgent = lazy(() => import('./pages/ServiceDetail/RegisteredAgent'));
 const BookkeepingCleanup = lazy(() => import('./pages/ServiceDetail/BookkeepingCleanup'));
@@ -103,7 +102,7 @@ function AnimatedRoutes() {
             <Route path="/services/bookkeeping"  element={<Bookkeeping />} />
             <Route path="/services/tax-services" element={<TaxServices />} />
             <Route path="/services/payroll"      element={<Payroll />} />
-            <Route path="/services/accounting"   element={<Accounting />} />
+            <Route path="/services/accounting"   element={<Navigate to="/services/bookkeeping-cleanup" replace />} />
             <Route path="/services/consulting"    element={<Consulting />} />
             <Route path="/services/registered-agent" element={<RegisteredAgent />} />
             <Route path="/services/bookkeeping-cleanup" element={<BookkeepingCleanup />} />

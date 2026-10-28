@@ -48,7 +48,7 @@ export const api = {
 
 export function formatDate(iso) {
   if (!iso) return '—';
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/Los_Angeles' });
 }
 
 export function formatCurrency(amount) {

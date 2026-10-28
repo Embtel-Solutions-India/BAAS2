@@ -10,7 +10,6 @@ const services = [
   ['Bookkeeping & Accounting',      '/services/bookkeeping',  'Monthly books, reports & reconciliation'],
   ['Business & Individual Taxes',   '/services/tax-services', 'Tax returns & year-round planning'],
   ['Payroll Management',            '/services/payroll',      'Payroll, tax filings & year-end forms'],
-  ['Accounting Cleanup',            '/services/accounting',   'Rescue bookkeeping & audit-ready books'],
   ['Business Formation & Consulting','/services/consulting',  'LLC, S-Corp & C-Corp setup'],
   ['Registered Agent',              '/services/registered-agent', 'State compliance & legal notices'],
   ['Bookkeeping Cleanup & Catch-Up','/services/bookkeeping-cleanup', 'Fix messy QuickBooks & catch up'],

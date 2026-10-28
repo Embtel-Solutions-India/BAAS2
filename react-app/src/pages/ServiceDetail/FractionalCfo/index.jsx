@@ -161,7 +161,7 @@ export default function FractionalCfo() {
   return (
     <>
       <SEOHead
-        title="Fractional CFO Services, Cash Forecasting & Capital Raising | BAAS"
+        title="Fractional CFO Services | Bay Area Accounting Solutions"
         description="Fractional CFO services from Bay Area Accounting Solutions, led by Virender Ahluwalia, 25+ years as CFO for startups, high-growth companies and turnarounds."
         url={`${SITE_URL}${PATH}`}
         type="website"
