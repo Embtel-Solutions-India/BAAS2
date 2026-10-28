@@ -231,6 +231,15 @@ export default function Bookkeeping() {
                     <Link key={l} className="sidebar-link" to={to}>{l}</Link>
                   ))}
                 </div>
+                <div className="sidebar-card" style={{marginTop:'20px'}}>
+                  <h4>Related Reading</h4>
+                  {[
+                    ['How Much Does Bookkeeping Cost in 2026?', '/blog/how-much-does-bookkeeping-cost-2026'],
+                    ['Why Every Small Business Needs Professional Accounting', '/blog/why-every-small-business-needs-professional-accounting-services-in-2026']
+                  ].map(([l, to]) => (
+                    <Link key={to} className="sidebar-link" to={to}>{l}</Link>
+                  ))}
+                </div>
                 <div className="sidebar-cta">
                   <h4>Free Clarity Session</h4>
                   <p>30 minutes with our team. We answer your questions and recommend exactly what you need.</p>

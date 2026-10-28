@@ -343,6 +343,10 @@ export default function FractionalCfo() {
                   ))}
                 </div>
                 <div className="sidebar-card" style={{ marginTop: '20px' }}>
+                  <h4>Related Reading</h4>
+                  <Link className="sidebar-link" to="/blog/7-financial-mistakes-that-slow-down-growing-saas-companies">7 Financial Mistakes That Slow Down Growing SaaS Companies</Link>
+                </div>
+                <div className="sidebar-card" style={{ marginTop: '20px' }}>
                   <h4>Contact</h4>
                   <CopyRow icon={Phone} label="Phone" value="(510) 962-7300" href="tel:+15109627300" copy />
                   <CopyRow icon={Mail} label="Email" value="info@bayareaaccountingsolutions.com" href="mailto:info@bayareaaccountingsolutions.com" copy />

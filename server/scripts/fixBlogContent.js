@@ -24,6 +24,14 @@ const linkCta = (html, phrase) => {
     .join('');
 };
 
+// Cut at a word boundary so search results do not truncate mid-word.
+const clip = (s, max) => {
+  const x = String(s || '').trim();
+  if (x.length <= max) return x;
+  const cut = x.slice(0, max - 1);
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(' '), max * 0.6)).replace(/[\s,.;:–—-]+$/, '')}…`;
+};
+
 const FIXES = [
   {
     // A8: heading cut off at "Your Next Est" with a stray quote mark
@@ -67,6 +75,11 @@ const FIXES = [
     apply: (b) => ({ title: b.title.replace(/\.\s*$/, '') }),
   },
   {
+    // A5: SEO title <= 60 and description <= 160 characters
+    match: () => true,
+    apply: (b) => ({ metaTitle: clip(b.metaTitle, 60), metaDescription: clip(b.metaDescription, 160) }),
+  },
+  {
     // B7: brand name is "Solutions"
     match: () => true,
     apply: (b) => ({ content: b.content.replace(/Bay Area Accounting Solution(?!s)/g, 'Bay Area Accounting Solutions') }),
@@ -83,7 +96,7 @@ async function main() {
     for (const fix of FIXES) {
       if (fix.match(next)) Object.assign(next, fix.apply(next));
     }
-    const fields = ['title', 'category', 'content'].filter((k) => next[k] !== post[k]);
+    const fields = ['title', 'category', 'content', 'metaTitle', 'metaDescription'].filter((k) => next[k] !== post[k]);
     if (!fields.length) continue;
     changed++;
     console.log(`[blog] ${post.slug}: would change ${fields.join(', ')}`);
