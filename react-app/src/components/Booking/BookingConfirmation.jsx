@@ -4,10 +4,9 @@ import { CheckCircle2 } from 'lucide-react';
 import { formatLongDate, formatTime, zoneLabel } from '../../utils/bookingDates';
 
 // Shown only after the server has confirmed the booking.
-export default function BookingConfirmation({ booking, accessToken, heading = 'Your appointment is confirmed', note, onBookAnother }) {
+export default function BookingConfirmation({ booking, heading = 'Your appointment is confirmed', note, onBookAnother }) {
   const ref = useRef(null);
   useEffect(() => { if (ref.current) ref.current.focus(); }, []);
-  const manage = accessToken ? `/book/manage/${encodeURIComponent(booking.reference)}?token=${encodeURIComponent(accessToken)}` : '';
   return (
     <div className="bk-confirm" role="status">
       <CheckCircle2 size={44} className="bk-confirm-icon" aria-hidden="true" />
@@ -23,7 +22,6 @@ export default function BookingConfirmation({ booking, accessToken, heading = 'Y
       </dl>
       <p className="bk-note">{note || `We sent a confirmation to ${booking.email}. Keep your reference number handy.`}</p>
       <div className="bk-confirm-actions">
-        {manage && <Link to={manage} className="btn-g">Cancel or reschedule</Link>}
         {onBookAnother && <button type="button" className="btn-g" onClick={onBookAnother}>Book another time</button>}
         <Link to="/" className="btn-p">Back to home</Link>
       </div>

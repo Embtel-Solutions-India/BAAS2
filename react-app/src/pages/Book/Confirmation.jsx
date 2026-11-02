@@ -81,7 +81,6 @@ export default function BookingConfirmationPage() {
                 )}
                 <p className="bk-note">{STATUS_TEXT[status][1]}</p>
                 <div className="bk-confirm-actions">
-                  {status === 'booked' && <Link to={`/book/manage/${encodeURIComponent(bookingId)}`} className="btn-g">Reschedule or cancel</Link>}
                   {status !== 'booked' && <Link to="/book" className="btn-g">Book a new time</Link>}
                   <Link to="/" className="btn-p">Back to home</Link>
                 </div>
