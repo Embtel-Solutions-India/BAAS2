@@ -25,6 +25,7 @@ const RushService   = lazy(() => import('./pages/RushService'));
 const Contractors   = lazy(() => import('./pages/ServiceDetail/Contractors'));
 const ForeignOwned  = lazy(() => import('./pages/ServiceDetail/ForeignOwned'));
 const FractionalCfo = lazy(() => import('./pages/ServiceDetail/FractionalCfo'));
+const Restaurants   = lazy(() => import('./pages/ServiceDetail/Restaurants'));
 const Book          = lazy(() => import('./pages/Book'));
 const NotFound      = lazy(() => import('./pages/NotFound'));
 
@@ -109,6 +110,7 @@ function AnimatedRoutes() {
             <Route path="/services/contractors"  element={<Contractors />} />
             <Route path="/services/foreign-owned-llc-accounting" element={<ForeignOwned />} />
             <Route path="/services/fractional-cfo" element={<FractionalCfo />} />
+            <Route path="/services/restaurants"  element={<Restaurants />} />
             <Route path="/rush-service"          element={<RushService />} />
             <Route path="/book"                  element={<Book />} />
 
