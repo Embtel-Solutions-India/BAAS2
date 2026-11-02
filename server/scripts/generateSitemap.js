@@ -35,6 +35,7 @@ const STATIC_PAGES = [
   { loc: '/services/fractional-cfo', priority: '0.8' },
   { loc: '/rush-service',                  priority: '0.8' },
   { loc: '/book',                          priority: '0.7' },
+  { loc: '/apply',                         priority: '0.7' },
   { loc: '/industries',                    priority: '0.7' },
   { loc: '/resources',                     priority: '0.6' },
   { loc: '/blog',                          priority: '0.7' },

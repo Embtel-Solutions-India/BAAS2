@@ -23,6 +23,7 @@ const ROUTES = [
   '/services/fractional-cfo',
   '/rush-service',
   '/book',
+  '/apply',
 ];
 
 function serveDist() {

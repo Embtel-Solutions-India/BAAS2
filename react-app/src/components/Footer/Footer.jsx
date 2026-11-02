@@ -42,6 +42,7 @@ export default function Footer() {
             <Link className="footer-link" to="/services/foreign-owned-llc-accounting">Foreign-Owned LLC Accounting</Link>
             <Link className="footer-link" to="/services/fractional-cfo">Fractional CFO</Link>
             <Link className="footer-link" to="/rush-service">Rush Service</Link>
+            <Link className="footer-link" to="/apply">Apply for Services</Link>
           </div>
 
           <div>

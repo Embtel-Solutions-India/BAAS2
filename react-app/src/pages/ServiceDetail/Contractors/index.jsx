@@ -1,26 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SEOHead from '../../../components/SEO/SEOHead';
+import ApplicationForm from '../../../components/Sections/ApplicationForm';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
-import { api } from '../../../utils/api';
 import { BOOK_PATH } from '../../../data/booking';
-import { PHONE_DISPLAY, PHONE_TEL, EMAIL } from '../../../data/rush';
+import { PHONE_DISPLAY, PHONE_TEL } from '../../../data/rush';
 
 // Landing page for contractors and trades (converted from the standalone contractor-landing-page.html).
 // Uses the site's own header and footer; styles live in globals.css under the .ct-page scope.
 
-const SMS_MAIN = 'Text me about this request. I agree to receive text messages from Bay Area Accounting Solutions at the number above, including appointment reminders, document requests and replies to my inquiry. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of service.';
-const SMS_SAVED = `${SMS_MAIN} See our Privacy Policy.`; // exact wording the visitor saw; it is saved with the request
-
-const NEEDS = [
-  ['Not sure yet', 'Not sure yet'],
-  ['Monthly bookkeeping', 'Monthly bookkeeping and job costing'],
-  ['Bookkeeping cleanup', 'Catching up on past bookkeeping'],
-  ['Payroll and 1099s', 'Payroll and 1099s'],
-  ['Tax preparation', 'Business or personal tax return'],
-  ['Business formation', 'Forming an LLC or corporation'],
-  ['Registered agent', 'Registered agent service'],
-];
 
 const FACTS = [
   ['Free consultation', '30 minutes, no obligation'],
@@ -83,132 +70,6 @@ const SCHEMA = [
   breadcrumbSchema([{ name: 'Home', path: '/' }, { name: 'Services', path: '/services' }, { name: 'Contractors', path: '/services/contractors' }]),
 ];
 
-const usDigits = (v) => { const d = v.replace(/\D/g, ''); return d.length === 11 && d[0] === '1' ? d.slice(1) : d; };
-const RULES = {
-  name: (v) => v.trim().length > 1,
-  email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
-  phone: (v) => usDigits(v).length === 10,
-};
-const TRACKING_LABELS = { utm_source: 'UTM source', utm_medium: 'UTM medium', utm_campaign: 'UTM campaign', utm_term: 'UTM term', utm_content: 'UTM content', gclid: 'Google click ID', fbclid: 'Facebook click ID' };
-
-function QuoteForm() {
-  const [v, setV] = useState({ name: '', business: '', email: '', phone: '', need: 'Not sure yet' });
-  const [sms, setSms] = useState(false);
-  const [bad, setBad] = useState({});
-  const [hp, setHp] = useState('');
-  const [status, setStatus] = useState('');
-  const [sending, setSending] = useState(false);
-  const [done, setDone] = useState(null);
-  const doneRef = useRef(null);
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
-  const phoneRef = useRef(null);
-
-  useEffect(() => { if (done) doneRef.current?.focus(); }, [done]);
-
-  const set = (k) => (e) => {
-    const val = e.target.value;
-    setV((s) => ({ ...s, [k]: val }));
-    if (bad[k]) setBad((b) => ({ ...b, [k]: !RULES[k](val) }));
-  };
-  const blur = (k) => () => { if (RULES[k] && v[k]) setBad((b) => ({ ...b, [k]: !RULES[k](v[k]) })); };
-
-  const submit = async (e) => {
-    e.preventDefault();
-    setStatus('');
-    const invalid = Object.keys(RULES).filter((k) => !RULES[k](v[k]));
-    setBad(Object.fromEntries(Object.keys(RULES).map((k) => [k, invalid.includes(k)])));
-    if (invalid.length) { ({ name: nameRef, email: emailRef, phone: phoneRef })[invalid[0]].current?.focus(); return; }
-
-    const tracking = {};
-    try {
-      const qs = new URLSearchParams(window.location.search);
-      Object.entries(TRACKING_LABELS).forEach(([k, label]) => { if (qs.get(k)) tracking[label] = qs.get(k).slice(0, 200); });
-    } catch { /* ignore */ }
-
-    setSending(true);
-    try {
-      await api.post('/quote-requests', {
-        source: 'Contractors page',
-        name: v.name.trim(),
-        email: v.email.trim(),
-        phone: usDigits(v.phone),
-        sms_consent: sms,
-        sms_consent_text: sms ? SMS_SAVED : '',
-        website: hp,
-        fields: {
-          'Business name': v.business.trim() || '-',
-          'Needs help with': v.need,
-          'Page': window.location.href.split('?')[0],
-          'Submitted at': new Date().toISOString(),
-          ...tracking,
-        },
-      });
-      try { if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { form: 'Contractors page' }); } catch { /* ignore */ }
-      setDone(v.name.trim().split(/\s+/)[0]);
-    } catch {
-      setStatus(`Your request didn’t go through. Try again, or call ${PHONE_DISPLAY} or email ${EMAIL}.`);
-    } finally {
-      setSending(false);
-    }
-  };
-
-  if (done) {
-    return (
-      <div className="ct-done" ref={doneRef} tabIndex={-1} role="status">
-        <h3>Request received, {done}.</h3>
-        <p>We’ll call or email you to set up your free consultation. Want to pick a time now?</p>
-        <Link className="ct-btn ct-btn-red" to={BOOK_PATH}>Book a time</Link>
-      </div>
-    );
-  }
-
-  const err = (k, text) => (bad[k] ? <div className="ct-err" role="alert">{text}</div> : null);
-  return (
-    <form className="ct-ticket-body" onSubmit={submit} noValidate>
-      {/* Honeypot for bots: hidden from people, ignored by the server if filled */}
-      <input type="text" name="website" value={hp} onChange={(e) => setHp(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', opacity: 0 }} />
-      <div className="ct-row2">
-        <div className={`ct-field${bad.name ? ' ct-bad' : ''}`}>
-          <label htmlFor="ct-f-name">Full name</label>
-          <input id="ct-f-name" ref={nameRef} type="text" autoComplete="name" value={v.name} onChange={set('name')} onBlur={blur('name')} aria-invalid={bad.name ? 'true' : 'false'} required />
-          {err('name', 'Enter your name.')}
-        </div>
-        <div className="ct-field">
-          <label htmlFor="ct-f-biz">Business name <span className="ct-opt">(optional)</span></label>
-          <input id="ct-f-biz" type="text" autoComplete="organization" value={v.business} onChange={set('business')} />
-        </div>
-      </div>
-      <div className="ct-row2">
-        <div className={`ct-field${bad.email ? ' ct-bad' : ''}`}>
-          <label htmlFor="ct-f-email">Email</label>
-          <input id="ct-f-email" ref={emailRef} type="email" autoComplete="email" inputMode="email" value={v.email} onChange={set('email')} onBlur={blur('email')} aria-invalid={bad.email ? 'true' : 'false'} required />
-          {err('email', 'Enter an email like name@company.com.')}
-        </div>
-        <div className={`ct-field${bad.phone ? ' ct-bad' : ''}`}>
-          <label htmlFor="ct-f-phone">Phone</label>
-          <input id="ct-f-phone" ref={phoneRef} type="tel" autoComplete="tel" inputMode="tel" value={v.phone} onChange={set('phone')} onBlur={blur('phone')} aria-invalid={bad.phone ? 'true' : 'false'} required />
-          {err('phone', 'Enter a 10-digit phone number.')}
-        </div>
-      </div>
-      <div className="ct-field">
-        <label htmlFor="ct-f-need">What do you need help with?</label>
-        <select id="ct-f-need" value={v.need} onChange={set('need')}>
-          {NEEDS.map(([val, label]) => <option key={val} value={val}>{label}</option>)}
-        </select>
-      </div>
-
-      <div className="ct-consent">
-        <input type="checkbox" id="ct-f-sms" checked={sms} onChange={(e) => setSms(e.target.checked)} />
-        <label htmlFor="ct-f-sms">{SMS_MAIN} See our <Link to="/privacy-policy" target="_blank" rel="noopener">Privacy Policy</Link> and <Link to="/terms-and-conditions#sms-terms" target="_blank" rel="noopener">SMS Terms</Link>.</label>
-      </div>
-
-      <button type="submit" className="ct-btn ct-btn-red" disabled={sending}>{sending ? 'Sending…' : 'Request my free consultation'}</button>
-      {status && <p className="ct-form-status" role="alert">{status}</p>}
-      <p className="ct-fine">We use your details only to respond to this request and never sell them. <Link to="/privacy-policy" target="_blank" rel="noopener">Privacy Policy</Link></p>
-    </form>
-  );
-}
 
 export default function Contractors() {
   return (
@@ -239,7 +100,7 @@ export default function Contractors() {
                 <h2>Quote request</h2>
                 <span>Free 30-minute consultation</span>
               </div>
-              <QuoteForm />
+              <ApplicationForm idPrefix="ct" defaultService="Bookkeeping & Accounting" />
             </div>
           </div>
 

@@ -26,6 +26,9 @@ const Contractors   = lazy(() => import('./pages/ServiceDetail/Contractors'));
 const ForeignOwned  = lazy(() => import('./pages/ServiceDetail/ForeignOwned'));
 const FractionalCfo = lazy(() => import('./pages/ServiceDetail/FractionalCfo'));
 const Book          = lazy(() => import('./pages/Book'));
+const ManageBooking = lazy(() => import('./pages/Book/Manage'));
+const BookingConfirmationPage = lazy(() => import('./pages/Book/Confirmation'));
+const Apply         = lazy(() => import('./pages/Apply'));
 const NotFound      = lazy(() => import('./pages/NotFound'));
 
 // Client Portal Auth pages
@@ -64,6 +67,7 @@ const AdminBlogEditor      = lazy(() => import('./pages/Admin/AdminBlogEditor'))
 const AdminPayments        = lazy(() => import('./pages/Admin/AdminPayments'));
 const AdminInvoices        = lazy(() => import('./pages/Admin/AdminInvoices'));
 const AdminServices        = lazy(() => import('./pages/Admin/AdminServices'));
+const AdminBookings        = lazy(() => import('./pages/Admin/AdminBookings'));
 
 function Spinner() {
   return (
@@ -111,6 +115,9 @@ function AnimatedRoutes() {
             <Route path="/services/fractional-cfo" element={<FractionalCfo />} />
             <Route path="/rush-service"          element={<RushService />} />
             <Route path="/book"                  element={<Book />} />
+            <Route path="/book/manage/:bookingId" element={<ManageBooking />} />
+            <Route path="/book/confirmation/:bookingId" element={<BookingConfirmationPage />} />
+            <Route path="/apply"                 element={<Apply />} />
 
             {/* Client Portal Auth Routes */}
             <Route path="/client-portal/login"           element={<PortalLogin />} />
@@ -148,6 +155,7 @@ function AnimatedRoutes() {
             <Route path="/admin/payments"                 element={<AdminPayments />} />
             <Route path="/admin/invoices"                 element={<AdminInvoices />} />
             <Route path="/admin/services"                 element={<AdminServices />} />
+            <Route path="/admin/bookings"                 element={<AdminBookings />} />
             <Route path="/admin/blogs/:id/edit"          element={<AdminBlogEditor />} />
 
             <Route path="/404"                           element={<NotFound />} />

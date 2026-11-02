@@ -25,7 +25,12 @@ async function apiFetch(endpoint, options = {}) {
   }
 
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+  if (!res.ok) {
+    const err = new Error(data.error || `Request failed (${res.status})`);
+    err.status = res.status;
+    if (data.fields) err.fields = data.fields; // per-field messages from server-side validation
+    throw err;
+  }
   return data;
 }
 

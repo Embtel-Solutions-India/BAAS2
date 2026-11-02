@@ -44,7 +44,7 @@ export default function PrivacyPolicy() {
               <li><strong>Google Analytics and Google Ads</strong>, to measure site traffic and the performance of our ads (for example, which pages you view and whether you submit a form).</li>
               <li><strong>Contentsquare</strong>, to understand how visitors use our pages (for example, clicks and scrolling) so we can improve them.</li>
               <li><strong>Zoho SalesIQ</strong>, for the live chat feature on our website.</li>
-              <li><strong>LeadConnector (HighLevel)</strong>, for appointment booking and follow-up.</li>
+              <li><strong>Our consultation booking system</strong>, which stores the name, email, phone number, services and message you enter, and the time you choose, to schedule and confirm your consultation.</li>
               <li><strong>Google reviews widget</strong>, to display our public Google reviews.</li>
             </ul>
             <p>These providers may collect information such as your IP address, device and browser type, pages visited and the time of your visit, under their own privacy policies. Some of these tools load only after you first interact with the page. You can block or delete cookies through your browser settings, though some features may stop working, and you can opt out of Google Analytics with Google&apos;s browser add-on at tools.google.com/dlpage/gaoptout.</p>

@@ -71,6 +71,9 @@ app.use('/api/chat',          require('./routes/chat'));
 app.use('/api/rush-requests', require('./routes/rushRequests'));
 app.use('/api/contact-requests', require('./routes/contactRequests'));
 app.use('/api/quote-requests', require('./routes/quoteRequests'));
+app.use('/api/booking',        require('./routes/consultationBooking')); // consultation booking relay to n8n
+app.use('/api/bookings',       require('./routes/bookings'));
+app.use('/api/admin/bookings', require('./routes/adminBookings'));
 
 app.get('/api/health', (req, res) =>
   res.json({ status: 'ok', ts: new Date().toISOString() })

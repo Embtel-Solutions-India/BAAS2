@@ -1,14 +1,12 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Brain, Coins, ShieldOff, TrendingDown, User, Building2, Percent, Landmark, Users, Heart, Compass, FileText, Fingerprint, FileCheck, PercentCircle, Award, RefreshCw, CheckCircle, XCircle } from 'lucide-react';
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
-import { sendQuote, contactIssue, smsFields, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
-import FormSafeguards from '../../../components/UI/FormSafeguards';
 import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
+import ApplicationForm from '../../../components/Sections/ApplicationForm';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
 const BOOK = '/book'; // on-site booking page (embeds the calendar)
@@ -23,68 +21,6 @@ function SectionHeader({ label, title, sub }) {
       <h2 className="stitle" dangerouslySetInnerHTML={{__html:title}}/>
       {sub && <p className="ssub">{sub}</p>}
     </div>
-  );
-}
-
-function ConsultForm() {
-  const [form, setForm] = useState({ name:'', email:'', biz:'', phone:'', entity:'', question:'' });
-  const [status, setStatus] = useState('idle');
-  const [consent, setConsent] = useState(false);
-  const [hp, setHp] = useState('');
-  const flash = (st) => { setStatus(st); setTimeout(() => setStatus('idle'), 2500); };
-
-  const submit = async (e) => {
-    e.preventDefault();
-    const { name, email, biz, phone, entity, question } = form;
-    if (!biz) return flash('error');
-    const issue = contactIssue({ name, email, phone });
-    if (issue) return flash(issue);
-    setStatus('sending');
-    try {
-      await sendQuote({ source: 'Consulting page', name, email, phone, ...smsFields(consent), website: hp, fields: { 'Business Name': biz, 'Entity being considered': entity, 'About the business': question } });
-      setStatus('sent');
-    } catch { setStatus('failed'); }
-  };
-
-  if (status === 'sent') {
-    return (
-      <div role="status" style={{marginTop:'24px',padding:'40px 32px',borderRadius:'20px',background:'rgba(74,222,128,.08)',border:'1px solid rgba(74,222,128,.35)',textAlign:'center'}}>
-        <div style={{width:'56px',height:'56px',borderRadius:'50%',background:'rgba(74,222,128,.15)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',color:'#22c55e'}}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        </div>
-        <h3 className="serif" style={{fontSize:'24px',marginBottom:'10px',color:'#1a1a1a'}}>Thank you — your consultation request is on its way.</h3>
-        <p style={{fontSize:'16px',color:'var(--tm)',lineHeight:1.6,maxWidth:'440px',margin:'0 auto 24px'}}>We&apos;ll assess your situation and recommend the structure and certifications that maximize protection, savings, and growth.</p>
-        <button type="button" onClick={() => setStatus('idle')} className="btn-ghost" style={{margin:'0 auto'}}>Submit another request</button>
-      </div>
-    );
-  }
-
-  return (
-    <form onSubmit={submit} style={{marginTop:'24px',padding:'32px',borderRadius:'20px',background:'var(--card)',border:'1px solid var(--cb)',boxShadow:'0 1px 3px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)'}}>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'16px'}}>
-        <div className="form-group"><label>Full Name *</label><input type="text" className="form-input" placeholder="Jane Smith" value={form.name} onChange={e => setForm(f => ({...f,name:e.target.value}))}/></div>
-        <div className="form-group"><label>Business Name *</label><input type="text" className="form-input" placeholder="Your Future LLC" value={form.biz} onChange={e => setForm(f => ({...f,biz:e.target.value}))}/></div>
-      </div>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'16px'}}>
-        <div className="form-group"><label>Email Address *</label><input type="email" className="form-input" placeholder="you@company.com" value={form.email} onChange={e => setForm(f => ({...f,email:e.target.value}))}/></div>
-        <div className="form-group"><label>Entity You&apos;re Considering</label>
-          <select className="form-input" value={form.entity} onChange={e => setForm(f => ({...f,entity:e.target.value}))}>
-            <option value="">Select type...</option>
-            {['Not sure yet','Sole Proprietorship','LLC','S-Corporation','C-Corporation','LLP','Non-Profit 501(c)(3)'].map(o => <option key={o}>{o}</option>)}
-          </select>
-        </div>
-      </div>
-      <div className="form-group"><label htmlFor="consult-phone">Phone Number (optional)</label><input id="consult-phone" type="tel" className="form-input" placeholder="(510) 000-0000" value={form.phone} onChange={e => setForm(f => ({...f,phone:e.target.value}))}/></div>
-      <div className="form-group" style={{marginTop:'8px'}}>
-        <label>Tell us about your business</label>
-        <textarea className="form-input" rows={3} placeholder="What you do, how many owners, goals, concerns..." value={form.question} onChange={e => setForm(f => ({...f,question:e.target.value}))}/>
-      </div>
-      <FormSafeguards id="quote-consent" consent={consent} setConsent={setConsent} hp={hp} setHp={setHp} />
-      {status === 'failed' && <div role="alert" style={{color:'#d4001f',fontSize:'14px',marginBottom:'12px'}}>{QUOTE_FAILED_NOTE}</div>}
-      <button type="submit" className="form-submit" style={{marginTop:'8px'}} disabled={status==='sending'}>
-        {QUOTE_STATUS[status] || 'Send My Request'}
-      </button>
-    </form>
   );
 }
 
@@ -284,7 +220,7 @@ export default function Consulting() {
             <RevealWrapper className="prose" delay={0.1}>
               <h2>Not sure which structure is right?</h2>
               <p>Book a free consultation — we&apos;ll assess your situation and recommend the structure and certifications that maximize protection, savings, and growth.</p>
-              <ConsultForm/>
+              <ApplicationForm idPrefix="cs" defaultService="Business Formation & Consulting" />
             </RevealWrapper>
             <aside>
               <RevealWrapper delay={0.2}>

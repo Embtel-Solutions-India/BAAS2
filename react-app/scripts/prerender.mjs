@@ -49,6 +49,7 @@ const ROUTES = [
   '/services/fractional-cfo',
   '/rush-service',
   '/book',
+  '/apply',
   '/404',
 ];
 
@@ -145,6 +146,8 @@ async function main() {
       // Keep third-party widgets (chat, cookie banner, reviews, analytics) out of the
       // snapshot: their injected DOM would be baked into the HTML as dead static
       // copies that sit on top of the live widgets and swallow clicks.
+      // Pages that talk to the API (the booking calendar) check this flag and leave their live data out of the static HTML.
+      await page.evaluateOnNewDocument(() => { window.__BAAS_PRERENDER__ = true; });
       await page.setRequestInterception(true);
       page.on('request', (req) => (THIRD_PARTY.test(req.url()) ? req.abort() : req.continue()));
       const url = `http://127.0.0.1:${PORT}${route}`;

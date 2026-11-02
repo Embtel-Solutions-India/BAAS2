@@ -153,6 +153,17 @@ export default function AdminLayout({ children, title = '' }) {
             </Link>
 
             <Link
+              to="/admin/bookings"
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all group relative ${isTabActive('/admin/bookings') ? 'text-white bg-[#d4001f]/25 font-bold shadow-xs border border-white/5' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              onClick={() => setMenuOpen(false)}
+            >
+              <svg className="w-4 h-4 text-current opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+              </svg>
+              Appointments
+            </Link>
+
+            <Link
               to="/admin/chat"
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all group relative ${isTabActive('/admin/chat') ? 'text-white bg-[#d4001f]/25 font-bold shadow-xs border border-white/5' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
               onClick={() => setMenuOpen(false)}

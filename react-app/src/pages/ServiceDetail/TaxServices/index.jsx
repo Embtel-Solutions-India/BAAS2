@@ -1,13 +1,11 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, CloudFog, Receipt, FileWarning, Percent, CalendarClock, Building2, Users, Clock, PiggyBank, Dices, TrendingDown, Shuffle, Coins, Flag, FileX, UserCheck, BookOpen, CalendarDays, FileText, User, Calculator, ShieldCheck, RefreshCw, Inbox, Search, Send } from 'lucide-react';
 import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
-import { sendQuote, contactIssue, smsFields, QUOTE_STATUS, QUOTE_FAILED_NOTE } from '../../../utils/quote';
-import FormSafeguards from '../../../components/UI/FormSafeguards';
 import RushStrip from '../../../components/Sections/RushStrip';
 import SEOHead from '../../../components/SEO/SEOHead';
+import ApplicationForm from '../../../components/Sections/ApplicationForm';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
 const BOOK = '/book'; // on-site booking page (embeds the calendar)
@@ -44,67 +42,6 @@ function PainGroup({ icon: Icon, title, items }) {
         ))}
       </motion.div>
     </div>
-  );
-}
-
-function TaxUploadForm() {
-  const [form, setForm] = useState({ name:'', email:'', phone:'', filingType:'' });
-  const [status, setStatus] = useState('idle');
-  const [consent, setConsent] = useState(false);
-  const [hp, setHp] = useState('');
-  const flash = (st) => { setStatus(st); setTimeout(() => setStatus('idle'), 2500); };
-
-  // This form does not take file uploads: documents are uploaded in our secure client portal after we reply.
-  const submit = async (e) => {
-    e.preventDefault();
-    const { name, email, phone, filingType } = form;
-    if (!filingType) return flash('error');
-    const issue = contactIssue({ name, email, phone });
-    if (issue) return flash(issue);
-    setStatus('sending');
-    try {
-      await sendQuote({ source: 'Tax Services page', name, email, phone, ...smsFields(consent), website: hp, fields: { 'Filing Type': filingType, 'Request': 'Wants a secure client-portal link to upload tax documents' } });
-      setStatus('sent');
-    } catch { setStatus('failed'); }
-  };
-
-  if (status === 'sent') {
-    return (
-      <div role="status" style={{marginTop:'24px',padding:'40px 32px',borderRadius:'20px',background:'rgba(74,222,128,.08)',border:'1px solid rgba(74,222,128,.35)',textAlign:'center'}}>
-        <div style={{width:'56px',height:'56px',borderRadius:'50%',background:'rgba(74,222,128,.15)',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 20px',color:'#22c55e'}}>
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
-        </div>
-        <h3 className="serif" style={{fontSize:'24px',marginBottom:'10px',color:'#1a1a1a'}}>Thank you — we received your request.</h3>
-        <p style={{fontSize:'16px',color:'var(--tm)',lineHeight:1.6,maxWidth:'440px',margin:'0 auto 24px'}}>We&apos;ll email you a link to our secure client portal so you can upload your tax documents safely. Once they&apos;re uploaded, we&apos;ll review and organize them within 1 business day and reach out with next steps.</p>
-        <button type="button" onClick={() => setStatus('idle')} className="btn-ghost" style={{margin:'0 auto'}}>Send another request</button>
-      </div>
-    );
-  }
-
-  return (
-    <form onSubmit={submit} style={{marginTop:'24px',padding:'32px',borderRadius:'20px',background:'var(--card)',border:'1px solid var(--cb)',boxShadow:'0 1px 3px rgba(0,0,0,0.04),0 8px 24px rgba(0,0,0,0.04)'}}>
-      <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))',gap:'16px'}}>
-        <div className="form-group"><label htmlFor="tax-name">Full Name *</label><input id="tax-name" type="text" className="form-input" placeholder="Jane Smith" value={form.name} onChange={e => setForm(f => ({...f,name:e.target.value}))}/></div>
-        <div className="form-group"><label htmlFor="tax-email">Email *</label><input id="tax-email" type="email" className="form-input" placeholder="you@company.com" value={form.email} onChange={e => setForm(f => ({...f,email:e.target.value}))}/></div>
-      </div>
-      <div className="form-group"><label htmlFor="tax-phone">Phone Number (optional)</label><input id="tax-phone" type="tel" className="form-input" placeholder="(510) 000-0000" value={form.phone} onChange={e => setForm(f => ({...f,phone:e.target.value}))}/></div>
-      <div className="form-group">
-        <label htmlFor="tax-filing">Filing Type *</label>
-        <select id="tax-filing" className="form-input" value={form.filingType} onChange={e => setForm(f => ({...f,filingType:e.target.value}))}>
-          <option value="">Select filing type...</option>
-          {['Business Tax Return (S-Corp)','Business Tax Return (C-Corp)','Business Tax Return (Partnership)','Individual (1040)','Self-Employed (Schedule C)','Amended Return','Multiple Years'].map(o => <option key={o}>{o}</option>)}
-        </select>
-      </div>
-      <div style={{display:'flex',gap:'12px',alignItems:'flex-start',padding:'14px 16px',borderRadius:'12px',background:'rgba(212,0,31,.04)',border:'1px solid rgba(212,0,31,.14)',marginBottom:'8px',fontSize:'14px',color:'var(--tm)',lineHeight:1.55}}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{flexShrink:0,marginTop:'2px'}}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        <span><strong>Your documents stay secure.</strong> Please don&apos;t email tax documents or send them through this form. After you submit, we&apos;ll send you a link to our secure client portal to upload them.</span>
-      </div>
-      <FormSafeguards id="quote-consent" consent={consent} setConsent={setConsent} hp={hp} setHp={setHp} />
-      {status === 'failed' && <div role="alert" style={{color:'#d4001f',fontSize:'14px',marginBottom:'12px'}}>{QUOTE_FAILED_NOTE}</div>}
-      <button type="submit" className="form-submit" style={{marginTop:'8px'}} disabled={status==='sending'}>
-        {QUOTE_STATUS[status] || 'Send Me a Secure Upload Link'}
-      </button>
-    </form>
   );
 }
 
@@ -224,7 +161,7 @@ export default function TaxServices() {
                 title="Upload once. We handle the rest."
               />
               <p>No more email attachments, lost paperwork, or last-minute scrambles. Securely upload your tax documents anytime and we&apos;ll organize, review, and file before your deadline.</p>
-              <TaxUploadForm/>
+              <ApplicationForm idPrefix="tx" defaultService="Business & Individual Taxes" />
             </RevealWrapper>
             <aside>
               <RevealWrapper delay={0.2}>

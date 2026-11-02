@@ -114,7 +114,8 @@ export default function Header() {
             </svg>
             Client Login
           </a>
-          <a href={BOOK} className="btn-p">Free Consultation</a>
+          <a href={BOOK} className="btn-g nav-consult">Free Consultation</a>
+          <Link to="/apply" className="btn-p">Apply Now</Link>
         </div>
 
         <button
@@ -146,7 +147,8 @@ export default function Header() {
           <Link className="mob-link" to="/contact" onClick={close} role="menuitem">Contact</Link>
           <div style={{marginTop:'20px',display:'flex',flexDirection:'column',gap:'12px'}}>
             <a href="/client-portal/login" className="btn-g" style={{justifyContent:'center',padding:'12px'}} onClick={(e) => { e.preventDefault(); close(); open(); }}>Client Login</a>
-            <a href={BOOK} className="btn-p" style={{justifyContent:'center',padding:'12px'}} onClick={close}>Free Consultation</a>
+            <Link to="/apply" className="btn-p" style={{justifyContent:'center',padding:'12px'}} onClick={close}>Apply Now</Link>
+            <a href={BOOK} className="btn-g" style={{justifyContent:'center',padding:'12px'}} onClick={close}>Free Consultation</a>
           </div>
         </div>
       )}

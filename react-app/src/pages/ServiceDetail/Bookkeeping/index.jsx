@@ -5,8 +5,8 @@ import RevealWrapper from '../../../components/UI/RevealWrapper';
 import PageHero from '../../../components/Sections/PageHero';
 import CtaBar from '../../../components/Sections/CtaBar';
 import RushStrip from '../../../components/Sections/RushStrip';
-import ContactForm from '../../../components/Sections/ContactForm';
 import SEOHead from '../../../components/SEO/SEOHead';
+import ApplicationForm from '../../../components/Sections/ApplicationForm';
 import { SITE_URL, serviceSchema, breadcrumbSchema } from '../../../components/SEO/seoConfig';
 
 const BOOK = '/book'; // on-site booking page (embeds the calendar)
@@ -219,7 +219,7 @@ export default function Bookkeeping() {
             <RevealWrapper className="prose" delay={0.1}>
               <h2>Contact Us About Bookkeeping</h2>
               <p>Tell us about your business and how we can help. We&apos;ll get back to you within 24 hours. No obligation, no pushy sales calls.</p>
-              <ContactForm source="Bookkeeping page" idPrefix="bk" />
+              <ApplicationForm idPrefix="bk" defaultService="Bookkeeping & Accounting" />
               <p style={{fontSize:'14px',color:'var(--td)',marginTop:'16px',textAlign:'center'}}>We respond within 24 hours. No spam. No obligation.</p>
             </RevealWrapper>
 

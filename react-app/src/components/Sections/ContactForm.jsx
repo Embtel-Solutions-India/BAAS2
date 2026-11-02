@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../../utils/api';
-import { SMS_CONSENT_TEXT, smsFields } from '../../utils/quote';
+import { CONTACT_WEBHOOK, buildContactPayload, phoneIssue, postForm, SEND_FAILED } from '../../utils/formWebhooks';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const PHONE_RE = /^\+?[0-9\s().-]{7,20}$/;
 const EMPTY = { first_name: '', last_name: '', email: '', phone: '', message: '' };
 
 const validate = (name, value) => {
@@ -12,16 +10,15 @@ const validate = (name, value) => {
     case 'first_name': return !value ? 'First name is required.' : value.length < 2 ? 'First name must be at least 2 characters.' : '';
     case 'last_name': return !value ? 'Last name is required.' : value.length < 2 ? 'Last name must be at least 2 characters.' : '';
     case 'email': return !value ? 'Email address is required.' : !EMAIL_RE.test(value) ? 'Please enter a valid email address.' : '';
-    case 'phone': return !value ? 'Phone number is required.' : !PHONE_RE.test(value) ? 'Please enter a valid phone number.' : '';
-    case 'message': return !value ? 'Message is required.' : value.length < 10 ? 'Message must be at least 10 characters.' : '';
+    case 'phone': return phoneIssue(value);
     default: return '';
   }
 };
 
-// Shared contact form (Contact page + Bookkeeping page). `source` tells the team where it came from.
+// Shared contact form (Contact page + Bookkeeping page). One POST per submission to the n8n contact webhook,
+// carrying the form answers plus the five tracking values (see utils/formWebhooks.js). `source` is only used for analytics.
 export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }) {
   const [form, setForm] = useState(EMPTY);
-  const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -41,20 +38,19 @@ export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }
     setErrors(newErrors);
     if (Object.keys(newErrors).length) return;
 
+    if (honeypot) { setSubmitted(true); return; } // a bot filled the hidden field: pretend it worked, send nothing
+
     setSubmitting(true); setSendError('');
     try {
-      // Backend emails the enquiry to info@bayareaaccountingsolutions.com
-      await api.post('/contact-requests', { ...form, source, ...smsFields(consent), website: honeypot });
+      await postForm(CONTACT_WEBHOOK, buildContactPayload(form));
       // Google Ads conversion: "Contact" form submitted
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'conversion', { send_to: 'AW-18506219893/GsyoCJ6Qx5gdEPWCuvhE' });
         window.gtag('event', 'generate_lead', { form: source });
       }
       setSubmitted(true);
-    } catch (err) {
-      setSendError(err.message && !/^Request failed|Failed to fetch|NetworkError/i.test(err.message)
-        ? err.message
-        : 'Sorry, we could not send your message. Please try again or call us at (510) 962-7300.');
+    } catch {
+      setSendError(SEND_FAILED);
     } finally {
       setSubmitting(false);
     }
@@ -96,34 +92,18 @@ export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }
             {field('last_name', 'Last Name', 'text', 'Doe', 'family-name')}
           </div>
           {field('email', 'Email', 'email', 'you@company.com', 'email')}
-          {field('phone', 'Phone', 'tel', '(510) 000-0000', 'tel')}
+          {field('phone', 'Phone', 'tel', '+1 510 000 0000', 'tel')}
           <div className="form-group">
-            <label htmlFor={`${idPrefix}_message`}>Message</label>
+            <label htmlFor={`${idPrefix}_message`}>Message <span style={{ opacity: 0.7 }}>(optional)</span></label>
             <textarea
               id={`${idPrefix}_message`} name="message" value={form.message} onChange={handleChange}
-              className={`form-input${errors.message ? ' input-invalid' : ''}`}
+              className="form-input"
               placeholder="Tell us about your business and how we can help..."
             />
-            {errors.message && <div className="field-error">{errors.message}</div>}
           </div>
-          <div
-            style={{
-              display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '20px', padding: '14px 16px', borderRadius: '10px',
-              border: `1px solid ${consent ? 'rgba(212,0,31,.3)' : 'var(--bl)'}`, background: consent ? 'rgba(212,0,31,.03)' : 'rgba(0,0,0,0.02)', transition: 'border-color .2s',
-            }}
-          >
-            <input
-              type="checkbox" id={`${idPrefix}_consent`} checked={consent}
-              onChange={(e) => setConsent(e.target.checked)}
-              style={{ width: '18px', height: '18px', minWidth: '18px', marginTop: '2px', accentColor: 'var(--accent)', cursor: 'pointer' }}
-            />
-            <label htmlFor={`${idPrefix}_consent`} style={{ fontSize: '14px', color: 'var(--tm)', lineHeight: 1.5, cursor: 'pointer' }}>
-              {SMS_CONSENT_TEXT.replace(' See our Privacy Policy.', '')} <span style={{ opacity: 0.8 }}>(optional)</span> View our{' '}
-              <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link> and <Link to="/terms-and-conditions#sms-terms" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>SMS Terms</Link>.
-            </label>
-          </div>
-          <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, margin: '-8px 0 16px' }}>
-            By sending this form you agree we may contact you by email or phone about your enquiry.
+          <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, margin: '0 0 16px' }}>
+            By sending this form you agree we may contact you by email or phone about your enquiry. See our{' '}
+            <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link>.
           </p>
           {sendError && <div role="alert" style={{ color: '#d4001f', fontSize: '14px', marginBottom: '12px' }}>{sendError}</div>}
           <button type="submit" className="form-submit" disabled={submitting}>{submitting ? 'Sending...' : 'Send Message'}</button>
