@@ -16,6 +16,7 @@ const services = [
   ['For Contractors',               '/services/contractors',  'Job costing, payroll & 1099s'],
   ['Foreign-Owned LLCs',            '/services/foreign-owned-llc-accounting', 'Form 5472, FBAR & visa-ready books'],
   ['Fractional CFO',                '/services/fractional-cfo', 'Forecasting, budgets & capital raising'],
+  ['For Restaurants',               '/services/restaurants',  'Sales tax, tipped payroll & POS automation'],
 ];
 
 // Everything in the Services dropdown: the services above plus Rush Service and the full list.

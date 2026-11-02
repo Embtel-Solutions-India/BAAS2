@@ -21,6 +21,7 @@ const ROUTES = [
   '/services/contractors',
   '/services/foreign-owned-llc-accounting',
   '/services/fractional-cfo',
+  '/services/restaurants',
   '/rush-service',
   '/book',
   '/apply',
