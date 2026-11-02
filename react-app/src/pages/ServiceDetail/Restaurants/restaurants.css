@@ -168,15 +168,15 @@
 .rl-page details p{margin-top:10px}
 
 /* Final CTA */
-.rl-final{background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff}
-.rl-page .rl-final h2{color:#fff}
-.rl-final .rl-lede{color:rgba(255,255,255,.9)}
+.rl-final{background:radial-gradient(ellipse 55% 50% at 88% 12%,rgba(212,0,31,.06),transparent 60%),radial-gradient(ellipse 50% 45% at 6% 92%,rgba(212,0,31,.045),transparent 62%),#f9f8f6;color:var(--body)}
+.rl-page .rl-final h2{color:var(--ink)}
+.rl-final .rl-lede{color:var(--body)}
 .rl-book-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;align-items:center}
 .rl-final ul{list-style:none;margin:22px 0;padding:0}
-.rl-final li{padding:6px 0 6px 28px;position:relative}
-.rl-final li::before{content:"";width:18px;height:18px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/contain no-repeat;position:absolute;left:0;top:10px}
-.rl-page .rl-final .rl-contact a{color:#fff;font-weight:700}
-.rl-booking{background:#fff;border-radius:18px;min-height:420px;padding:28px;color:var(--body);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:14px}
+.rl-final li{padding:6px 0 6px 28px;position:relative;color:var(--ink)}
+.rl-final li::before{content:"";width:18px;height:18px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/contain no-repeat;position:absolute;left:0;top:10px;color:var(--red)}
+.rl-page .rl-final .rl-contact a{color:var(--red);font-weight:700}
+.rl-booking{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:18px;min-height:420px;padding:28px;color:var(--body);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:14px}
 .rl-booking h3{color:var(--ink)}
 @media(max-width:900px){.rl-book-grid{grid-template-columns:1fr}}
 

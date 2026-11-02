@@ -345,7 +345,7 @@ export default function Restaurants() {
         <section className="rl-final" id="book">
           <div className="rl-wrap rl-book-grid">
             <div>
-              <span className="rl-eyebrow" style={{ color: '#fff', opacity: 0.85 }}>Free 30-minute back-office review</span>
+              <span className="rl-eyebrow">Free 30-minute back-office review</span>
               <h2>Close up tonight and leave the paperwork to us.</h2>
               <p className="rl-lede">On a short call, we&apos;ll look at your POS, sales tax and payroll setup. Then we&apos;ll show you exactly what we&apos;d automate.</p>
               <ul>
