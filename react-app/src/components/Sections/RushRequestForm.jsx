@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../utils/api';
+import { smsFields } from '../../utils/quote';
+import SmsConsent from '../UI/SmsConsent';
 import { trackRush, todayPT, daysToDeadline, isWithinOneBusinessDay, readUtm, captureUtm } from '../../utils/rush';
 import { FORM_SERVICES, FORM_TIERS, FORM_REASONS, FORM_DOCS, FORM_MESSAGES } from '../../data/rush';
 
@@ -39,6 +41,7 @@ export default function RushRequestForm({ prefill }) {
   const [done, setDone] = useState(null);
   const [sendError, setSendError] = useState('');
   const [honeypot, setHoneypot] = useState('');
+  const [sms, setSms] = useState(false);
   const started = useRef(false);
   const source = useRef('form');
 
@@ -81,6 +84,7 @@ export default function RushRequestForm({ prefill }) {
         ...form,
         phone: usDigits(form.phone),
         consent: true,
+        ...smsFields(sms),
         website: honeypot,
         // hidden fields (spec 9.1)
         page_url: window.location.href,
@@ -187,6 +191,7 @@ export default function RushRequestForm({ prefill }) {
         </label>
       </div>
       {consentError && <div role="alert" style={{ color: '#d4001f', fontSize: '13px', marginTop: '-8px' }}>Please tick the box above to continue.</div>}
+      <SmsConsent id="rush_sms" checked={sms} onChange={setSms} style={{ margin: 0 }} />
       {sendError && <div role="alert" style={{ color: '#d4001f', fontSize: '14px' }}>{sendError}</div>}
       <button type="submit" className="form-submit" disabled={submitting}>{submitting ? 'Sending...' : FORM_MESSAGES.heading}</button>
     </form>

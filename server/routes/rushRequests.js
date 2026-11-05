@@ -128,7 +128,8 @@ router.post('/', limiter, async (req, res) => {
         ${row('Deadline is for', esc(d.reason))}
         ${row('Documents ready', esc(d.docs_ready))}
         ${row('Notes', esc(d.notes || '—').replace(/\n/g, '<br>'))}
-        ${row('Consent', 'Yes — phone, email or text')}
+        ${row('Consent', 'Yes — phone or email')}
+        ${row('Text-message consent', b.sms_consent === true ? `<strong>Yes</strong><br><span style="color:#666;font-size:12px">${esc(clean(b.sms_consent_text, 1500, true)).replace(/\n/g, '<br>')}</span>` : 'No (not ticked)')}
         ${row('Button clicked', esc(d.button_clicked || '—'))}
         ${row('Page', esc(d.page_url || '—'))}
         ${row('UTM', esc([d.utm_source, d.utm_medium, d.utm_campaign].filter(Boolean).join(' / ') || '—'))}

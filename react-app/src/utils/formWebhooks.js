@@ -2,6 +2,7 @@
 // One POST per submission, JSON, no authentication, no keys in the browser. HTTP 200 means success.
 import { getTracking } from './tracking';
 import { APPLICATION_SERVICES, PAYROLL_SERVICE } from '../data/applicationForm';
+import { smsFields } from './quote';
 
 export const APPLICATION_WEBHOOK = 'https://n8n.embtelsolutions.ca/webhook/7d0c1f3e-1b2a-4c5d-9e8f-baas00000001';
 export const CONTACT_WEBHOOK = 'https://n8n.embtelsolutions.ca/webhook/baas-contact-form';
@@ -24,19 +25,20 @@ export const phoneIssue = (raw) => {
   return E164.test(normalizePhone(raw)) ? '' : 'Enter a US number, or include the country code, e.g. +15105550123.';
 };
 
-export function buildContactPayload(f) {
+export function buildContactPayload(f, smsConsent = false) {
   return {
     first_name: f.first_name.trim(),
     last_name: f.last_name.trim(),
     email: f.email.trim(),
     phone: normalizePhone(f.phone),
     message: (f.message || '').trim(),
+    ...smsFields(smsConsent),
     ...getTracking(),
   };
 }
 
 // `services` maps each ticked service to its chosen speed, e.g. { 'Payroll Management': 'emergency' }.
-export function buildApplicationPayload(f) {
+export function buildApplicationPayload(f, smsConsent = false) {
   const ticked = APPLICATION_SERVICES.filter((s) => f.services[s.value]);
   const service_speeds = Object.fromEntries(ticked.map((s) => [s.value, s.speeds.length === 1 ? s.speeds[0] : f.services[s.value]]));
   const needsEmployees = service_speeds[PAYROLL_SERVICE] === 'emergency';
@@ -50,6 +52,7 @@ export function buildApplicationPayload(f) {
     services: ticked.map((s) => s.value),
     service_speeds,
     payroll_employees: needsEmployees ? Number(f.payroll_employees) : 0,
+    ...smsFields(smsConsent),
     ...getTracking(),
   };
 }

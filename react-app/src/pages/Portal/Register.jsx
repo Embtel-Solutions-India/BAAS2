@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { api, API_BASE } from '../../utils/api';
 import PasswordInput from '../../components/UI/PasswordInput';
 import OtpInput from '../../components/UI/OtpInput';
+import SmsConsent from '../../components/UI/SmsConsent';
+import { smsFields } from '../../utils/quote';
 import '../../styles/portal.css';
 
 function GoogleIcon() {
@@ -35,6 +37,7 @@ export default function Register() {
     password: '',
     confirm_password: ''
   });
+  const [sms, setSms] = useState(false);
   const [errors, setErrors] = useState({});
   const [alertMsg, setAlertMsg] = useState('');
   const [loading, setLoading] = useState(false);
@@ -140,6 +143,7 @@ export default function Register() {
         phone: formData.phone.trim(),
         company_name: formData.company_name.trim(),
         password: formData.password,
+        ...smsFields(sms),
         code: c,
       });
       navigate('/client-portal/dashboard');
@@ -258,6 +262,8 @@ export default function Register() {
                 />
                 <div className={`form-error ${errors.phone ? 'visible' : ''}`}>{errors.phone}</div>
               </div>
+
+              <SmsConsent id="reg_sms" checked={sms} onChange={setSms} style={{ marginTop: 0 }} />
 
               <div className="form-group">
                 <label htmlFor="password">Password</label>

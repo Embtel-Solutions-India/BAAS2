@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import SmsConsent from '../UI/SmsConsent';
 import { CONTACT_WEBHOOK, buildContactPayload, phoneIssue, postForm, SEND_FAILED } from '../../utils/formWebhooks';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -24,6 +25,7 @@ export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }
   const [submitted, setSubmitted] = useState(false);
   const [sendError, setSendError] = useState('');
   const [honeypot, setHoneypot] = useState('');
+  const [sms, setSms] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,7 +44,7 @@ export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }
 
     setSubmitting(true); setSendError('');
     try {
-      await postForm(CONTACT_WEBHOOK, buildContactPayload(form));
+      await postForm(CONTACT_WEBHOOK, buildContactPayload(form, sms));
       // Google Ads conversion: "Contact" form submitted
       if (typeof window.gtag === 'function') {
         window.gtag('event', 'conversion', { send_to: 'AW-18506219893/GsyoCJ6Qx5gdEPWCuvhE' });
@@ -101,6 +103,7 @@ export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }
               placeholder="Tell us about your business and how we can help..."
             />
           </div>
+          <SmsConsent id={`${idPrefix}_sms`} checked={sms} onChange={setSms} />
           <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, margin: '0 0 16px' }}>
             By sending this form you agree we may contact you by email or phone about your enquiry. See our{' '}
             <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link>.

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
+import SmsConsent from '../UI/SmsConsent';
+import { SMS_OPT_IN_MESSAGE } from '../../utils/quote';
 import { APPLICATION_WEBHOOK, buildApplicationPayload, phoneIssue, postForm, SEND_FAILED } from '../../utils/formWebhooks';
 import { APPLICATION_SERVICES, CLIENT_TYPES, PAYROLL_SERVICE, SPEED_LABELS, US_STATES } from '../../data/applicationForm';
 
@@ -20,6 +22,7 @@ export default function ApplicationForm({ idPrefix = 'ap', defaultService = '' }
   const [submitted, setSubmitted] = useState(false);
   const [sendError, setSendError] = useState('');
   const [honeypot, setHoneypot] = useState('');
+  const [sms, setSms] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -87,7 +90,7 @@ export default function ApplicationForm({ idPrefix = 'ap', defaultService = '' }
 
     setSubmitting(true); setSendError('');
     try {
-      await postForm(APPLICATION_WEBHOOK, buildApplicationPayload(form));
+      await postForm(APPLICATION_WEBHOOK, buildApplicationPayload(form, sms));
       if (typeof window.gtag === 'function') window.gtag('event', 'generate_lead', { form: 'Application' });
       setSubmitted(true);
     } catch {
@@ -132,6 +135,7 @@ export default function ApplicationForm({ idPrefix = 'ap', defaultService = '' }
           Our team will review it and get back to you shortly. If it&apos;s urgent, call{' '}
           <a href="tel:+15109627300" style={{ color: 'var(--accent)' }}>(510) 962-7300</a>.
         </p>
+        {sms && <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, marginTop: '14px' }}>{SMS_OPT_IN_MESSAGE}</p>}
       </div>
     );
   }
@@ -217,6 +221,10 @@ export default function ApplicationForm({ idPrefix = 'ap', defaultService = '' }
         </div>
       )}
 
+      <SmsConsent id={id('sms')} checked={sms} onChange={setSms} />
+      <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, margin: '-6px 0 14px' }}>
+        <strong>Opt-in confirmation message:</strong> &ldquo;{SMS_OPT_IN_MESSAGE}&rdquo;
+      </p>
       <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, margin: '0 0 16px' }}>
         By sending this form you agree we may contact you by email or phone about your application. See our{' '}
         <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link>.

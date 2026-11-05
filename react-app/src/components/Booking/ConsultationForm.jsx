@@ -4,12 +4,14 @@ import { ChevronDown } from 'lucide-react';
 import { bookConsultation } from '../../utils/consultationApi';
 import { getTracking } from '../../utils/tracking';
 import { phoneIssue, normalizePhone } from '../../utils/formWebhooks';
+import { smsFields } from '../../utils/quote';
+import SmsConsent from '../UI/SmsConsent';
 import { APPLICATION_SERVICES } from '../../data/applicationForm';
 import { formatLongDate, formatTime } from '../../utils/bookingDates';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MESSAGE_MAX = 1000;
-const EMPTY = { first_name: '', last_name: '', email: '', phone: '', services: [], message: '' };
+const EMPTY = { first_name: '', last_name: '', email: '', phone: '', services: [], message: '', sms: false };
 const SERVICE_NAMES = APPLICATION_SERVICES.map((s) => s.value); // the exact service names the booking system expects
 
 // Details for the chosen time. One request goes to our server, which forwards it to the booking system together with
@@ -69,7 +71,7 @@ export default function ConsultationForm({ slot, zoneLabel, initialValues, onVal
       const res = await bookConsultation({
         first_name: values.first_name.trim(), last_name: values.last_name.trim(), email: values.email.trim(), phone: normalizePhone(values.phone),
         start_time: slot.iso, services: SERVICE_NAMES.filter((s) => values.services.includes(s)), message: values.message.trim(),
-        ...getTracking(), website: honeypot,
+        ...smsFields(values.sms), ...getTracking(), website: honeypot,
       });
       if (res.success) {
         try { if (typeof window.gtag === 'function') window.gtag('event', 'book_appointment', { value: 1 }); } catch { /* analytics must never break booking */ }
@@ -150,6 +152,8 @@ export default function ConsultationForm({ slot, zoneLabel, initialValues, onVal
         <div className="bk-hint" aria-live="polite">{values.message.length}/{MESSAGE_MAX}</div>
         {errors.message && <div className="field-error" role="alert">{errors.message}</div>}
       </div>
+
+      <SmsConsent id="bk_sms" checked={!!values.sms} onChange={(v) => setField('sms', v)} />
 
       <p className="bk-note" style={{ marginTop: 0 }}>
         By booking you agree we may contact you by email or phone about your consultation. See our <Link to="/privacy-policy" target="_blank">Privacy Policy</Link>.

@@ -2,11 +2,13 @@ import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createBooking } from '../../utils/bookingApi';
 import { phoneIssue } from '../../utils/formWebhooks';
+import { smsFields } from '../../utils/quote';
+import SmsConsent from '../UI/SmsConsent';
 import { formatLongDate, formatTime } from '../../utils/bookingDates';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const NOTES_MAX = 1000;
-const EMPTY = { name: '', email: '', phone: '', company: '', purpose: '', appointmentType: '', notes: '', consent: false };
+const EMPTY = { name: '', email: '', phone: '', company: '', purpose: '', appointmentType: '', notes: '', consent: false, sms: false };
 
 // Customer details for the chosen slot. The date, time and timezone are read-only here and are checked again
 // by the server; the end time is never sent because the server works it out from the appointment type.
@@ -52,7 +54,7 @@ export default function BookingForm({ config, slot, zoneLabel, idempotencyKey, i
     try {
       const res = await createBooking({
         name: values.name, email: values.email, phone: values.phone, company: values.company, purpose: values.purpose,
-        appointmentType: values.appointmentType || (types[0] && types[0].id) || '', notes: values.notes, consent: true,
+        appointmentType: values.appointmentType || (types[0] && types[0].id) || '', notes: values.notes, consent: true, ...smsFields(values.sms),
         date: slot.date, startTime: slot.startTime, timezone: config.timezone, idempotencyKey, website: honeypot,
       });
       try { if (typeof window.gtag === 'function') window.gtag('event', 'book_appointment', { value: 1 }); } catch { /* analytics must never break booking */ }
@@ -134,6 +136,8 @@ export default function BookingForm({ config, slot, zoneLabel, idempotencyKey, i
         <label htmlFor="bk_consent">I agree to the <Link to="/privacy-policy" target="_blank">Privacy Policy</Link> and to being contacted about this appointment.</label>
       </div>
       {errors.consent && <div className="field-error" id="bk_consent_err" role="alert">{errors.consent}</div>}
+
+      <SmsConsent id="bk_sms" checked={!!values.sms} onChange={(v) => set('sms', v)} />
 
       {formError && <div className="bk-alert" role="alert">{formError}</div>}
       <button type="submit" className="form-submit" disabled={submitting}>{submitting ? 'Booking…' : 'Confirm appointment'}</button>
