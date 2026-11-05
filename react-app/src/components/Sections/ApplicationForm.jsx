@@ -222,9 +222,6 @@ export default function ApplicationForm({ idPrefix = 'ap', defaultService = '' }
       )}
 
       <SmsConsent id={id('sms')} checked={sms} onChange={setSms} />
-      <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, margin: '-6px 0 14px' }}>
-        <strong>Opt-in confirmation message:</strong> &ldquo;{SMS_OPT_IN_MESSAGE}&rdquo;
-      </p>
       <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, margin: '0 0 16px' }}>
         By sending this form you agree we may contact you by email or phone about your application. See our{' '}
         <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link>.

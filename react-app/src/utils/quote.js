@@ -6,7 +6,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^\+?[0-9\s().-]{7,20}$/;
 
 // Optional text-message consent: exact wording the visitor sees; it is saved with the request.
-export const SMS_CONSENT_LABEL = 'I agree to receive text messages from Bay Area Accounting Solutions (BAAS) at the mobile number I provided, including service alerts, appointment reminders, document requests, replies to my inquiry, and marketing updates and promotions. Message frequency varies. Message and data rates may apply. Reply STOP to opt out or HELP for help. Consent is not a condition of purchase.';
+export const SMS_CONSENT_LABEL = 'I agree to receive SMS updates and promotions from Bay Area Accounting Solutions at the mobile number I provided. Recurring texts may include service alerts and marketing messages. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out. Reply HELP for help. Consent is not a condition of purchase.';
 // Confirmation text sent after opt-in; shown on the /apply form so reviewers see exactly what subscribers receive.
 export const SMS_OPT_IN_MESSAGE = 'You are subscribed to Bay Area Accounting Solutions SMS updates and promotions. Recurring texts may include service alerts and marketing messages. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out. Reply HELP for help.';
 export const SMS_CONSENT_TEXT =`${SMS_CONSENT_LABEL} See our Privacy Policy and SMS Terms.`;
