@@ -103,7 +103,7 @@ export default function ContactForm({ source = 'Contact page', idPrefix = 'cf' }
               placeholder="Tell us about your business and how we can help..."
             />
           </div>
-          <SmsConsent id={`${idPrefix}_sms`} checked={sms} onChange={setSms} />
+          <SmsConsent id={`${idPrefix}_sms`} value={sms} onChange={setSms} />
           <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, margin: '0 0 16px' }}>
             By sending this form you agree we may contact you by email or phone about your enquiry. See our{' '}
             <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link>.

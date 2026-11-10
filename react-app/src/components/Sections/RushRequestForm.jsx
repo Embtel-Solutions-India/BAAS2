@@ -191,7 +191,7 @@ export default function RushRequestForm({ prefill }) {
         </label>
       </div>
       {consentError && <div role="alert" style={{ color: '#d4001f', fontSize: '13px', marginTop: '-8px' }}>Please tick the box above to continue.</div>}
-      <SmsConsent id="rush_sms" checked={sms} onChange={setSms} style={{ margin: 0 }} />
+      <SmsConsent id="rush_sms" value={sms} onChange={setSms} style={{ margin: 0 }} />
       {sendError && <div role="alert" style={{ color: '#d4001f', fontSize: '14px' }}>{sendError}</div>}
       <button type="submit" className="form-submit" disabled={submitting}>{submitting ? 'Sending...' : FORM_MESSAGES.heading}</button>
     </form>

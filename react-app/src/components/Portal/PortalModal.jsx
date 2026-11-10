@@ -228,7 +228,7 @@ export default function PortalModal() {
                 <div className="form-group"><label>Company Name</label><input type="text" name="company_name" className="form-input" placeholder="Your Company LLC" value={regData.company_name} onChange={handleRegChange}/></div>
                 <div className="form-group"><label>Email Address</label><input type="email" name="email" className="form-input" placeholder="you@company.com" value={regData.email} onChange={handleRegChange}/></div>
                 <div className="form-group"><label>Phone Number</label><input type="tel" name="phone" className="form-input" placeholder="(555) 000-0000" value={regData.phone} onChange={handleRegChange}/></div>
-                <SmsConsent id="portal_reg_sms" checked={regSms} onChange={setRegSms} style={{ marginTop: 0 }} />
+                <SmsConsent id="portal_reg_sms" value={regSms} onChange={setRegSms} style={{ marginTop: 0 }} />
                 <div className="form-group" style={{marginBottom:'24px'}}><label>Create Password</label><PasswordInput name="password" className="form-input" placeholder="Min. 8 characters" value={regData.password} onChange={handleRegChange} onKeyDown={e => e.key === 'Enter' && handleRegister()}/></div>
                 <button className="form-submit" onClick={handleRegister} disabled={regLoading}>{regLoading ? 'Sending code…' : 'Continue'}</button>
               </div>

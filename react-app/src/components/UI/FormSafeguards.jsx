@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import { SMS_CONSENT_TEXT } from '../../utils/quote';
+import { SMS_CARE_LABEL } from '../../utils/quote';
 
 // Honeypot field, an optional text-message checkbox and a privacy notice, shared by the service-page
 // quote forms. Sending the form is itself the request to be contacted (email/phone); texting needs the box.
 // `consent` here means "I agree to texts" and is never required.
-const SMS_LABEL = SMS_CONSENT_TEXT.replace(' See our Privacy Policy.', '');
+const SMS_LABEL = SMS_CARE_LABEL;
 
 export default function FormSafeguards({ id, consent, setConsent, hp, setHp }) {
   return (

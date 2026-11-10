@@ -45,7 +45,8 @@ export default function Terms() {
             <h2>9. SMS Terms</h2>
             <div id="sms-terms" style={{scrollMarginTop:'108px'}}>
               <p><strong>Program.</strong> If you opt in on one of our forms, Bay Area Accounting Solutions will send you text messages about your request or account, such as appointment reminders, document requests, replies to your questions and service updates.</p>
-              <p><strong>Consent.</strong> Opting in to texts is optional and is not a condition of purchasing any goods or services. By checking the box, you agree to receive these messages from us at the mobile number you provided, including messages sent using an automated system.</p>
+              <p><strong>Two separate opt-ins.</strong> Our forms have two separate, unticked checkboxes: one for service texts (service alerts, appointment reminders, document requests and replies to your questions) and one for promotional texts (SMS updates, offers and promotions). You can tick either, both or neither, and each works on its own.</p>
+              <p><strong>Consent.</strong> Opting in to texts is optional and is not a condition of purchasing any goods or services. By checking a box, you agree to receive that type of message from us at the mobile number you provided, including messages sent using an automated system.</p>
               <p><strong>Message frequency and costs.</strong> Message frequency varies. Message and data rates may apply.</p>
               <p><strong>Opt out and help.</strong> Reply STOP at any time to stop receiving messages. Reply HELP for help, or contact us at (510) 962-7300 or info@bayareaaccountingsolutions.com. After you reply STOP we may send one final message to confirm.</p>
               <p><strong>Carriers.</strong> Wireless carriers are not liable for delayed or undelivered messages.</p>

@@ -136,7 +136,7 @@ router.post('/', writeLimiter, (req, res) => {
     message: str(b.message, 1500).replace(/<[^>]*>/g, ' '),
   };
   // Optional text-message opt-in: only recorded when the visitor ticked the separate box.
-  if (b.sms_consent === true) { payload.sms_consent = true; payload.sms_consent_text = str(b.sms_consent_text, 1500); }
+  if (b.sms_consent === true) { payload.sms_consent = true; payload.sms_service_consent = b.sms_service_consent === true; payload.sms_marketing_consent = b.sms_marketing_consent === true; payload.sms_consent_text = str(b.sms_consent_text, 1500); }
   // Always all five tracking keys, empty when unknown.
   TRACKING_KEYS.forEach((k) => { payload[k] = str(b[k], 300); });
   noStore(res);

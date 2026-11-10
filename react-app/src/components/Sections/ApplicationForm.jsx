@@ -135,7 +135,7 @@ export default function ApplicationForm({ idPrefix = 'ap', defaultService = '' }
           Our team will review it and get back to you shortly. If it&apos;s urgent, call{' '}
           <a href="tel:+15109627300" style={{ color: 'var(--accent)' }}>(510) 962-7300</a>.
         </p>
-        {sms && <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, marginTop: '14px' }}>{SMS_OPT_IN_MESSAGE}</p>}
+        {sms && sms.promo && <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, marginTop: '14px' }}>{SMS_OPT_IN_MESSAGE}</p>}
       </div>
     );
   }
@@ -221,7 +221,7 @@ export default function ApplicationForm({ idPrefix = 'ap', defaultService = '' }
         </div>
       )}
 
-      <SmsConsent id={id('sms')} checked={sms} onChange={setSms} />
+      <SmsConsent id={id('sms')} value={sms} onChange={setSms} />
       <p style={{ fontSize: '13px', color: 'var(--td)', lineHeight: 1.5, margin: '0 0 16px' }}>
         By sending this form you agree we may contact you by email or phone about your application. See our{' '}
         <Link to="/privacy-policy" target="_blank" style={{ color: 'var(--accent)', textDecoration: 'underline' }}>Privacy Policy</Link>.

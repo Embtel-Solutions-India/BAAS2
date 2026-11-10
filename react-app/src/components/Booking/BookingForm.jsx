@@ -137,7 +137,7 @@ export default function BookingForm({ config, slot, zoneLabel, idempotencyKey, i
       </div>
       {errors.consent && <div className="field-error" id="bk_consent_err" role="alert">{errors.consent}</div>}
 
-      <SmsConsent id="bk_sms" checked={!!values.sms} onChange={(v) => set('sms', v)} />
+      <SmsConsent id="bk_sms" value={values.sms} onChange={(v) => set('sms', v)} />
 
       {formError && <div className="bk-alert" role="alert">{formError}</div>}
       <button type="submit" className="form-submit" disabled={submitting}>{submitting ? 'Booking…' : 'Confirm appointment'}</button>

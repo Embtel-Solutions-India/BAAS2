@@ -5,12 +5,25 @@ import { api } from './api';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^\+?[0-9\s().-]{7,20}$/;
 
-// Optional text-message consent: exact wording the visitor sees; it is saved with the request.
-export const SMS_CONSENT_LABEL = 'I agree to receive SMS updates and promotions from Bay Area Accounting Solutions at the mobile number I provided. Recurring texts may include service alerts and marketing messages. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out. Reply HELP for help. Consent is not a condition of purchase.';
-// Confirmation text sent after opt-in; shown on the /apply form so reviewers see exactly what subscribers receive.
+// Two separate, optional, unticked text-message opt-ins (carriers require service and marketing consent to be collected
+// separately). The exact wording the visitor sees is saved with the request.
+const SMS_TAIL = 'Message frequency varies. Msg & data rates may apply. Reply STOP to opt out. Reply HELP for help. Consent is not a condition of purchase.';
+export const SMS_CARE_LABEL = `I agree to receive service text messages from Bay Area Accounting Solutions (BAAS) at the mobile number I provided, such as service alerts, appointment reminders, document requests and replies to my inquiry. ${SMS_TAIL}`;
+export const SMS_PROMO_LABEL = `I agree to receive promotional text messages from Bay Area Accounting Solutions (BAAS) at the mobile number I provided, such as SMS updates, offers and promotions. Recurring marketing texts. ${SMS_TAIL}`;
+// Confirmation text sent after the promotional opt-in.
 export const SMS_OPT_IN_MESSAGE = 'You are subscribed to Bay Area Accounting Solutions SMS updates and promotions. Recurring texts may include service alerts and marketing messages. Message frequency varies. Msg & data rates may apply. Reply STOP to opt out. Reply HELP for help.';
-export const SMS_CONSENT_TEXT =`${SMS_CONSENT_LABEL} See our Privacy Policy and SMS Terms.`;
-export const smsFields = (on) => ({ sms_consent: !!on, sms_consent_text: on ? SMS_CONSENT_TEXT : '' });
+export const SMS_NONE = { care: false, promo: false };
+// `v` = { care, promo }. sms_consent is true when either box is ticked; the two kinds are also reported separately.
+export const smsFields = (v) => {
+  const care = !!(v && v.care);
+  const promo = !!(v && v.promo);
+  return {
+    sms_consent: care || promo,
+    sms_service_consent: care,
+    sms_marketing_consent: promo,
+    sms_consent_text: [care && SMS_CARE_LABEL, promo && SMS_PROMO_LABEL].filter(Boolean).join(' | '),
+  };
+};
 
 export async function sendQuote(payload) {
   const { source } = payload;

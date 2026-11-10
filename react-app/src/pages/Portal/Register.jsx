@@ -263,7 +263,7 @@ export default function Register() {
                 <div className={`form-error ${errors.phone ? 'visible' : ''}`}>{errors.phone}</div>
               </div>
 
-              <SmsConsent id="reg_sms" checked={sms} onChange={setSms} style={{ marginTop: 0 }} />
+              <SmsConsent id="reg_sms" value={sms} onChange={setSms} style={{ marginTop: 0 }} />
 
               <div className="form-group">
                 <label htmlFor="password">Password</label>

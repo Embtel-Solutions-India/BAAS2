@@ -153,7 +153,7 @@ export default function ConsultationForm({ slot, zoneLabel, initialValues, onVal
         {errors.message && <div className="field-error" role="alert">{errors.message}</div>}
       </div>
 
-      <SmsConsent id="bk_sms" checked={!!values.sms} onChange={(v) => setField('sms', v)} />
+      <SmsConsent id="bk_sms" value={values.sms} onChange={(v) => setField('sms', v)} />
 
       <p className="bk-note" style={{ marginTop: 0 }}>
         By booking you agree we may contact you by email or phone about your consultation. See our <Link to="/privacy-policy" target="_blank">Privacy Policy</Link>.
