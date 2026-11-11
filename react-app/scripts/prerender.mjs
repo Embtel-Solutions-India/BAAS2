@@ -25,7 +25,7 @@ const DIST = path.resolve(__dirname, '..', 'dist');
 const PORT = 5178;
 
 // Third-party hosts that must not run during prerender (see main loop).
-const THIRD_PARTY = /zoho|salesiq|contentsquare|hotjar|googletagmanager|google-analytics|doubleclick|googleadservices|google\.com\/(ccm|rmkt|pagead)|elfsight/i;
+const THIRD_PARTY = /zoho|salesiq|tawk|contentsquare|hotjar|googletagmanager|google-analytics|doubleclick|googleadservices|google\.com\/(ccm|rmkt|pagead)|elfsight/i;
 
 // Public, static content routes worth indexing (must match App.jsx routes).
 const ROUTES = [

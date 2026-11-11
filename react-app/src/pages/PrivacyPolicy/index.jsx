@@ -43,7 +43,7 @@ export default function PrivacyPolicy() {
             <ul>
               <li><strong>Google Analytics and Google Ads</strong>, to measure site traffic and the performance of our ads (for example, which pages you view and whether you submit a form).</li>
               <li><strong>Contentsquare</strong>, to understand how visitors use our pages (for example, clicks and scrolling) so we can improve them.</li>
-              <li><strong>Zoho SalesIQ</strong>, for the live chat feature on our website.</li>
+              <li><strong>Tawk.to</strong>, for the live chat feature on our website.</li>
               <li><strong>Our consultation booking system</strong>, which stores the name, email, phone number, services and message you enter, and the time you choose, to schedule and confirm your consultation.</li>
               <li><strong>Google reviews widget</strong>, to display our public Google reviews.</li>
             </ul>
