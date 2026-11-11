@@ -1,10 +1,10 @@
 /**
- * Floating WhatsApp support button (fixed bottom-right).
+ * Floating WhatsApp support button (fixed bottom-left).
  * Number comes from the VITE_WHATSAPP_NUMBER env var (country code, digits only).
- * Renders nothing when the number isn't configured.
+ * Defaults to +1 510 962-7300.
  */
 export default function WhatsAppButton({ message = "Hi! I'd like some help with your accounting services." }) {
-  const number = (import.meta.env.VITE_WHATSAPP_NUMBER || '').replace(/[^\d]/g, '');
+  const number = (import.meta.env.VITE_WHATSAPP_NUMBER || '+1 510 962-7300').replace(/[^\d]/g, '');
   if (!number) return null;
 
   const href = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
@@ -18,7 +18,7 @@ export default function WhatsAppButton({ message = "Hi! I'd like some help with 
       title="Chat with us on WhatsApp"
       style={{
         position: 'fixed',
-        right: '24px',
+        left: '24px',
         bottom: '24px',
         zIndex: 1000,
         width: '58px',

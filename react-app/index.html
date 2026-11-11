@@ -59,6 +59,21 @@
         evts.forEach(function (e) { addEventListener(e, load, { passive: true }); });
       })();
     </script>
+    <!-- Tawk.to chat loads right away (not deferred) so the widget shows as soon as the site opens. -->
+    <script>
+      (function () {
+          window.Tawk_API = window.Tawk_API || {};
+          Tawk_API.customStyle = { visibility: {
+            desktop: { position: 'br', xOffset: 20, yOffset: 90 },
+            mobile: { position: 'br', xOffset: 10, yOffset: 90 }
+          } };
+          window.Tawk_LoadStart = new Date();
+          var t = document.createElement('script');
+          t.async = true; t.src = 'https://embed.tawk.to/6af38ad33e33933c420fb28d/1k73lcivd';
+          t.charset = 'UTF-8'; t.setAttribute('crossorigin', '*');
+          document.head.appendChild(t);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

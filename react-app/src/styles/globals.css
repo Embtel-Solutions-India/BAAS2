@@ -801,7 +801,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 /* Rush landing page: sticky "Request Rush Service" button, mobile only */
 .rush-sticky{display:none}
 @media (max-width:768px){
-  .rush-sticky{display:block;position:fixed;left:16px;right:84px;bottom:16px;z-index:900;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .25s,transform .25s}
+  .rush-sticky{display:block;position:fixed;left:84px;right:84px;bottom:16px;z-index:900;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .25s,transform .25s}
   .rush-sticky.show{opacity:1;transform:none;pointer-events:auto}
   .rush-sticky a,.rush-sticky button{width:100%;justify-content:center;box-shadow:0 8px 24px rgba(212,0,31,.35)}
 }
